@@ -23,6 +23,7 @@
 		FC7194E72AC3352000391BD4 /* BoardDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7194E62AC3352000391BD4 /* BoardDetailViewController.swift */; };
 		FC7194E92AC33AFD00391BD4 /* AddPetActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7194E82AC33AFD00391BD4 /* AddPetActionViewController.swift */; };
 		FC7194EB2AC3413D00391BD4 /* AddDiaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7194EA2AC3413D00391BD4 /* AddDiaryViewController.swift */; };
+		FC7B56812AC5800400E90500 /* PetDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7B56802AC5800400E90500 /* PetDetailViewController.swift */; };
 		FC9303F42AC45A9C00C883C6 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = FC9303F32AC45A9C00C883C6 /* .gitignore */; };
 		FC9303F72AC45B1C00C883C6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = FC9303F62AC45B1C00C883C6 /* README.md */; };
 		FCCE13512AC292C3005B95C9 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCE13502AC292C3005B95C9 /* HomeViewController.swift */; };
@@ -47,6 +48,7 @@
 		FC7194E62AC3352000391BD4 /* BoardDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardDetailViewController.swift; sourceTree = "<group>"; };
 		FC7194E82AC33AFD00391BD4 /* AddPetActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPetActionViewController.swift; sourceTree = "<group>"; };
 		FC7194EA2AC3413D00391BD4 /* AddDiaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDiaryViewController.swift; sourceTree = "<group>"; };
+		FC7B56802AC5800400E90500 /* PetDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetDetailViewController.swift; sourceTree = "<group>"; };
 		FC9303F32AC45A9C00C883C6 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		FC9303F52AC45AF500C883C6 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		FC9303F62AC45B1C00C883C6 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				FCCE13502AC292C3005B95C9 /* HomeViewController.swift */,
+				FC7B56802AC5800400E90500 /* PetDetailViewController.swift */,
 				FC7194E82AC33AFD00391BD4 /* AddPetActionViewController.swift */,
 				FC7194EA2AC3413D00391BD4 /* AddDiaryViewController.swift */,
 			);
@@ -253,6 +256,7 @@
 				FC518B2A2AC0AF9B00479461 /* AppDelegate.swift in Sources */,
 				FC518B2C2AC0AF9B00479461 /* SceneDelegate.swift in Sources */,
 				FC518B632AC269E000479461 /* DiaryViewController.swift in Sources */,
+				FC7B56812AC5800400E90500 /* PetDetailViewController.swift in Sources */,
 				FC7194E92AC33AFD00391BD4 /* AddPetActionViewController.swift in Sources */,
 				FCCE13512AC292C3005B95C9 /* HomeViewController.swift in Sources */,
 				FC7194E72AC3352000391BD4 /* BoardDetailViewController.swift in Sources */,
