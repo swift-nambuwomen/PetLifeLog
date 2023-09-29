@@ -11,7 +11,7 @@ class AddDiaryViewController: UIViewController {
 
     @IBOutlet weak var diaryDate: UILabel!
     @IBOutlet weak var diaryContent: UITextView!
-    var currentDate = ""
+    var selectedDate = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,13 +20,13 @@ class AddDiaryViewController: UIViewController {
     }
     
     func drawUI() {
-        diaryDate.text = currentDate + " 일기"
+        diaryDate.text = selectedDate + " 일기" // 메인에서 선택된 날짜의 일기를 추가해야 하므로 타이틀은 그 날짜로
     }
     
     
     // 등록 버튼
     @IBAction func addDiary(_ sender: Any) {
-        //값 저장 구현
+        // 저장할 데이터 : pet_act테이블에 act_date= selectedDate, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, diary_content=텍스트필드내용, diary_image=이미지뷰, diary_open_yn=스위치바상태
         
         self.dismiss(animated: true)
     }
