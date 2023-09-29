@@ -9,51 +9,68 @@ import UIKit
 
 class AddPetActionViewController: UIViewController {
 
+    var selectedDate = "" // 홈뷰컨트롤러에서 네비바상에 선택한 날짜 건네 받음. pet_act테이블의 act_date로 저장용.
+    
+    // TODO: 접속자 정보 받아와 구현
+    var pet_id = "" // 접속자 id의 선택된 강아지 id
+    var user_id = "" // 접속자 id
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
     }
     
+    // TODO: 6개 액션 등록 메소드에서 공통으로 쓸 데이터 세팅용 메소드
+    func setDataset() {
+        //
+    }
 
+    
     // MARK: - 등록 버튼 - 6개 액션 기록 저장하기
     @IBAction func AddFood(_ sender: Any) {
-        // 값 받아오고, 저장 구현
+        // 저장할 데이터 : pet_act테이블에 act_date= selectedDate, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =3 && pet_act_detail테이블의 feed_type
         
+        setDataset()
         self.dismiss(animated: true)
         
     }
     
     
     @IBAction func AddPoo(_ sender: Any) {
-        // 값 받아오고, 저장 구현
+        // 저장할 데이터 : pet_act테이블에 act_date= selectedDate, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =2 && pet_act_detail테이블의 ordure_shape=?, ordure_color=?
         
+        setDataset()
         self.dismiss(animated: true)
     }
     
     
     @IBAction func AddWalk(_ sender: Any) {
-        // 값 받아오고, 저장 구현
+        // 저장할 데이터 : pet_act테이블에 act_date= selectedDate, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =1
         
+        setDataset()
         self.dismiss(animated: true)
     }
     
     
     @IBAction func AddWeight(_ sender: Any) {
-        // 값 받아오고, 저장 구현
+        // 저장할 데이터 : pet_act테이블에 act_date= selectedDate, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =6 && pet_act_detail테이블의 weight=?
         
+        setDataset()
         self.dismiss(animated: true)
     }
     
     @IBAction func AddHair(_ sender: Any) {
-        // 값 받아오고, 저장 구현
+        // 저장할 데이터 : pet_act테이블에 act_date= selectedDate, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =5
         
+        setDataset()
         self.dismiss(animated: true)
     }
     
     
     @IBAction func AddHospital(_ sender: Any) {
-        // 값 받아오고, 저장 구현
+        // 저장할 데이터 : pet_act테이블에 act_date= 해당 날짜, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =4 && pet_act_detail 테이블의 hospital_type = ?
         
+        setDataset()
         self.dismiss(animated: true)
     }
     
