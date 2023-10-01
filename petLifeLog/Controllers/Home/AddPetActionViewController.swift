@@ -26,13 +26,11 @@ class AddPetActionViewController: UIViewController {
     }
 
     
-    // MARK: - 등록 버튼 - 6개 액션 기록 저장하기
+    // MARK: - 등록 버튼 - 6개 액션 기록 저장하기. 저장된 데이터를 가지고 홈으로 돌아갈 수 있도록 스토리보드에서 unwind함
     @IBAction func AddFood(_ sender: Any) {
         // 저장할 데이터 : pet_act테이블에 act_date= selectedDate, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =3 && pet_act_detail테이블의 feed_type
         
         setDataset()
-        self.dismiss(animated: true)
-        
     }
     
     
@@ -40,7 +38,6 @@ class AddPetActionViewController: UIViewController {
         // 저장할 데이터 : pet_act테이블에 act_date= selectedDate, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =2 && pet_act_detail테이블의 ordure_shape=?, ordure_color=?
         
         setDataset()
-        self.dismiss(animated: true)
     }
     
     
@@ -48,7 +45,6 @@ class AddPetActionViewController: UIViewController {
         // 저장할 데이터 : pet_act테이블에 act_date= selectedDate, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =1
         
         setDataset()
-        self.dismiss(animated: true)
     }
     
     
@@ -56,14 +52,12 @@ class AddPetActionViewController: UIViewController {
         // 저장할 데이터 : pet_act테이블에 act_date= selectedDate, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =6 && pet_act_detail테이블의 weight=?
         
         setDataset()
-        self.dismiss(animated: true)
     }
     
     @IBAction func AddHair(_ sender: Any) {
         // 저장할 데이터 : pet_act테이블에 act_date= selectedDate, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =5
         
         setDataset()
-        self.dismiss(animated: true)
     }
     
     
@@ -71,7 +65,6 @@ class AddPetActionViewController: UIViewController {
         // 저장할 데이터 : pet_act테이블에 act_date= 해당 날짜, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =4 && pet_act_detail 테이블의 hospital_type = ?
         
         setDataset()
-        self.dismiss(animated: true)
     }
     
     

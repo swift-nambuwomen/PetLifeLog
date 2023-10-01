@@ -7,8 +7,6 @@
 
 import UIKit
 
-// TODO: 스토리보드 스택뷰 고정되게 조정 필요함
-
 class PetDetailViewController: UIViewController {
     // var dataset = // 메인 prepare에서 넘겨 받은 데이터셋, 추후 해당 타입으로 지정해줘야 함
     
@@ -33,7 +31,7 @@ class PetDetailViewController: UIViewController {
     
     // TODO: 넘겨받은 데이터셋에서 UI내에 각 요소마다 해당하는 데이터가 있을 시 채워 넣게 해야 함.
     
-    // Cell 선택시 어떤 act_name인지 받아서 해당 액션에 맞는 ui를 그리게 함.
+    // MARK: Cell 선택시 어떤 act_name인지 받아서 해당 액션에 맞는 UI를 그리게 함.
     func drawUI() { //act_name 변수는 acts테이블에 저장된 name칼럼의 6개.
         let act_name = "배변" // TO DO : 디테일뷰 종류 선택에 따라 6개 액션 중 하나 변수로 들어오게 하기
         switch act_name {
@@ -47,7 +45,12 @@ class PetDetailViewController: UIViewController {
             return
         }
     }
-
+    
+    // MARK: 취소버튼 - 모달창 사라지게. 등록버튼 - 데이터 들고갈 수 있게 스토리보드상에서 unwind segue로 홈으로 연결함
+    @IBAction func cancelBtn(_ sender: Any) {
+        self.dismiss(animated: true)
+    }
+    
     /*
     // MARK: - Navigation
 
