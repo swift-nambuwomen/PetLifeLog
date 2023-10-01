@@ -18,8 +18,9 @@ var dataset = ["pet1","pet2","pet3","pet4"]
 class HomeViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var currentDate: UINavigationItem! // 오늘 날짜 지정하기 위해서
+    @IBOutlet weak var dateBtn: UIButton! // 날짜 지정하기 위함
     @IBOutlet weak var nextBtn: UIBarButtonItem!
+    
     
     var selected_date = "" // 네비바용. 사용자가 선택한 날짜. yyyy-MM-dd
     var today = "" // < > 날짜 이동 버튼, 날짜에 따라 비활성화 처리용 대조 데이터
@@ -28,6 +29,7 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         let now = Int(Date().timeIntervalSince1970) // unixTime. 1972년 1월 1일부터로부터 몇초가 경과했는지
         setDate(now)
+        
         nextBtn.isEnabled = false // 오늘 다음 날짜의 기록은 없으니 처음엔 > 버튼 비활성화로 시작하기
         today = selected_date // nextDate버튼 비활성화 처리 위하여 오늘 날짜와 비교하기 위해서 받아두기
         getDataset() // 세팅된 날짜의 테이블뷰 액션 셀의 row들에 보여줄 액션명, 다이어리 셀에 보여줄 다이어리 데이터 가져오기
@@ -51,7 +53,8 @@ class HomeViewController: UIViewController {
         
         //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
         //getDataset()
-        //setupTableView() // 날짜 맞게 테이블뷰 셋업
+        //날짜 맞게 테이블뷰 재셋업
+        //tableView.reloadData()
     }
     
     //날짜 +1 버튼(>)
@@ -67,7 +70,8 @@ class HomeViewController: UIViewController {
         
         //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
         //getDataset()
-        //setupTableView() // 날짜 맞게 테이블뷰 셋업
+        //날짜 맞게 테이블뷰 재셋업
+        //tableView.reloadData()
     }
     
     // MARK: 날짜 연산 -> 문자열로 변환 -> 전역변수 날짜 업데이트 -> 네비바에 해당 날짜 표시
@@ -75,8 +79,15 @@ class HomeViewController: UIViewController {
         let timeInterval = TimeInterval(date) // Int를 unixTime으로 변환
         let changedDate = Date(timeIntervalSince1970: timeInterval) // unixTime을 Date타입으로 변환
         selected_date = changedDate.toString() // Date를 스트링으로 변환 후 selected_date갱신.갱신된 날짜에서 재연산하여야하니까 최종 변환값을 대입해줘야함.
-        currentDate.title = selected_date // 네비바에 갱신된 날짜 보여주기
+        dateBtn.setTitle(selected_date, for:.normal) // 갱신된 날짜 보여주기
     }
+    
+    
+    // TODO: 카메라 버튼 구현
+    @IBAction func addDiaryPic(_ sender: Any) {
+    }
+    
+
     
     // 메인 네비바상의 선택된 날짜에 현재 접속된 유저의 선택된 강아지의 기록(액션,일기)이 있다면 가져와라.
     func getDataset() {
@@ -106,22 +117,55 @@ class HomeViewController: UIViewController {
             let targetVC = segue.destination as! AddDiaryViewController
             targetVC.selectedDate = selected_date
         }
-        if segue.identifier == "toAddAct1" || segue.identifier == "toAddAct2" || segue.identifier == "toAddAct3" || segue.identifier == "toAddAct4" || segue.identifier == "toAddAct5" || segue.identifier == "toAddAct6" { // 액션 추가 모달창으로 가는 segue 6개
+        else if segue.identifier == "toAddAct1" || segue.identifier == "toAddAct2" || segue.identifier == "toAddAct3" || segue.identifier == "toAddAct4" || segue.identifier == "toAddAct5" || segue.identifier == "toAddAct6" { // 액션 추가 모달창으로 가는 segue 6개
             let targetVC = segue.destination as! AddPetActionViewController
             targetVC.selectedDate = selected_date
         }
-        if segue.identifier == "toActionDetail" { // 액션 상세 편집 모달창으로 가는 segue
-            let targetVC = segue.destination as! PetDetailViewController
+        else if segue.identifier == "toCalendar" {
+            let targetVC = segue.destination as! CalendarViewController
+            targetVC.today = today
+            targetVC.selected_date = selected_date
+        }
+        else if segue.identifier == "toActionDetail" { // 액션 상세 편집 모달창으로 가는 segue
+            //let targetVC = segue.destination as! PetDetailViewController
             // targetVC.dataset = dataset // 상세페이지에서 기존 데이터 뿌려줘야 함. 네비바 날짜의 데이터로.
         }
-        if segue.identifier == "toReadDiary" { // 다이어리 읽기 모달창으로 가는 segue
-            let targetVC = segue.destination as! AddDiaryViewController
+        else if segue.identifier == "toReadDiary" { // 다이어리 읽기 모달창으로 가는 segue
+            //let targetVC = segue.destination as! AddDiaryViewController
             // targetVC.dataset = dataset // 상세페이지에서 기존 데이터 뿌려줘야 함. 네비바 날짜의 데이터로.
         }
+    }
+    
+    
+    // MARK: 뒤로 가기(unwind segue). 데이터를 가지고 홈으로 돌아옵니다.
+    @IBAction func unwindToHome (_ unwindSegue : UIStoryboardSegue) {
+        //캘린더 홈으로 버튼으로부터
+        let calendarVC = unwindSegue.source as? CalendarViewController
+        if calendarVC?.new_date != "" { //new_date가 초기설정값인 ""이 아니라면
+            dateBtn.setTitle(calendarVC?.new_date, for: .normal) // 받아온 new_date를 네비바 타이틀에 설정
+            if let calendarVC { selected_date = calendarVC.new_date} // 받아온 new_date를 갱신날짜 변수에 지정
+            //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
+            //getDataset()
+            //날짜 맞게 테이블뷰 재셋업
+            //tableView.reloadData()
+            
+        }
+        
+        //Add Action6개 등록버튼(신규등록)으로부터
+        //let addActionVC = unwindSegue.source as? AddPetActionViewController
+        
+        //Add Diary 등록버튼(신규등록,수정)으로부터
+        //let addDiaryVC = unwindSegue.source as? AddDiaryViewController
+        
+        //Action 디테일뷰 등록버튼(수정)으로부터
+        //let editActionVC = unwindSegue.source as? PetDetailViewController
         
     }
 
 }
+
+
+
 
 
 // MARK: - 테이블뷰 세팅
@@ -185,6 +229,8 @@ extension String {
         }
     }
 }
+
+
 
 extension Date {
     func toString() -> String { // < > 버튼 누를시 날짜 연산하여 네비바에 날짜 포맷팅해서 입력하기 위한 용도
