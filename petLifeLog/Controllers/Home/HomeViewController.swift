@@ -10,85 +10,35 @@ import UIKit
 //테스트용 임시 데이터
 let user_id = "admin" // 로그인 후 들고 있어야 할 user_id값
 let pet_id = "adminpet" // 로그인 후 들고 있어야 할 user_id의 현재 선택 되어있는 pet_id의 값(pet_id로 강아지생일필요)
+let petBirthday = "2023-09-10" //강아지 생일. 임시데이터.
 
 //var dataset // 전역변수로 선언 미리 해주기
-//임시데이터
-var dataset = ["pet1","pet2","pet3","pet4"]
+var dataset = ["pet1","pet2","pet3","pet4"] // 테스트용 데이터
 
 class HomeViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var dateBtn: UIButton! // 날짜 지정하기 위함
     @IBOutlet weak var nextBtn: UIBarButtonItem!
-    
-    
+    @IBOutlet weak var prevBtn: UIBarButtonItem!
     var selected_date = "" // 네비바용. 사용자가 선택한 날짜. yyyy-MM-dd
     var today = "" // < > 날짜 이동 버튼, 날짜에 따라 비활성화 처리용 대조 데이터
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let now = Int(Date().timeIntervalSince1970) // unixTime. 1972년 1월 1일부터로부터 몇초가 경과했는지
         setDate(now)
         
-        nextBtn.isEnabled = false // 오늘 다음 날짜의 기록은 없으니 처음엔 > 버튼 비활성화로 시작하기
         today = selected_date // nextDate버튼 비활성화 처리 위하여 오늘 날짜와 비교하기 위해서 받아두기
+        nextBtn.isEnabled = false // 오늘 다음 날짜의 기록은 없으니 처음엔 > 버튼 비활성화로 시작하기
         getDataset() // 세팅된 날짜의 테이블뷰 액션 셀의 row들에 보여줄 액션명, 다이어리 셀에 보여줄 다이어리 데이터 가져오기
         setupTableView() // 날짜 맞게 테이블뷰 셋업
     }
     
-
-    //날짜 -1 버튼(<)
-    @IBAction func prevDate(_ sender: Any) {
-        // TODO: 강아지 생일 날짜 이전 날짜의 버튼은 비활성화 되도록 하기.
-        
-        nextBtn.isEnabled = true // 오늘 이전 날짜로 가면 다음 날짜로 갈 수 있으니 next 활성화 시키기
-        
-        let navidate = selected_date.toDate() //yyyy-MM-dd 스트링을 Date타입으로 변환
-        let navidatenum = navidate!.timeIntervalSince1970 // Date타입을 unixTime으로 변환
-    
-        let prevDay = Int(navidatenum) - 86400 // unixTime을 Int로 변환하여 하루(86400) 빼기
-        setDate(prevDay)
-        
-        // if selected_date == 강아지생일 {prevBtn.isEnabled = false } // 생일 이전은 기록 못하게. 생일 가져오기
-        
-        //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
-        //getDataset()
-        //날짜 맞게 테이블뷰 재셋업
-        //tableView.reloadData()
-    }
-    
-    //날짜 +1 버튼(>)
-    @IBAction func nextDate(_ sender: Any) {
-        let navidate = selected_date.toDate()
-        let navidatenum = navidate!.timeIntervalSince1970
-        
-        let nextDay = Int(navidatenum) + 86400
-        setDate(nextDay)
-        
-        if selected_date == today { // 오늘 날짜에서는 다음 날짜 선택 버튼 비활성화되게. 미래 행동 기록 막기.
-            nextBtn.isEnabled = false }
-        
-        //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
-        //getDataset()
-        //날짜 맞게 테이블뷰 재셋업
-        //tableView.reloadData()
-    }
-    
-    // MARK: 날짜 연산 -> 문자열로 변환 -> 전역변수 날짜 업데이트 -> 네비바에 해당 날짜 표시
-    func setDate(_ date: Int) {
-        let timeInterval = TimeInterval(date) // Int를 unixTime으로 변환
-        let changedDate = Date(timeIntervalSince1970: timeInterval) // unixTime을 Date타입으로 변환
-        selected_date = changedDate.toString() // Date를 스트링으로 변환 후 selected_date갱신.갱신된 날짜에서 재연산하여야하니까 최종 변환값을 대입해줘야함.
-        dateBtn.setTitle(selected_date, for:.normal) // 갱신된 날짜 보여주기
-    }
     
     
-    // TODO: 카메라 버튼 구현
-    @IBAction func addDiaryPic(_ sender: Any) {
-    }
-    
-
-    
+    // MARK: UI, 데이터 셋업
     // 메인 네비바상의 선택된 날짜에 현재 접속된 유저의 선택된 강아지의 기록(액션,일기)이 있다면 가져와라.
     func getDataset() {
         // TODO: 메인화면 테이블뷰 액션 셀의 row들에 보여줄 액션명, 다이어리 셀에 보여줄 다이어리 데이터 가져오기. pet_act
@@ -110,6 +60,68 @@ class HomeViewController: UIViewController {
     }
     
     
+    
+    // MARK: 네비바 날짜 설정
+    // 네비바 날짜가 오늘이라면 오른쪽 버튼 비활성화, 강아지생일이라면 왼쪽 버튼 비활성화
+    func checkDateCaseLogic() {
+        nextBtn.isEnabled = true
+        prevBtn.isEnabled = true
+        if selected_date == today {
+            nextBtn.isEnabled = false
+        }
+        if selected_date == petBirthday {
+            prevBtn.isEnabled = false
+        }
+    }
+
+    //날짜 -1 버튼(<)
+    @IBAction func prevDate(_ sender: Any) {
+        let navidate = selected_date.toDate() //yyyy-MM-dd 스트링을 Date타입으로 변환
+        let navidatenum = navidate!.timeIntervalSince1970 // Date타입을 unixTime으로 변환
+    
+        let prevDay = Int(navidatenum) - 86400 // unixTime을 Int로 변환하여 하루(86400) 빼기
+        setDate(prevDay)
+        checkDateCaseLogic()
+        
+        //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
+        //getDataset()
+        //날짜 맞게 테이블뷰 재셋업
+        //tableView.reloadData()
+    }
+    
+    //날짜 +1 버튼(>)
+    @IBAction func nextDate(_ sender: Any) {
+        let navidate = selected_date.toDate()
+        let navidatenum = navidate!.timeIntervalSince1970
+        
+        let nextDay = Int(navidatenum) + 86400
+        setDate(nextDay)
+        checkDateCaseLogic()
+        
+        //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
+        //getDataset()
+        //날짜 맞게 테이블뷰 재셋업
+        //tableView.reloadData()
+    }
+    
+    // 날짜 연산 -> 문자열로 변환 -> 전역변수 날짜 업데이트 -> 네비바에 해당 날짜 표시
+    func setDate(_ date: Int) {
+        let timeInterval = TimeInterval(date) // Int를 unixTime으로 변환
+        let changedDate = Date(timeIntervalSince1970: timeInterval) // unixTime을 Date타입으로 변환
+        selected_date = changedDate.toString() // Date를 스트링으로 변환 후 selected_date갱신.갱신된 날짜에서 재연산하여야하니까 최종 변환값을 대입해줘야함.
+        dateBtn.setTitle(selected_date, for:.normal) // 갱신된 날짜 보여주기
+    }
+    
+    
+    
+    // MARK: 카메라
+    // TODO: 카메라 버튼 구현
+    @IBAction func addDiaryPic(_ sender: Any) {
+    }
+    
+    
+    
+    // MARK: 화면 전환시 데이터 전달
     // 세그웨이를 이용하여 모달 뷰로 전환. 메인뷰에 네비바에 선택된 날짜(act_date 데이터 add용) 넘겨주기.
     // ex)어제 날짜에서 액션 버튼 선택할 경우 어제 날짜로 해당 액션을 등록해야하기 때문에 홈뷰에서 선택된 날짜를 넘겨주는게 필요
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -144,6 +156,8 @@ class HomeViewController: UIViewController {
         if calendarVC?.new_date != "" { //new_date가 초기설정값인 ""이 아니라면
             dateBtn.setTitle(calendarVC?.new_date, for: .normal) // 받아온 new_date를 네비바 타이틀에 설정
             if let calendarVC { selected_date = calendarVC.new_date} // 받아온 new_date를 갱신날짜 변수에 지정
+            checkDateCaseLogic()
+            
             //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
             //getDataset()
             //날짜 맞게 테이블뷰 재셋업

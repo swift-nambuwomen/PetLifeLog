@@ -678,6 +678,7 @@
                     <connections>
                         <outlet property="dateBtn" destination="Atr-Qz-moW" id="JDN-fa-bWx"/>
                         <outlet property="nextBtn" destination="ru3-on-OU7" id="FKQ-2u-awB"/>
+                        <outlet property="prevBtn" destination="OKC-Te-J6g" id="nDb-DL-YUg"/>
                         <outlet property="tableView" destination="JSr-ab-A04" id="ELr-mz-SH2"/>
                     </connections>
                 </viewController>
