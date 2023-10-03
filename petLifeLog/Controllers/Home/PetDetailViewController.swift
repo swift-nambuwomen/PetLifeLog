@@ -22,7 +22,7 @@ class PetDetailViewController: UIViewController {
     @IBOutlet weak var TimeView: UIStackView!
     @IBOutlet weak var WeightView: UIStackView!
     
-    
+    var petAction = PetAction()
     @IBOutlet weak var imageView: UIImageView!
     let picker = UIImagePickerController()
     
@@ -38,14 +38,14 @@ class PetDetailViewController: UIViewController {
     
     // MARK: Cell 선택시 어떤 act_name인지 받아서 해당 액션에 맞는 UI를 그리게 함.
     func drawUI() { //act_name 변수는 acts테이블에 저장된 name칼럼의 6개.
-        let act_name = "배변" // TO DO : 디테일뷰 종류 선택에 따라 6개 액션 중 하나 변수로 들어오게 하기
-        switch act_name {
-        case "사료" : ActionLabel.title = "사료"; PooShapeView.isHidden = true; PooColorView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true
-        case "배변" : ActionLabel.title = "배변"; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true
-        case "병원" : ActionLabel.title = "병원"; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true
-        case "미용" : ActionLabel.title = "미용"; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; WeightView.isHidden = true
-        case "산책" : ActionLabel.title = "산책"; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; WeightView.isHidden = true
-        case "몸무게" : ActionLabel.title = "체중"; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true;
+        let act_id = petAction.act_id
+        switch act_id {
+        case 1 : ActionLabel.title = "산책"; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; WeightView.isHidden = true
+        case 2 : ActionLabel.title = "배변"; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true
+        case 3 : ActionLabel.title = "사료"; PooShapeView.isHidden = true; PooColorView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true
+        case 4 : ActionLabel.title = "병원"; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true
+        case 5 : ActionLabel.title = "미용"; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; WeightView.isHidden = true
+        case 6 : ActionLabel.title = "체중"; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true;
         default:
             return
         }
