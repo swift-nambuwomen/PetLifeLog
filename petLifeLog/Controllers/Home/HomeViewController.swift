@@ -86,6 +86,7 @@ class HomeViewController: UIViewController {
     func setupDiaryView() {
         diaryTime.text = petDiary?.act_time
         diaryContent.text = petDiary?.diary_content
+        cameraBtn.isHidden = false
         if petDiary?.diary_image != nil {
             cameraBtn.isEnabled = false
         }
