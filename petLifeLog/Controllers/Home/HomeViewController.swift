@@ -225,6 +225,21 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         }
         return cell
     }
+    
+    // 테이블 액션 셀 삭제 가능하게
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        var result = false
+        if indexPath.section == 0 { result = true } // 액션들 섹션
+        return result
+    }
+    
+    // row를 밀어서 삭제하기
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        // TODO: datasource뿐 아니라 실제 DB에서도 삭제되게 처리하기
+        guard editingStyle == .delete else { return }
+        dataset.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .fade)
+    }
 
 }
 
