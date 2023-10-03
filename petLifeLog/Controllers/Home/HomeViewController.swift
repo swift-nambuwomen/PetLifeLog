@@ -13,16 +13,21 @@ let pet_id = "adminpet" // 로그인 후 들고 있어야 할 user_id의 현재 
 let petBirthday = "2023-09-10" //강아지 생일. 임시데이터.
 
 //var dataset // 전역변수로 선언 미리 해주기
-var dataset = ["pet1","pet2","pet3","pet4"] // 테스트용 데이터
+var dataset = ["pet1","pet2","pet3","pet4","pet5","pet6","pet7","pet8"] // 테스트용 데이터
 
 class HomeViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    
     @IBOutlet weak var dateBtn: UIButton! // 날짜 지정하기 위함
     @IBOutlet weak var nextBtn: UIBarButtonItem!
     @IBOutlet weak var prevBtn: UIBarButtonItem!
     var selected_date = "" // 네비바용. 사용자가 선택한 날짜. yyyy-MM-dd
     var today = "" // < > 날짜 이동 버튼, 날짜에 따라 비활성화 처리용 대조 데이터
+    
+    let picker = UIImagePickerController()
+    @IBOutlet weak var diaryImgView: UIImageView!
+    @IBOutlet weak var cameraBtn: UIButton!
     
     
     override func viewDidLoad() {
@@ -34,6 +39,7 @@ class HomeViewController: UIViewController {
         nextBtn.isEnabled = false // 오늘 다음 날짜의 기록은 없으니 처음엔 > 버튼 비활성화로 시작하기
         getDataset() // 세팅된 날짜의 테이블뷰 액션 셀의 row들에 보여줄 액션명, 다이어리 셀에 보여줄 다이어리 데이터 가져오기
         setupTableView() // 날짜 맞게 테이블뷰 셋업
+        picker.delegate = self // 카메라 피커
     }
     
     
@@ -56,6 +62,7 @@ class HomeViewController: UIViewController {
     func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.rowHeight = UITableView.automaticDimension // 동적 셀 높이
         //tableView.separatorStyle = .none //cell구분선 없애기
     }
     
@@ -115,9 +122,41 @@ class HomeViewController: UIViewController {
     
     
     // MARK: 카메라
-    // TODO: 카메라 버튼 구현
     @IBAction func addDiaryPic(_ sender: Any) {
+        let alert =  UIAlertController(title: "다이어리 사진", message: "사진을 앨범에서 가져오거나 카메라로 찍으세요.", preferredStyle: .actionSheet)
+    
+        let library =  UIAlertAction(title: "사진앨범", style: .default) { (action) in self.openLibrary()
+        }
+        
+        let camera =  UIAlertAction(title: "카메라", style: .default) { (action) in
+            self.openCamera()
+        }
+        
+        let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        
+        alert.addAction(library)
+        alert.addAction(camera)
+        alert.addAction(cancel)
+        present(alert, animated: true, completion: nil)
+        
     }
+    
+    func openLibrary() {
+        picker.sourceType = .photoLibrary
+        present(picker, animated: false, completion: nil)
+    }
+    
+    func openCamera() {
+        if(UIImagePickerController .isSourceTypeAvailable(.camera)){
+            picker.sourceType = .camera
+            present(picker, animated: false, completion: nil)
+        }
+        else{
+            print("Camera not available")
+        }
+    }
+    
+    
     
     
     
@@ -128,6 +167,7 @@ class HomeViewController: UIViewController {
         if segue.identifier == "toAddDiary" { // 다이어리 추가 모달창으로 가는 segue
             let targetVC = segue.destination as! AddDiaryViewController
             targetVC.selectedDate = selected_date
+            // targetVC.dataset = dataset // 상세페이지에서 기존 데이터 뿌려줘야 함. 네비바 날짜의 데이터로.
         }
         else if segue.identifier == "toAddAct1" || segue.identifier == "toAddAct2" || segue.identifier == "toAddAct3" || segue.identifier == "toAddAct4" || segue.identifier == "toAddAct5" || segue.identifier == "toAddAct6" { // 액션 추가 모달창으로 가는 segue 6개
             let targetVC = segue.destination as! AddPetActionViewController
@@ -140,10 +180,6 @@ class HomeViewController: UIViewController {
         }
         else if segue.identifier == "toActionDetail" { // 액션 상세 편집 모달창으로 가는 segue
             //let targetVC = segue.destination as! PetDetailViewController
-            // targetVC.dataset = dataset // 상세페이지에서 기존 데이터 뿌려줘야 함. 네비바 날짜의 데이터로.
-        }
-        else if segue.identifier == "toReadDiary" { // 다이어리 읽기 모달창으로 가는 segue
-            //let targetVC = segue.destination as! AddDiaryViewController
             // targetVC.dataset = dataset // 상세페이지에서 기존 데이터 뿌려줘야 함. 네비바 날짜의 데이터로.
         }
     }
@@ -186,27 +222,29 @@ class HomeViewController: UIViewController {
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2 // 행동 기록하는 용도, 일기 용도 총 2가지 종류의 셀 섹션
+        return 1 // 액션 셀 하나
+        // return 2 // 행동 기록하는 용도, 일기 용도 총 2가지 종류의 셀 섹션
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return dataset.count // 행동 기록 셀, 섹션0
-        } else {
-            return 1 // 일기 셀, 섹션1
-        }
+//        if section == 0 {
+//            return dataset.count // 행동 기록 셀, 섹션0
+//        } else {
+//            return 1 // 일기 셀, 섹션1
+//        }
+        return dataset.count // 액션 셀 row 수는 데이터의 개수
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = UITableViewCell()
-        if indexPath.section == 1 { // 일기 셀, 섹션 1
-            cell = tableView.dequeueReusableCell(withIdentifier: "diaryCell", for: indexPath)
+//        if indexPath.section == 1 { // 일기 셀, 섹션 1
+//            cell = tableView.dequeueReusableCell(withIdentifier: "diaryCell", for: indexPath)
+//            // cell tag활용 데이터 매칭하기
+//        } else { // 나머지 rows 전부 == 행동 기록 행들
+//            cell = tableView.dequeueReusableCell(withIdentifier: "actionCell", for: indexPath)
+        cell = tableView.dequeueReusableCell(withIdentifier: "actionCell", for: indexPath)
             // cell tag활용 데이터 매칭하기
-        } else { // 나머지 rows 전부 == 행동 기록 행들
-            cell = tableView.dequeueReusableCell(withIdentifier: "actionCell", for: indexPath)
-            // cell tag활용 데이터 매칭하기
-            
-            
+        
             // TODO: getDataset()으로 불러들여온 dataset을 꺼내서 diaryCell,actionCell의 각 컴포넌트에 매치해서 넣어준다.
             
             //pet_act(id, act_date,[diary_content],[diary_image],diary_open_yn,reg_datetime,[act_id],pet_id,user_id)
@@ -221,8 +259,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             
             //세부 디테일 내용은 메인셀에서 어디까지 보여줄것인가 정하기
             // pet_act_detail(id, act_time, memo, memo_image, walk_spend_time, ordure_shape, ordure_color, feed_type, feed_amount, feed_name, hospital_type, hospital_name, hospital_doctor, hospital_cost, beauty_cost, weight, petact_id)
-            
-        }
         return cell
     }
     
@@ -268,5 +304,26 @@ extension Date {
         dateFormatter.locale = Locale(identifier: "ko_KR")
         dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         return dateFormatter.string(from: self)
+    }
+}
+
+
+// MARK: 카메라 익스텐션
+extension HomeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        var newImage: UIImage? = nil // update 할 이미지
+        newImage = newImage?.resizeWithWidth(width: 100)
+        if let possibleImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
+            newImage = possibleImage // 수정된 이미지가 있을 경우
+        } else if let possibleImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            newImage = possibleImage // 원본 이미지가 있을 경우
+        }
+        
+        self.diaryImgView.image = newImage // 받아온 이미지를 update
+        picker.dismiss(animated: true, completion: nil) // picker를 닫아줌
+        cameraBtn.isHidden = true
+        
     }
 }

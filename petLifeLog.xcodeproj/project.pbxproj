@@ -92,6 +92,9 @@
 				FC518B3F2AC0B05300479461 /* Models */,
 				FC518B3E2AC0B03800479461 /* Views */,
 				FC518B3D2AC0B02F00479461 /* Controllers */,
+				FC8C3EF72ACC3E57007FD632 /* Extensions */,
+				FC8C3EFD2ACC5813007FD632 /* Images */,
+				FC8C3EFC2ACC5804007FD632 /* Fonts */,
 				FC518B292AC0AF9B00479461 /* AppDelegate.swift */,
 				FC518B2B2AC0AF9B00479461 /* SceneDelegate.swift */,
 				FC518B322AC0AF9C00479461 /* Assets.xcassets */,
@@ -132,6 +135,27 @@
 			children = (
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		FC8C3EF72ACC3E57007FD632 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		FC8C3EFC2ACC5804007FD632 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		FC8C3EFD2ACC5813007FD632 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Images;
 			sourceTree = "<group>";
 		};
 		FCCE13522AC2932C005B95C9 /* Home */ = {
