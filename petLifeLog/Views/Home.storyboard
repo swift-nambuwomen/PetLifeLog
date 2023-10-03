@@ -405,7 +405,19 @@
                         <outlet property="PooShapeView" destination="QLf-gt-JND" id="qgX-ZM-BHq"/>
                         <outlet property="TimeView" destination="BuX-hF-scd" id="otb-S4-AgI"/>
                         <outlet property="WeightView" destination="G0l-l2-6fR" id="ufW-tb-gG3"/>
+                        <outlet property="act_time" destination="xwv-8I-DEj" id="n3G-r7-s3L"/>
+                        <outlet property="expences" destination="uXf-f6-Rq3" id="Sji-Vt-lB9"/>
+                        <outlet property="food_brand" destination="L4P-Ag-5CM" id="qdW-Rh-xJ9"/>
+                        <outlet property="food_gram" destination="1aF-IU-rOO" id="UUe-dm-4oz"/>
+                        <outlet property="food_type" destination="8a2-6I-114" id="e0k-Hr-qmb"/>
+                        <outlet property="hair_type" destination="wJz-Sh-2CU" id="SYi-Z4-kKR"/>
+                        <outlet property="hospital_type" destination="1Wk-fU-dUH" id="WLf-8E-aAm"/>
                         <outlet property="imageView" destination="Nqe-Sj-jQg" id="rmw-hp-uEc"/>
+                        <outlet property="memo" destination="9yv-4d-tvA" id="exs-1m-En4"/>
+                        <outlet property="poo_color" destination="VTk-w2-zEs" id="QpK-fs-0K9"/>
+                        <outlet property="poo_shape" destination="b56-MU-sGb" id="Vfg-Kw-pfc"/>
+                        <outlet property="waste_time" destination="X25-aP-kWH" id="WtT-sX-Fak"/>
+                        <outlet property="weight" destination="S2k-pd-GPh" id="Et4-Pi-6cR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hsl-kc-5CX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
