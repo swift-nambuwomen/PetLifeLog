@@ -212,10 +212,10 @@ class PetInfoViewController: UIViewController {
         let id = 1
         
         // [http 요청 주소 지정]
-        let url = "http://127.0.0.1/pets/\(id)"
+        let url = "http://127.0.0.1:8000/pets/\(id)"
 
         // [http 요청 헤더 지정]
-        let header : HTTPHeaders = [
+        let headers : HTTPHeaders = [
             "Content-Type" : "application/json"
         ]
 
@@ -235,7 +235,31 @@ class PetInfoViewController: UIViewController {
             "user_id":1
         ]
         
-        AF.request(url, method: .put, parameters: queryString, encoding: URLEncoding.httpBody).responseJSON() { response in
+//        AF.request(url, method: .post, parameters: queryString, headers: headers).responseJSON { AFdata in
+//            do {
+//                guard let jsonObject = try JSONSerialization.jsonObject(with: AFdata.data!) as? [String: Any] else {
+//                    print("Error: Cannot convert data to JSON object")
+//                    return
+//                }
+//                guard let prettyJsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted) else {
+//                    print("Error: Cannot convert JSON object to Pretty JSON data")
+//                    return
+//                }
+//                guard let prettyPrintedJson = String(data: prettyJsonData, encoding: .utf8) else {
+//                    print("Error: Could print JSON in String")
+//                    return
+//                }
+//
+//                print(prettyPrintedJson)
+//            } catch {
+//                print("Error: Trying to convert JSON data to string")
+//                return
+//            }
+//        }
+//
+
+        AF.request(url, method: .post, parameters: queryString, encoding: URLEncoding.httpBody).responseString() { response in
+            //responseJSON()
             switch response.result {
             case .success:
                 if let data = try! response.result.get() as? [String: Any] {
