@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FBBDA06E2ACCFFB300A1263E /* MyPagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBDA06C2ACCFFB300A1263E /* MyPagesViewController.swift */; };
+		FBBDA06F2ACCFFB300A1263E /* PetInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBDA06D2ACCFFB300A1263E /* PetInfoViewController.swift */; };
+		FBBDA0722ACCFFF400A1263E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = FBBDA0712ACCFFF400A1263E /* Alamofire */; };
+		FBBDA6542ACD00B900A1263E /* PetInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBDA6532ACD00B900A1263E /* PetInfo.swift */; };
 		FC069C822AC9B33300A8023E /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC069C812AC9B33300A8023E /* CalendarViewController.swift */; };
 		FC518B2A2AC0AF9B00479461 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC518B292AC0AF9B00479461 /* AppDelegate.swift */; };
 		FC518B2C2AC0AF9B00479461 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC518B2B2AC0AF9B00479461 /* SceneDelegate.swift */; };
@@ -32,6 +36,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FBBDA06C2ACCFFB300A1263E /* MyPagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPagesViewController.swift; sourceTree = "<group>"; };
+		FBBDA06D2ACCFFB300A1263E /* PetInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetInfoViewController.swift; sourceTree = "<group>"; };
+		FBBDA6532ACD00B900A1263E /* PetInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetInfo.swift; sourceTree = "<group>"; };
 		FC069C812AC9B33300A8023E /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
 		FC518B262AC0AF9B00479461 /* petLifeLog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = petLifeLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC518B292AC0AF9B00479461 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -64,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FBBDA0722ACCFFF400A1263E /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,6 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				FC8C3F002ACC74D5007FD632 /* Pet.swift */,
+				FBBDA6532ACD00B900A1263E /* PetInfo.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -201,6 +210,8 @@
 		FCCE13562AC29352005B95C9 /* MyInfo */ = {
 			isa = PBXGroup;
 			children = (
+				FBBDA06C2ACCFFB300A1263E /* MyPagesViewController.swift */,
+				FBBDA06D2ACCFFB300A1263E /* PetInfoViewController.swift */,
 			);
 			path = MyInfo;
 			sourceTree = "<group>";
@@ -221,6 +232,9 @@
 			dependencies = (
 			);
 			name = petLifeLog;
+			packageProductDependencies = (
+				FBBDA0712ACCFFF400A1263E /* Alamofire */,
+			);
 			productName = petLifeLog;
 			productReference = FC518B262AC0AF9B00479461 /* petLifeLog.app */;
 			productType = "com.apple.product-type.application";
@@ -249,6 +263,9 @@
 				Base,
 			);
 			mainGroup = FC518B1D2AC0AF9B00479461;
+			packageReferences = (
+				FBBDA0702ACCFFF400A1263E /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			productRefGroup = FC518B272AC0AF9B00479461 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -284,14 +301,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC518B2A2AC0AF9B00479461 /* AppDelegate.swift in Sources */,
+				FBBDA06E2ACCFFB300A1263E /* MyPagesViewController.swift in Sources */,
 				FC8C3F012ACC74D5007FD632 /* Pet.swift in Sources */,
 				FC518B2C2AC0AF9B00479461 /* SceneDelegate.swift in Sources */,
 				FC518B632AC269E000479461 /* DiaryViewController.swift in Sources */,
 				FC069C822AC9B33300A8023E /* CalendarViewController.swift in Sources */,
+				FBBDA06F2ACCFFB300A1263E /* PetInfoViewController.swift in Sources */,
 				FC7B56812AC5800400E90500 /* PetDetailViewController.swift in Sources */,
 				FC7194E92AC33AFD00391BD4 /* AddPetActionViewController.swift in Sources */,
 				FCCE13512AC292C3005B95C9 /* HomeViewController.swift in Sources */,
 				FC7194E72AC3352000391BD4 /* BoardDetailViewController.swift in Sources */,
+				FBBDA6542ACD00B900A1263E /* PetInfo.swift in Sources */,
 				FC518B572AC0C81600479461 /* AddBoardViewController.swift in Sources */,
 				FC7194EB2AC3413D00391BD4 /* AddDiaryViewController.swift in Sources */,
 				FC518B4D2AC0B65C00479461 /* BoardViewController.swift in Sources */,
@@ -441,6 +461,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JD28MPPNL4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = petLifeLog/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -468,6 +489,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JD28MPPNL4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = petLifeLog/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -510,6 +532,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FBBDA0702ACCFFF400A1263E /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FBBDA0712ACCFFF400A1263E /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FBBDA0702ACCFFF400A1263E /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FC518B1E2AC0AF9B00479461 /* Project object */;
 }
