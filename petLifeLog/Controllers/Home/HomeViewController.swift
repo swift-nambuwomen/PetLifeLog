@@ -60,7 +60,7 @@ class HomeViewController: UIViewController {
 
         //샘플 데이터
         if selected_date == sample_data_date {
-            petActions = [PetAction(act_id: 2, actions:PetActionDetail(act_time : "09:10", memo : "건강한듯", memo_image : "twinlake", ordure_shape : "정상", ordure_color : "초코")), PetAction(act_id: 3, actions:PetActionDetail(act_time : "10:39", memo : "어제 주문한 수제 간식. 잘 먹는다.", memo_image : "charleyrivers", feed_type:"간식", feed_name: "미국브랜드")), PetAction(act_id: 6, actions:PetActionDetail(act_time : "13:11", weight: 13.2))]
+            petActions = [PetAction(act_id: 2, actions:PetActionDetail(act_time : "09:10", memo : "건강한듯", memo_image : "twinlake", ordure_shape : "정상", ordure_color : "검정")), PetAction(act_id: 3, actions:PetActionDetail(act_time : "10:39", memo : "어제 주문한 수제 간식. 잘 먹는다.", memo_image : "charleyrivers", feed_type:"간식", feed_name: "미국브랜드")), PetAction(act_id: 6, actions:PetActionDetail(act_time : "13:11", weight: 13.2)), PetAction(act_id: 1, actions:PetActionDetail(act_time : "14:39")), PetAction(act_id: 4, actions:PetActionDetail(act_time : "15:22", hospital_type: "질병")), PetAction(act_id: 5, actions:PetActionDetail(act_time : "16:41"))]
             
             petDiary = PetDiary(act_time: "13:26", diary_content: "오늘은 애견동반 호텔에 다녀왔다.")
         } else {
@@ -305,11 +305,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         // 디테일 - 액션별로 보여줄 디테일이 다르므로 분기 처리
         switch petAction.act_id {
-            case 1: lblActDetail?.text = petAction.actions?.walk_spend_time
+        case 1: lblActDetail?.text = String(petAction.actions?.walk_spend_time ?? 0)
             case 2: lblActDetail?.text = "\(petAction.actions?.ordure_color ?? "") \( petAction.actions?.ordure_shape ?? "")"
             case 3: lblActDetail?.text = "\(petAction.actions?.feed_type ?? "") \(petAction.actions?.feed_name ?? "") \(petAction.actions?.feed_amount ?? "")"
             case 4: lblActDetail?.text = petAction.actions?.hospital_name
-        case 5: lblActDetail?.text = String((petAction.actions?.beauty_cost)!)
+        case 5: lblActDetail?.text = String((petAction.actions?.beauty_cost) ?? 0)
         case 6: lblActDetail?.text =  String((petAction.actions?.weight)!)
             default: print("none")
         }
@@ -370,12 +370,34 @@ extension String {
     }
 }
 
-
+extension String {
+    func toTime() -> Date? { // 액션 시간 받은거 저장하려고
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
+        if let date = dateFormatter.date(from: self) {
+            return date
+        } else {
+            return nil
+        }
+    }
+}
 
 extension Date {
     func toString() -> String { // < > 버튼 누를시 날짜 연산하여 네비바에 날짜 포맷팅해서 입력하기 위한 용도
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
+        return dateFormatter.string(from: self)
+    }
+}
+
+extension Date {
+    func toTimeString() -> String { // 액션 시간 받으려고
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
         dateFormatter.locale = Locale(identifier: "ko_KR")
         dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         return dateFormatter.string(from: self)

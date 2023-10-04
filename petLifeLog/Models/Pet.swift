@@ -24,7 +24,7 @@ struct PetActionDetail: Codable {
     var act_time : String
     var memo : String?
     var memo_image : String?
-    var walk_spend_time : String?
+    var walk_spend_time : Int?
     var ordure_shape : String?
     var ordure_color : String?
     var feed_type : String?

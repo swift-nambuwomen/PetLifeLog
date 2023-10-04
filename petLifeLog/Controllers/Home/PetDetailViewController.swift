@@ -51,45 +51,66 @@ class PetDetailViewController: UIViewController {
     }
     
     // TODO: 넘겨받은 데이터셋에서 UI내에 각 요소마다 해당하는 데이터가 있을 시 채워 넣게 해야 함.
-            //세그먼트에 값 넣는 방법, 이미지뷰에 String <-> UIImage, DatePicker에 시간 넣는 방법
+            //이미지뷰에 String <-> UIImage 방법
     // MARK: Cell 선택시 어떤 act_name인지 받아서 해당 액션에 맞는 UI를 그리게 함.
     func drawUI() { //act_name 변수는 acts테이블에 저장된 name칼럼의 6개.
+        // 공통으로 들어갈 사항
+        act_time.date = (petAction.actions?.act_time.toTime())!
+        memo.text = petAction.actions?.memo
+        //imageView.image = petAction.actions?.memo_image // String, UIImage
+        
         let act_id = petAction.act_id
         switch act_id {
         case 1 : ActionLabel.title = "산책"; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; WeightView.isHidden = true;
-            waste_time.text = petAction.actions?.walk_spend_time;
-            memo.text = petAction.actions?.memo
-            // act_time.무언가 = petAction.actions?.act_time // UIDatePicker에 시간 대입 속성
-            //imageView.image = petAction.actions?.memo_image // String, UIImage
+            //waste_time.text = petAction.actions?.walk_spend_time; Int -> String
+            
         case 2 : ActionLabel.title = "배변"; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
-            memo.text = petAction.actions?.memo
-            // act_time.무언가 = petAction.actions?.act_time // UIDatePicker에 시간 대입 속성
-            //poo_shape // 세그먼트에 값 넣는 방법
-            //poo_color // 세그먼트에 값 넣는 방법
-            //imageView.image = petAction.actions?.memo_image // String, UIImage
+
+            if petAction.actions?.ordure_shape == "건조" {
+                poo_shape.selectedSegmentIndex = 0
+            } else if petAction.actions?.ordure_shape == "정상" {
+                poo_shape.selectedSegmentIndex = 1
+            } else {
+                poo_shape.selectedSegmentIndex = 2
+            }
+            
+            switch petAction.actions?.ordure_color {
+                case "초코": poo_color.selectedSegmentIndex = 0
+                case "녹색": poo_color.selectedSegmentIndex = 1
+                case "노랑": poo_color.selectedSegmentIndex = 2
+                case "빨강": poo_color.selectedSegmentIndex = 3
+                case "검정": poo_color.selectedSegmentIndex = 4
+                case "보라": poo_color.selectedSegmentIndex = 5
+                default: return
+            }
+            
         case 3 : ActionLabel.title = "사료"; PooShapeView.isHidden = true; PooColorView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
             food_brand.text = petAction.actions?.feed_name;
             food_gram.text = petAction.actions?.feed_amount;
-            memo.text = petAction.actions?.memo
-            //petAction.actions?.feed_type = food_type; // 세그먼트
-            // act_time.무언가 = petAction.actions?.act_time // UIDatePicker에 시간 대입 속성
-            //imageView.image = petAction.actions?.memo_image // String, UIImage
+            
+            if petAction.actions?.feed_type == "사료" {
+                food_type.selectedSegmentIndex = 0
+            } else {
+                food_type.selectedSegmentIndex = 1
+            }
+            
         case 4 : ActionLabel.title = "병원"; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
-            memo.text = petAction.actions?.memo
-            // act_time.무언가 = petAction.actions?.act_time // UIDatePicker에 시간 대입 속성
-            // hospital_type 세그먼트 petAction.actions?.hospital_type
-            //imageView.image = petAction.actions?.memo_image // String, UIImage
+
+            if petAction.actions?.hospital_type == "예방접종" {
+                hospital_type.selectedSegmentIndex = 0
+            } else {
+                hospital_type.selectedSegmentIndex = 1
+            }
+            
         case 5 : ActionLabel.title = "미용"; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; WeightView.isHidden = true;
-            memo.text = petAction.actions?.memo
-            // act_time.무언가 = petAction.actions?.act_time // UIDatePicker에 시간 대입 속성
+
             // hair_type
             // waste_time
-            // imageView.image = petAction.actions?.memo_image // String, UIImage
+
         case 6 : ActionLabel.title = "체중"; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true;
-            memo.text = petAction.actions?.memo
-            // act_time.무언가 = petAction.actions?.act_time // UIDatePicker에 시간 대입 속성
+
             //weight.text = petAction.actions?.weight // double을 txt에 대입
-            //imageView.image = petAction.actions?.memo_image // String, UIImage
+
         default:
             return
         }
