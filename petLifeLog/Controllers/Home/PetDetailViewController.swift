@@ -62,7 +62,9 @@ class PetDetailViewController: UIViewController {
         let act_id = petAction.act_id
         switch act_id {
         case 1 : ActionLabel.title = "산책"; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; WeightView.isHidden = true;
-            //waste_time.text = petAction.actions?.walk_spend_time; Int -> String
+            
+            let myString: String = String(petAction.actions?.walk_spend_time ?? 0)
+            waste_time.text = myString
             
         case 2 : ActionLabel.title = "배변"; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
 
@@ -102,14 +104,24 @@ class PetDetailViewController: UIViewController {
                 hospital_type.selectedSegmentIndex = 1
             }
             
-        case 5 : ActionLabel.title = "미용"; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; WeightView.isHidden = true;
-
-            // hair_type
-            // waste_time
+            let myString: String = String(petAction.actions?.beauty_cost ?? 0)
+            expences.text = myString
+            
+        case 5 : ActionLabel.title = "미용"; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
+            
+            let myString: String = String(petAction.actions?.beauty_cost ?? 0)
+            expences.text = myString
+            
+            if petAction.actions?.beauty_type == "셀프" {
+                hair_type.selectedSegmentIndex = 0
+            } else {
+                hair_type.selectedSegmentIndex = 1
+            }
 
         case 6 : ActionLabel.title = "체중"; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true;
-
-            //weight.text = petAction.actions?.weight // double을 txt에 대입
+            
+            let myString: String = String(petAction.actions?.weight ?? 0.0)
+            weight.text = myString
 
         default:
             return

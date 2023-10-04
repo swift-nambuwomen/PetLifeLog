@@ -28,12 +28,12 @@ class CalendarViewController: UIViewController {
     
     // MARK: 홈으로 버튼 - 스토리보드상에서 unwind segue로 홈으로 연결
     @IBAction func pressedDone(_ sender: Any) {
-        new_date = calendar.date.toString()
+        new_date = calendar.date.toDateString()
     }
     
     // MARK: 날짜선택 버튼 - 선택해야 새로운 date가 변수에 지정, 저장되어 홈으로 보내짐
     @IBAction func setDate(_ sender: Any) {
-        new_date = calendar.date.toString()
+        new_date = calendar.date.toDateString()
         print(new_date)
     }
     

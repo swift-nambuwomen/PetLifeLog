@@ -12,10 +12,10 @@ let user_id = "admin" // 로그인 후 들고 있어야 할 user_id값
 let pet_id = "adminpet" // 로그인 후 들고 있어야 할 user_id의 현재 선택 되어있는 pet_id의 값(pet_id로 강아지생일필요)
 let petBirthday = "2023-09-10" //강아지 생일. 임시데이터.
 let sample_data_date = "2023-10-04"
+
 class HomeViewController: UIViewController {
     var petActions:[PetAction]?
     var petDiary:PetDiary?
-    //var petActionDetails:[PetActionDetail]?
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -37,11 +37,10 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         let now = Int(Date().timeIntervalSince1970) // unixTime. 1972년 1월 1일부터로부터 몇초가 경과했는지
         setDate(now)
-        
         today = selected_date // nextDate버튼 비활성화 처리 위하여 오늘 날짜와 비교하기 위해서 받아두기
         nextBtn.isEnabled = false // 오늘 다음 날짜의 기록은 없으니 처음엔 > 버튼 비활성화로 시작하기
+        
         getDataset() // 세팅된 날짜의 테이블뷰 액션 셀의 row들에 보여줄 액션명, 다이어리 셀에 보여줄 다이어리 데이터 가져오기
-        print("이 날짜 pet 액션들", petActions ?? "pet액션 데이터 없음")
         setupTableView() // 날짜 맞게 테이블뷰 셋업
         setupDiaryView() // 다이어리 내용 있을시 셋업
         picker.delegate = self // 카메라 피커
@@ -60,27 +59,13 @@ class HomeViewController: UIViewController {
 
         //샘플 데이터
         if selected_date == sample_data_date {
-            petActions = [PetAction(act_id: 2, actions:PetActionDetail(act_time : "09:10", memo : "건강한듯", memo_image : "twinlake", ordure_shape : "정상", ordure_color : "검정")), PetAction(act_id: 3, actions:PetActionDetail(act_time : "10:39", memo : "어제 주문한 수제 간식. 잘 먹는다.", memo_image : "charleyrivers", feed_type:"간식", feed_name: "미국브랜드")), PetAction(act_id: 6, actions:PetActionDetail(act_time : "13:11", weight: 13.2)), PetAction(act_id: 1, actions:PetActionDetail(act_time : "14:39")), PetAction(act_id: 4, actions:PetActionDetail(act_time : "15:22", hospital_type: "질병")), PetAction(act_id: 5, actions:PetActionDetail(act_time : "16:41"))]
+            petActions = [PetAction(act_id: 2, actions:PetActionDetail(act_time : "09:10", memo : "건강한듯", memo_image : "twinlake", ordure_shape : "정상", ordure_color : "검정")), PetAction(act_id: 3, actions:PetActionDetail(act_time : "10:39", memo : "어제 주문한 수제 간식. 잘 먹는다.", memo_image : "charleyrivers", feed_type:"간식", feed_name: "미국브랜드")), PetAction(act_id: 6, actions:PetActionDetail(act_time : "13:11", weight: 13.2)), PetAction(act_id: 1, actions:PetActionDetail(act_time : "14:39")), PetAction(act_id: 4, actions:PetActionDetail(act_time : "15:22", hospital_type: "질병")), PetAction(act_id: 5, actions:PetActionDetail(act_time : "16:41", beauty_type: "미용실", beauty_cost: 13000))]
             
             petDiary = PetDiary(act_time: "13:26", diary_content: "오늘은 애견동반 호텔에 다녀왔다.")
         } else {
             petActions = nil
             petDiary = nil
         }
-        
-        
-        
-        // TODO: 메인화면 테이블뷰 액션 셀의 row들에 보여줄 액션명, 다이어리 셀에 보여줄 다이어리 데이터 가져오기. pet_act
-        // API 통신 통해 pet_act테이블에서 act_date==selected_date 이면서 user_id==user_id, pet_id==pet_id에 일치하는 데이터를 1개 혹은 여러개 받는다.
-        //pet_act(id,[act_date],[diary_content],[diary_image],diary_open_yn,reg_datetime,[act_id],pet_id,user_id) 이 중 4개 필요함
-        // pet_act테이블에서 act_date와 diary_content와 diary_image와 act_id를 가져온다.
-        // act_id가 있으면 cell 1에 한 행씩 act_date와 act_id를 보여주고,
-        // act_id가 없으면(==diary라면) cell 2에 act_date와 diary_content와 diary_image를 보여준다.
-        
-        // TODO: 메인화면 테이블뷰 액션셀의 row들에 보여줄 각 액션의 세부 데이터 가져오기. pet_act_detail
-        // pet_act_detail(id, act_time, memo, memo_image, walk_spend_time, ordure_shape, ordure_color, feed_type, feed_amount, feed_name, hospital_type, hospital_name, hospital_doctor, hospital_cost, beauty_cost, weight, petact_id)
-    
-        // Tag1 = 시간, Tag2 = 액션대표이미지, Tag3 = 액션명, Tag4 = 액션 필수 디테일, Tag5 = 메모, Tag6 = 액션 메모 이미지
     }
     
     func setupDiaryView() {
@@ -155,7 +140,7 @@ class HomeViewController: UIViewController {
     func setDate(_ date: Int) {
         let timeInterval = TimeInterval(date) // Int를 unixTime으로 변환
         let changedDate = Date(timeIntervalSince1970: timeInterval) // unixTime을 Date타입으로 변환
-        selected_date = changedDate.toString() // Date를 스트링으로 변환 후 selected_date갱신.갱신된 날짜에서 재연산하여야하니까 최종 변환값을 대입해줘야함.
+        selected_date = changedDate.toDateString() // Date를 스트링으로 변환 후 selected_date갱신.갱신된 날짜에서 재연산하여야하니까 최종 변환값을 대입해줘야함.
         dateBtn.setTitle(selected_date, for:.normal) // 갱신된 날짜 보여주기
     }
     
@@ -305,12 +290,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         // 디테일 - 액션별로 보여줄 디테일이 다르므로 분기 처리
         switch petAction.act_id {
-        case 1: lblActDetail?.text = String(petAction.actions?.walk_spend_time ?? 0)
+        case 1: lblActDetail?.text = "\(String(petAction.actions?.walk_spend_time ?? 0))분"
             case 2: lblActDetail?.text = "\(petAction.actions?.ordure_color ?? "") \( petAction.actions?.ordure_shape ?? "")"
-            case 3: lblActDetail?.text = "\(petAction.actions?.feed_type ?? "") \(petAction.actions?.feed_name ?? "") \(petAction.actions?.feed_amount ?? "")"
-            case 4: lblActDetail?.text = petAction.actions?.hospital_name
-        case 5: lblActDetail?.text = String((petAction.actions?.beauty_cost) ?? 0)
-        case 6: lblActDetail?.text =  String((petAction.actions?.weight)!)
+            case 3: lblActDetail?.text = "\(petAction.actions?.feed_type ?? "") \(petAction.actions?.feed_name ?? "") \(petAction.actions?.feed_amount ?? "0")g"
+        case 4: lblActDetail?.text = "\(petAction.actions?.hospital_type ?? "") \(petAction.actions?.hospital_cost ?? 0)원"
+        case 5: lblActDetail?.text = "\(String((petAction.actions?.beauty_cost) ?? 0))원"
+        case 6: lblActDetail?.text =  "\(String((petAction.actions?.weight)!))kg"
             default: print("none")
         }
         
@@ -319,21 +304,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         // 메모 사진
         memoImgView?.image = UIImage(named: petAction.actions?.memo_image ?? "white")
-        
-        
-        
-        //pet_act(id, act_date,[diary_content],[diary_image],diary_open_yn,reg_datetime,[act_id],pet_id,user_id)
-        
-        // pet_act에서 메인 셀에 필요 데이터인 diary_content와 diary_image와 act_id를 가져온다.
-            // act_id가 있으면 액션 셀에 act_date와 act_id를 보여주고, 즉, 일시와 액션명. (메인 셀에서 액션 상세 내용까지 보여주려면 pet_act_detail 데이터도 가져와야함)
-            // act_id가 없으면(==diary라면) 다이어리 셀에 act_date와 diary_content와 diary_image를 보여준다.
-        
-        // Tag1 = 시간, Tag2 = 액션대표이미지, Tag3 = 액션명, Tag4 = 액션 필수 디테일, Tag5 = 메모, Tag6 = 액션 메모 이미지
-        // 등록시간(필수), 6개액션이미지(Aseets에 등록되어있을것), 액션명(필수), 세부디테일내용(몇몇 액션만 필수), 메모내용(선택), 사진(선택)
-            // 셀의 Tag2(첫번째 imageview)에 보여줄 6개 액션에 대한 image는 Assets에 넣어두고 pet_act테이블의 act_id가 1~6이냐 로직에 따라 보여주기.
-        
-        //세부 디테일 내용은 메인셀에서 어디까지 보여줄것인가 정하기
-        // pet_act_detail(id, act_time, memo, memo_image, walk_spend_time, ordure_shape, ordure_color, feed_type, feed_amount, feed_name, hospital_type, hospital_name, hospital_doctor, hospital_cost, beauty_cost, weight, petact_id)
+
         return cell
     }
     
@@ -385,7 +356,7 @@ extension String {
 }
 
 extension Date {
-    func toString() -> String { // < > 버튼 누를시 날짜 연산하여 네비바에 날짜 포맷팅해서 입력하기 위한 용도
+    func toDateString() -> String { // < > 버튼 누를시 날짜 연산하여 네비바에 날짜 포맷팅해서 입력하기 위한 용도
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         dateFormatter.locale = Locale(identifier: "ko_KR")

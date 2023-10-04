@@ -31,9 +31,10 @@ struct PetActionDetail: Codable {
     var feed_amount : String?
     var feed_name : String?
     var hospital_type : String?
-    var hospital_name : String?
-    var hospital_doctor : String?
+//    var hospital_name : String?
+//    var hospital_doctor : String?
     var hospital_cost : Int?
+    var beauty_type : String?
     var beauty_cost : Int?
     var weight : Double?
 }
