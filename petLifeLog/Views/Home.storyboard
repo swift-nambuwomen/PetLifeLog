@@ -236,7 +236,7 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="L4P-Ag-5CM">
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="L4P-Ag-5CM">
                                                 <rect key="frame" x="91.333333333333329" y="0.0" width="254.66666666666669" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
@@ -252,7 +252,7 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1aF-IU-rOO">
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1aF-IU-rOO">
                                                 <rect key="frame" x="72.333333333333329" y="0.0" width="254.66666666666669" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
@@ -310,11 +310,17 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uXf-f6-Rq3">
-                                                <rect key="frame" x="36.666666666666657" y="0.0" width="309.33333333333337" height="34"/>
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uXf-f6-Rq3">
+                                                <rect key="frame" x="36.666666666666657" y="0.0" width="287.33333333333337" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="원" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1fM-EX-RRa">
+                                                <rect key="frame" x="331" y="0.0" width="15" height="34"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="BuX-hF-scd" userLabel="TimeView">
@@ -326,7 +332,7 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="X25-aP-kWH">
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="X25-aP-kWH">
                                                 <rect key="frame" x="78.333333333333329" y="0.0" width="237.66666666666669" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
@@ -348,7 +354,7 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="S2k-pd-GPh">
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="S2k-pd-GPh">
                                                 <rect key="frame" x="59.333333333333329" y="0.0" width="253.33333333333337" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
@@ -405,7 +411,19 @@
                         <outlet property="PooShapeView" destination="QLf-gt-JND" id="qgX-ZM-BHq"/>
                         <outlet property="TimeView" destination="BuX-hF-scd" id="otb-S4-AgI"/>
                         <outlet property="WeightView" destination="G0l-l2-6fR" id="ufW-tb-gG3"/>
+                        <outlet property="act_time" destination="xwv-8I-DEj" id="n3G-r7-s3L"/>
+                        <outlet property="expences" destination="uXf-f6-Rq3" id="Sji-Vt-lB9"/>
+                        <outlet property="food_brand" destination="L4P-Ag-5CM" id="qdW-Rh-xJ9"/>
+                        <outlet property="food_gram" destination="1aF-IU-rOO" id="UUe-dm-4oz"/>
+                        <outlet property="food_type" destination="8a2-6I-114" id="e0k-Hr-qmb"/>
+                        <outlet property="hair_type" destination="wJz-Sh-2CU" id="SYi-Z4-kKR"/>
+                        <outlet property="hospital_type" destination="1Wk-fU-dUH" id="WLf-8E-aAm"/>
                         <outlet property="imageView" destination="Nqe-Sj-jQg" id="rmw-hp-uEc"/>
+                        <outlet property="memo" destination="9yv-4d-tvA" id="exs-1m-En4"/>
+                        <outlet property="poo_color" destination="VTk-w2-zEs" id="QpK-fs-0K9"/>
+                        <outlet property="poo_shape" destination="b56-MU-sGb" id="Vfg-Kw-pfc"/>
+                        <outlet property="waste_time" destination="X25-aP-kWH" id="WtT-sX-Fak"/>
+                        <outlet property="weight" destination="S2k-pd-GPh" id="Et4-Pi-6cR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hsl-kc-5CX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
