@@ -11,13 +11,19 @@ import Alamofire
 
 class PetInfoViewController: UIViewController {
     var pet:[Pets] = []
-    var saveType = ""
+    var saveType = "" //저장 I/U 구분
     var album:PHPickerViewController?
     let camera = UIImagePickerController()
+    var name: Any = ""  // 닉네임
+    var breed: Any = "" // 품종
+    var sexType: Any = ""  // 출생일
+    var petId: Any = "" // petId
+    var imageFile = ""  // image파일명
     
-    private let datePicker = UIDatePicker()
+    //이미지선택 데이터?
+    static let originalImage = UIImagePickerController.InfoKey.originalImage
     
-    @IBOutlet weak var datePiceker: UIDatePicker!
+    @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet var btnAlbum: UIView!
     @IBOutlet weak var lblBirth: UILabel!
     @IBOutlet weak var txtBreed: UITextField!
@@ -41,14 +47,9 @@ class PetInfoViewController: UIViewController {
         config.filter = .images
         
         album = PHPickerViewController(configuration: config)
-        album?.delegate
+        album?.delegate = self
         
-//        let image = pet.profileImage
-//        if let imageName = image {
-//            imageview.image = UIImage(named: imageName)
-//        }
-        
-        print(pet)
+        datePicker.addTarget(self, action: #selector(actDatePicker(_:)), for: .valueChanged)
         
         if saveType == "U"{
             txtName.text = pet[0].name
@@ -59,11 +60,12 @@ class PetInfoViewController: UIViewController {
                 lblTitle.text = "이름 정보가 없습니다"
             }
             
+            petId = pet[0].id
             txtBreed.text = pet[0].breed
             
-            let image = pet[0].profileImage
+            imageFile = pet[0].profileImage
             
-            imageview.image = UIImage(named: image)
+            imageview.image = UIImage(named: imageFile)
             
             let sexType = pet[0].sex
             if sexType == "수컷" {
@@ -73,28 +75,43 @@ class PetInfoViewController: UIViewController {
                 sexseg.selectedSegmentIndex = 1
             }
             
-            var birth = pet[0].birth
-            
+            let birth = pet[0].birth
+                
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
+            dateFormatter.locale = Locale(identifier: "ko_KR")
             if let date = dateFormatter.date(from: birth) {
-                datePicker.datePickerMode = .date // 시간을 선택하지 못하게 함
+                //datePicker.datePickerMode = .date // 시간을 선택하지 못하게 함
                 datePicker.date = date
             }
+            // Date Picker의 시간대 설정 (한국 시간대로 설정)
+            datePicker.timeZone = TimeZone(identifier: "Asia/Seoul")
+        
         }
         else{
             lblTitle.text = "새로운 강아지 등록"
             txtName.text = ""
             txtBreed.text = ""
             sexseg.selectedSegmentIndex = 0
-            lblBirth.text = ""
+//            lblBirth.text = ""
 
         }
     }
     
+    //==========================버튼, 달력 이벤트================================
+    //달력 선택시
+    @IBAction func actDatePicker(_ sender: UIDatePicker) {
+        view.endEditing(true)
+    }
+    
+    //취소버튼 클릭
+    @IBAction func actCancel(_ sender: Any) {
+        self.dismiss(animated: true)
+    }
+    
     //저장버튼 클릭
     @IBAction func actSave(_ sender: Any) {
-        var addPet:[String:String] = [:]
+        //var addPet:[String:String] = [:]
 
         if saveType == "I" {
             saveInsertPets()
@@ -104,53 +121,48 @@ class PetInfoViewController: UIViewController {
         }
         
         //사진 저장
-        if let imageName = addPet["profileImage"] {
-            let fileURL = getFileURL(imageName)
-            
-            if let image = imageview.image,
-               let data = image.jpegData(compressionQuality: 0.8) {
-                do {
-                    try data.write(to: fileURL)
-                }
-                catch{
-                    print("저장실패")
-                }
+//        UIImageWriteToSavedPhotosAlbum(originalImage, self, #selector(saveImage(_:didFinishSavingWithError:contextInfo:)), nil)
+        let fileURL = getFileURL(imageFile)
+
+        if let image = imageview.image,
+           let data = image.jpegData(compressionQuality: 0.8) {
+            do {
+                try data.write(to: fileURL)
+            }
+            catch{
+                print("저장실패")
             }
         }
+        //}
     }
 
-    @IBAction func actDatePicker(_ sender: UIDatePicker) {
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy-MM-dd"
-//
-//        let selectedDate = datePicker.date
-//        let dateString = dateFormatter.string(from: selectedDate)
-//
-//        // 앞에서부터 10자리만 추출
-//        let substringIndex = dateString.index(dateString.startIndex, offsetBy: 10)
-//        let trimmedDateString = String(dateString[..<substringIndex])
-//        lblBirth.text = trimmedDateString
+    func saveImage(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer)
+    {
+        if let error = error {
+            print(error)
+        } else {
+            print("save")
+        }
     }
     
-    
-    //사진선택
+    //================================사진선택==========================================
     @IBAction func actProfile(_ sender: UIButton) {
         let alert = UIAlertController(title: "이미지선택", message: "", preferredStyle: .actionSheet)
-        let actionCamera = UIAlertAction(title: "사진찍기", style: .default) { action in self.present(self.camera, animated: true) }
+        
+        let actionCamera = UIAlertAction(title: "사진찍기", style: .default) { action in
+            self.camera.sourceType = .camera
+            self.present(self.camera, animated: false) }
         alert.addAction(actionCamera)
         
         let actionPhoto = UIAlertAction(title: "사진 보관함", style: .default) { action in
-            if let album = self.album {
-                self.present(album, animated: true)
-            }
-        }
+            self.camera.sourceType = .photoLibrary
+            self.present(self.camera, animated: false) }
         alert.addAction(actionPhoto)
         
-        let actionCancel = UIAlertAction(title: "취소", style: .cancel)
+        let actionCancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
         alert.addAction(actionCancel)
         
         present(alert, animated: true)
-        
     }
     
     //사진
@@ -167,7 +179,25 @@ class PetInfoViewController: UIViewController {
         return fileURL
     }
     
-    // 데이터를 저장하는 함수
+    //입력박스 일괄 셋팅
+    func setInput(){
+        if let strName = txtName.text {
+            let anyName: Any = strName
+            self.name = anyName
+        }
+        
+        if let strName = txtBreed.text {
+            let anyName: Any = strName
+            self.breed = anyName
+        }
+        
+        if let strName = sexseg.titleForSegment(at: sexseg.selectedSegmentIndex) {
+            self.sexType = strName
+        }
+        
+    }
+    
+    //==================== 강아지 정보 신규등록 ============================
     func saveInsertPets() {
         // [http 요청 주소 지정]
         let url = "http://127.0.0.1/pets/"
@@ -177,99 +207,76 @@ class PetInfoViewController: UIViewController {
 //            "Content-Type" : "application/json"
 //        ]
 
-        let name = txtName.text
-        let breed = txtBreed.text
-        let setType = sexseg.titleForSegment(at: sexseg.selectedSegmentIndex)
+        setInput()
         
         // [http 요청 파라미터 지정 실시]
         //id, name, profile_image, birth, breed, sex, user_id
         let queryString : Parameters = [
             "id": 0,
             "name": name,
-            "profile_image": "dog1.jpeg",
-            "birth": "20220901",
+            "profile_image": imageFile,
+            "birth": datePicker.date.toString(),
             "breed": breed,
-            "sex":setType,
+            "sex":sexType,
             "user_id":1
         ]
         
-        AF.request(url, method: .post, parameters: queryString, encoding: URLEncoding.httpBody).responseJSON() { response in
+        // Alamofire를 사용하여 POST 요청 보내기
+        AF.request(url, method: .post, parameters: queryString, encoding: JSONEncoding.default).responseDecodable(of: Pets.self) { response in
             switch response.result {
             case .success:
-                if let data = try! response.result.get() as? [String: Any] {
-                    print(data)
-                }
-            case .failure(let error):
-                print("Error: \(error)")
-                return
+                // POST 요청이 성공하고, 응답 데이터를 모델로 디코딩한 경우
+                break
+            case .failure:
+                // POST 요청 중 오류가 발생한 경우
+                break
             }
         }
     }
     
-    
-    // 데이터를 저장하는 함수
+    //==================== 강아지 정보 수정 ============================
     func saveUpdatePets() {
-        let id = 1
-        
         // [http 요청 주소 지정]
-        let url = "http://127.0.0.1:8000/pets/\(id)"
+        let url = "http://127.0.0.1:8000/pets/\(petId)"
 
         // [http 요청 헤더 지정]
-        let headers : HTTPHeaders = [
-            "Content-Type" : "application/json"
-        ]
+//        let headers : HTTPHeaders = [
+//            "Content-Type" : "application/json"
+//        ]
 
-        let name = txtName.text
-        let breed = txtBreed.text
-        let sexType = sexseg.titleForSegment(at: sexseg.selectedSegmentIndex)
+        setInput()
         
         // [http 요청 파라미터 지정 실시]
         //id, name, profile_image, birth, breed, sex, user_id
         let queryString : Parameters = [
-            "id":id,
+            "id":petId,
             "name": name,
             "profile_image": "dog2.jpeg",
-            "birth": "20230901",
+            "birth": datePicker.date.toString(),
             "breed": breed,
             "sex": sexType,
             "user_id":1
         ]
+        print(queryString)
         
-//        AF.request(url, method: .post, parameters: queryString, headers: headers).responseJSON { AFdata in
-//            do {
-//                guard let jsonObject = try JSONSerialization.jsonObject(with: AFdata.data!) as? [String: Any] else {
-//                    print("Error: Cannot convert data to JSON object")
-//                    return
-//                }
-//                guard let prettyJsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted) else {
-//                    print("Error: Cannot convert JSON object to Pretty JSON data")
-//                    return
-//                }
-//                guard let prettyPrintedJson = String(data: prettyJsonData, encoding: .utf8) else {
-//                    print("Error: Could print JSON in String")
-//                    return
-//                }
-//
-//                print(prettyPrintedJson)
-//            } catch {
-//                print("Error: Trying to convert JSON data to string")
-//                return
-//            }
-//        }
-//
-
-        AF.request(url, method: .post, parameters: queryString, encoding: URLEncoding.httpBody).responseString() { response in
-            //responseJSON()
+        // Alamofire를 사용하여 POST 요청 보내기
+        AF.request(url, method: .post, parameters: queryString, encoding: JSONEncoding.default).responseDecodable(of: Pets.self) { response in
             switch response.result {
             case .success:
-                if let data = try! response.result.get() as? [String: Any] {
-                    print(data)
-                }
-            case .failure(let error):
-                print("Error: \(error)")
-                return
+                // POST 요청이 성공하고, 응답 데이터를 모델로 디코딩한 경우
+                let alert = UIAlertController(title: "확인", message: "저장되었습니다.", preferredStyle: .alert)
+                let action = UIAlertAction(title: " 확인", style: .default)
+                alert.addAction(action)
+                
+                self.present(alert, animated: true)
+                
+                break
+            case .failure:
+                // POST 요청 중 오류가 발생한 경우
+                break
             }
         }
+        
     }
     
 }
@@ -310,6 +317,44 @@ extension PetInfoViewController: UIImagePickerControllerDelegate, UINavigationCo
         if let image = info[.originalImage] as? UIImage {
             self.imageview.image = image
         }
+    /*서버에 이미지 저장하기
+//        let resizedImage = resizeImage(image: selectedImage, newWidth: 300)
+//
+//                let imageData = resizedImage.jpegData(compressionQuality: 0.5)
+//
+//
+//                Alamofire.upload(
+//
+//                    multipartFormData: { MultipartFormData in
+//                        if((imageData) != nil){
+//
+//
+//
+//                            MultipartFormData.append(imageData!, withName: "서버 필드명", fileName: "profileImage.jpeg", mimeType: "image/jpeg")
+//                        }
+//
+//                }, to: "서버 주소", method: .patch, headers: header) { (result) in
+//
+//                    switch result {
+//                    case .success(let upload, _, _):
+//
+//                        upload.responseJSON { response in
+//                           // getting success
+//                            if (response.response?.statusCode)! >= 200 {
+//
+//                                self.imgProfile.image = resizedImage
+//                                self.dismiss(animated: true, completion: nil)
+//                            }
+//
+//                        }
+//
+//                    case .failure(let encodingError): break
+//                        // getting error
+//
+//                    }
+//
+//                }
+     */
         picker.dismiss(animated: true)
     }
 }

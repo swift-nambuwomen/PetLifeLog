@@ -72,7 +72,12 @@ class MyPagesViewController: UIViewController, UITableViewDataSource {
         let detailVC = segue.destination as? PetInfoViewController
         print(selectedPet)
         detailVC?.pet = [selectedPet]
-        detailVC?.saveType = "U"
+        if saveType == "I"{
+            detailVC?.saveType = "I"
+        }
+        else{
+            detailVC?.saveType = "U"
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -81,17 +86,17 @@ class MyPagesViewController: UIViewController, UITableViewDataSource {
     
     //양육자의 Id를 앱실행할때 유지
     func loadSetting(){
-        let userDefaults = UserDefaults.standard
+        //let userDefaults = UserDefaults.standard
         //lblName.text = userDefaults.string(forKey: "name")
     }
 
     //url에서 데이터 가져오기
     func getPetInfo(query:Int?){
-        guard let query = query
-        else{
-            print("query in nil")
-            return
-        }
+//        guard let query = query
+//        else{
+//            print("query in nil")
+//            return
+//        }
         
         let str = "http://127.0.0.1:8000/pets/"
 //        let params:Parameters = ["query":query]
