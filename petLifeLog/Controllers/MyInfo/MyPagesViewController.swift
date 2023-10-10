@@ -29,11 +29,20 @@ class MyPagesViewController: UIViewController, UITableViewDataSource {
         
     }
 
+    //닫기버튼 눌렀을때 화면 갱신
+    @IBAction func back(_ segue:UIStoryboardSegue){
+        getPetInfo(query: 2)
+        tableView.reloadData()
+    }
+    
     @IBAction func actInsert(_ sender: UIButton){
         saveType = "I"
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if pet.count > 0{
+            saveType = "U"
+        }
         return pet.count
     }
     
@@ -70,9 +79,17 @@ class MyPagesViewController: UIViewController, UITableViewDataSource {
         let selectedPet = pet[select.row]
         
         let detailVC = segue.destination as? PetInfoViewController
+        detailVC?.modalPresentationStyle = .formSheet
+        detailVC?.preferredContentSize = CGSize(width: 200, height: 150)
+        
         print(selectedPet)
         detailVC?.pet = [selectedPet]
-        detailVC?.saveType = "U"
+        if saveType == "I"{
+            detailVC?.saveType = "I"
+        }
+        else{
+            detailVC?.saveType = "U"
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -81,19 +98,20 @@ class MyPagesViewController: UIViewController, UITableViewDataSource {
     
     //양육자의 Id를 앱실행할때 유지
     func loadSetting(){
-        let userDefaults = UserDefaults.standard
+        //let userDefaults = UserDefaults.standard
         //lblName.text = userDefaults.string(forKey: "name")
     }
 
     //url에서 데이터 가져오기
     func getPetInfo(query:Int?){
-        guard let query = query
-        else{
-            print("query in nil")
-            return
-        }
+//        guard let query = query
+//        else{
+//            print("query in nil")
+//            return
+//        }
         
-        let str = "http://127.0.0.1:8000/pets/"
+        let str = "http://127.0.0.1:8000/api/pet/"
+        //let str = "http://127.0.0.1:8000/pets/"
 //        let params:Parameters = ["query":query]
         
         let alamo = AF.request(str, method: .get)
@@ -102,6 +120,7 @@ class MyPagesViewController: UIViewController, UITableViewDataSource {
         alamo.responseDecodable(of:[Pets].self) { response in
             if let error = response.error {
                     print("Error: \(error.localizedDescription)")
+                
             }
             else {
                 // 성공적으로 디코딩된 데이터 처리
