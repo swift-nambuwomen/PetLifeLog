@@ -124,6 +124,7 @@ class PetInfoViewController: UIViewController {
         
         //사진 저장
 //        UIImageWriteToSavedPhotosAlbum(originalImage, self, #selector(saveImage(_:didFinishSavingWithError:contextInfo:)), nil)
+
 //        let fileURL = getFileURL(imageFile)
 //
 //        if let image = imageview.image,
@@ -135,7 +136,6 @@ class PetInfoViewController: UIViewController {
 //                print("저장실패")
 //            }
 //        }
-        //}
     }
 
     func saveImage(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer)
@@ -193,6 +193,26 @@ class PetInfoViewController: UIViewController {
         
     }
     
+
+    //입력박스 일괄 셋팅
+    func setInput(){
+        if let strName = txtName.text {
+            let anyName: Any = strName
+            self.name = anyName
+        }
+        
+        if let strName = txtBreed.text {
+            let anyName: Any = strName
+            self.breed = anyName
+        }
+        
+        if let strName = sexseg.titleForSegment(at: sexseg.selectedSegmentIndex) {
+            self.sexType = strName
+        }
+        
+    }
+    
+
     //==================== 강아지 정보 신규등록 ============================
     func saveInsertPets() {
         // [http 요청 주소 지정]
@@ -210,7 +230,7 @@ class PetInfoViewController: UIViewController {
         let queryString : Parameters = [
             "id": 0,
             "name": name,
-            "profile_image": "dog1.jpeg",
+            "profile_image": "dog2.jpeg",
             "birth": "2023-10-10", //datePicker.date.toString(),
             "breed": breed,
             "sex":sexType,
@@ -238,52 +258,6 @@ class PetInfoViewController: UIViewController {
                 break
             }
         }
-    }
-    
-    //==================== 강아지 정보 수정 ============================
-    func saveUpdatePets() {
-        // [http 요청 주소 지정]
-        let url = "http://127.0.0.1:8000/api/pet/update/\(petId)/"
-
-        // [http 요청 헤더 지정]
-//        let headers : HTTPHeaders = [
-//            "Content-Type" : "application/json"
-//        ]
-
-        setInput()
-        
-        // [http 요청 파라미터 지정 실시]
-        //id, name, profile_image, birth, breed, sex, user_id
-        let queryString : Parameters = [
-            "id":petId,
-            "name": name,
-            "profile_image": "dog2.jpeg",
-            "birth": "2023-10-10", //datePicker.date.toString(),
-            "breed": breed,
-            "sex": sexType,
-            "user":1
-        ]
-        print(queryString)
-        
-        // Alamofire를 사용하여 POST 요청 보내기
-        AF.request(url, method: .put, parameters: queryString, encoding: JSONEncoding.default).responseDecodable(of: Pets.self) { response in
-            switch response.result {
-            case .success:
-                // POST 요청이 성공하고, 응답 데이터를 모델로 디코딩한 경우
-                let alert = UIAlertController(title: "확인", message: "수정되었습니다.", preferredStyle: .alert)
-                let action = UIAlertAction(title: " 확인", style: .default)
-                alert.addAction(action)
-                
-                self.present(alert, animated: true)
-                
-                break
-            case .failure:
-                // POST 요청 중 오류가 발생한 경우
-                print(response.debugDescription)
-                break
-            }
-        }
-        
     }
     
 }
@@ -333,7 +307,7 @@ extension PetInfoViewController: UIImagePickerControllerDelegate, UINavigationCo
 //        .responseJSON { response in
 //        //응답받아 처리하는곳
 //        }
-    }
+
         
         //서버에 이미지 저장하기
 

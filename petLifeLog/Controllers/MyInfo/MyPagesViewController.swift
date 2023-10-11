@@ -125,6 +125,7 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
     }
 
     //url에서 데이터 가져오기
+
     func getPetInfo(pet:Int){
 //        guard let query = query
 //        else{
