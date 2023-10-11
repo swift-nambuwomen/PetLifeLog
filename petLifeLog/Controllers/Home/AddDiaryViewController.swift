@@ -29,7 +29,7 @@ class AddDiaryViewController: UIViewController {
         //TODO: 다이어리는 하루 하나 등록 가능하기에, 다이어리 기존 데이터가 있을 시 데이터 들고와서 뿌려줘야 함
         if selectedDate == sample_data_date { // 샘플 날짜
             diaryContent.text = petDiary.diary_content
-            diaryImgView.image = UIImage(named: petDiary.diary_image)
+            diaryImgView.image = UIImage(named: petDiary.diary_image!)
         }
     }
     

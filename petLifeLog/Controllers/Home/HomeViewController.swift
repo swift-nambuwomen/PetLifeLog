@@ -10,13 +10,13 @@ import Alamofire
 
 //테스트용 임시 데이터
 let user_id = "admin" // 로그인 후 들고 있어야 할 user_id값
-let pet_id = "adminpet" // 로그인 후 들고 있어야 할 user_id의 현재 선택 되어있는 pet_id의 값(pet_id로 강아지생일필요)
+let pet_id = 1 // 로그인 후 들고 있어야 할 user_id의 현재 선택 되어있는 pet_id의 값(pet_id로 강아지생일필요)
 let petBirthday = "2023-09-10" //강아지 생일. 임시데이터.
-let sample_data_date = "2023-10-04"
+let sample_data_date = "2023-10-12"
 
 class HomeViewController: UIViewController {
-    var petActions:[PetAction]?
     var petDiary:PetDiary?
+    var petActions:[Act]?
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -40,58 +40,84 @@ class HomeViewController: UIViewController {
         setDate(now)
         today = selected_date // nextDate버튼 비활성화 처리 위하여 오늘 날짜와 비교하기 위해서 받아두기
         nextBtn.isEnabled = false // 오늘 다음 날짜의 기록은 없으니 처음엔 > 버튼 비활성화로 시작하기
-        
+        print("called 홈뷰didroad")
         getDataset() // 세팅된 날짜의 테이블뷰 액션 셀의 row들에 보여줄 액션명, 다이어리 셀에 보여줄 다이어리 데이터 가져오기
         setupTableView() // 날짜 맞게 테이블뷰 셋업
         setupDiaryView() // 다이어리 내용 있을시 셋업
         picker.delegate = self // 카메라 피커
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        tableView.reloadData()
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+//        tableView.reloadData()
+//    }
     
     // MARK: UI, 데이터 셋업
     // 메인 네비바상의 선택된 날짜에 현재 접속된 유저의 선택된 강아지의 기록(액션,일기)이 있다면 가져와라.
     func getDataset() {
-        // let result = try JSONDecoder().decode(PetAction.self, from: data)
-        // self.petActions = result.actions // 디테일
-        //petActions:[PetActionDetail]?
-        let url = "http://127.0.0.1:8000/api/pet/act/list"
-        let params:Parameters = ["pet_id":1, "act_date":"2023-10-03"]
-        //let dataRequest = AF.request(url, method: .get, parameters: params)
-
-                
-        AF.request(url, method: .get, parameters: params, encoding: URLEncoding.default).responseDecodable(of: Act.self) { response in
-            print("Request: \(String(describing: response.request))")   // original url request
-            print("Response: \(String(describing: response.response))") // http url response
-            print("Result: \(response.result)")
-            switch response.result {
-                    case .success:
-                        guard let result = response.value else { return }
-                        print("결과",result)
-                    case .failure(let error):
-                        print("에러", error)
-                        break
-                    }
-                }
+        getHomeListWithAF()
         
         //샘플 데이터
-        if selected_date == sample_data_date {
-            petActions = [PetAction(act_id: 2, actions:PetActionDetail(act_time : "09:10", memo : "건강한듯", memo_image : "twinlake", ordure_shape : "정상", ordure_color : "검정")), PetAction(act_id: 3, actions:PetActionDetail(act_time : "10:39", memo : "어제 주문한 수제 간식. 잘 먹는다.", memo_image : "charleyrivers", feed_type:"간식", feed_name: "미국브랜드")), PetAction(act_id: 6, actions:PetActionDetail(act_time : "13:11", weight: 13.2)), PetAction(act_id: 1, actions:PetActionDetail(act_time : "14:39")), PetAction(act_id: 4, actions:PetActionDetail(act_time : "15:22", hospital_type: "질병")), PetAction(act_id: 5, actions:PetActionDetail(act_time : "16:41", beauty_type: "미용실", beauty_cost: 13000))]
-            
-            petDiary = PetDiary(act_time: "13:26", diary_image: "no-img", diary_content: "오늘은 애견동반 호텔에 다녀왔다.")
-        } else {
-            petActions = nil
-            petDiary = nil
+//        if selected_date == sample_data_date {
+//            self.petActions = [
+//                Act(act: "배변", actdetail:Actdetail(act_time : "09:10", memo : "건강한듯", memo_image : "twinlake", ordure_shape : "정상", ordure_color : "검정")),
+//                Act(act: "사료", actdetail:Actdetail(act_time : "10:39", memo : "어제 주문한 수제 간식. 잘 먹는다.", memo_image : "charleyrivers", feed_type:"간식", feed_name: "미국브랜드")),
+//                Act(act: "몸무게", actdetail:Actdetail(act_time : "13:11", weight: 13.2)),
+//                Act(act: "산책", actdetail:Actdetail(act_time : "14:39")),
+//                Act(act: "병원", actdetail:Actdetail(act_time : "15:22", hospital_type: "질병")),
+//                Act(act: "미용", actdetail:Actdetail(act_time : "16:41", beauty_cost: 13000, beauty_type: "미용실"))
+//            ]
+//
+//            petDiary = PetDiary(act_time: "13:26", diary_content: "오늘은 애견동반 호텔에 다녀왔다.")
+//        } else {
+//            petActions = nil
+//            petDiary = nil
+//        }
+//        print("샘플데이터 펫액션 카운트", self.petActions?.count ?? 0)
+        
+        //날짜 맞게 테이블뷰,일기 뷰 재셋업(메소드 3개 - 날짜버튼 <,> & unsegue용)
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            self.setupDiaryView()
         }
+        print("getData 마지막행 펫액션 카운트", self.petActions?.count ?? 0)
     }
+    
+    
+    func getHomeListWithAF() {
+        let url = "http://127.0.0.1:8000/api/pet/act/list"
+        let params:Parameters = ["pet_id":pet_id, "act_date":selected_date]
+        let dataRequest = AF.request(url, method: .get, parameters: params)
+
+        print("called GET ActionList")
+        dataRequest.responseDecodable(of: [Act].self) { response in
+            //print("Request: \(String(describing: response.request))")   // original url request
+            //print("Response: \(String(describing: response.response))") // http url response
+            //print("Result: \(response.result)")
+            switch response.result {
+                case .success:
+                    guard let result = response.value else { return }
+                    print("GET 펫액션 응답 결과", result)
+                    self.petActions = result
+                    print("AF안의 펫액션 카운트", self.petActions?.count ?? 0)
+                    //self.petDiary =
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                        self.setupDiaryView()
+                    }
+                case .failure(let error):
+                    print("GET 응답 에러", error)
+                    break
+            }
+        }
+        
+    }
+    
     
     func setupDiaryView() {
         diaryTime.text = petDiary?.act_time
         diaryContent.text = petDiary?.diary_content
         cameraBtn.isHidden = false
-        if petDiary?.diary_image != nil {
+        if petDiary?.diary_image != nil { //이미지 존재 유무에 따라 카메라 버튼 가리기
             cameraBtn.isEnabled = false
         }
         diaryImgView.image = UIImage(named: petDiary?.diary_image ?? "white")
@@ -130,11 +156,12 @@ class HomeViewController: UIViewController {
         
         //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
         getDataset()
+        print("날짜<버튼")
         //날짜 맞게 테이블뷰,일기 뷰 재셋업
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            self.setupDiaryView()
-        }
+//        DispatchQueue.main.async {
+//            self.tableView.reloadData()
+//            self.setupDiaryView()
+//        }
     }
     
     //날짜 +1 버튼(>)
@@ -148,11 +175,12 @@ class HomeViewController: UIViewController {
         
         //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
         getDataset()
+        print("날짜>버튼")
         //날짜 맞게 테이블뷰,일기 뷰 재셋업
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            self.setupDiaryView()
-        }
+//        DispatchQueue.main.async {
+//            self.tableView.reloadData()
+//            self.setupDiaryView()
+//        }
     }
     
     // 날짜 연산 -> 문자열로 변환 -> 전역변수 날짜 업데이트 -> 네비바에 해당 날짜 표시
@@ -224,6 +252,7 @@ class HomeViewController: UIViewController {
         }
         else if segue.identifier == "toActionDetail" { // 액션 상세 편집 모달창으로 가는 segue
             if let selected = tableView.indexPathForSelectedRow {
+                print("디테일segue전달시 선택 행",selected.row, "petActions카운트",petActions?.count ?? 0)
                 if let targetVC = segue.destination as? PetDetailViewController {
                     targetVC.petAction = petActions?[selected.row] ?? nil // 상세페이지에서 선택된 액션 데이터 뿌려줘야 함.
                 }
@@ -243,11 +272,12 @@ class HomeViewController: UIViewController {
             
             //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
             getDataset()
+            print("데이터 갱신하여 뒤로가기 unwindToHome")
             //날짜 맞게 테이블뷰,일기 뷰 재셋업
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                self.setupDiaryView()
-            }
+//            DispatchQueue.main.async {
+//                self.tableView.reloadData()
+//                self.setupDiaryView()
+//            }
             
         }
         
@@ -276,6 +306,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("tableview의 petActions카운트", petActions?.count ?? 0)
         return petActions?.count ?? 0// 액션 셀 row 수는 데이터의 개수
     }
     
@@ -294,35 +325,36 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         let memoImgView = cell.viewWithTag(6) as? UIImageView // 액션 메모 이미지
         
         // 시간
-        lblActTime?.text = petAction.actions?.act_time
+        lblActTime?.text = petAction.actdetail?.act_time
         
         // 액션명,액션대표이미지
-        switch petAction.act_id {
-            case 1: lblActName?.text = "산책"; actImgView?.image = UIImage(named: "walk")
-            case 2: lblActName?.text = "배변"; actImgView?.image = UIImage(named: "poo")
-            case 3: lblActName?.text = "사료"; actImgView?.image = UIImage(named: "food")
-            case 4: lblActName?.text = "병원"; actImgView?.image = UIImage(named: "hospital")
-            case 5: lblActName?.text = "미용"; actImgView?.image = UIImage(named: "hair")
-            case 6: lblActName?.text = "몸무게"; actImgView?.image = UIImage(named: "weight")
-            default: print("none")
+        let act = petAction.act
+        switch act { 
+            case "산책": actImgView?.image = UIImage(named: "walk")
+            case "배변": actImgView?.image = UIImage(named: "poo")
+            case "사료": actImgView?.image = UIImage(named: "food")
+            case "병원": actImgView?.image = UIImage(named: "hospital")
+            case "미용": actImgView?.image = UIImage(named: "hair")
+            case "몸무게": actImgView?.image = UIImage(named: "weight")
+            default: actImgView?.image = UIImage(named: "walk")
         }
         
-        // 디테일 - 액션별로 보여줄 디테일이 다르므로 분기 처리
-        switch petAction.act_id {
-        case 1: lblActDetail?.text = "\(String(petAction.actions?.walk_spend_time ?? 0))분"
-            case 2: lblActDetail?.text = "\(petAction.actions?.ordure_color ?? "") \( petAction.actions?.ordure_shape ?? "")"
-            case 3: lblActDetail?.text = "\(petAction.actions?.feed_type ?? "") \(petAction.actions?.feed_name ?? "") \(petAction.actions?.feed_amount ?? "0")g"
-        case 4: lblActDetail?.text = "\(petAction.actions?.hospital_type ?? "") \(petAction.actions?.hospital_cost ?? 0)원"
-        case 5: lblActDetail?.text = "\(String((petAction.actions?.beauty_cost) ?? 0))원"
-        case 6: lblActDetail?.text =  "\(String((petAction.actions?.weight)!))kg"
-            default: print("none")
+        // 디테일 - 액션별로 보여줄 디테일이 다르므로 분기 처리(액션 라벨, 각 액션 디테일들)
+        switch act {
+            case "산책": lblActName?.text = act; lblActDetail?.text = "\(String(petAction.actdetail?.walk_spend_time ?? 0))분"
+            case "배변": lblActDetail?.text = "\(petAction.actdetail?.ordure_color ?? "") \( petAction.actdetail?.ordure_shape ?? "")"
+            case "사료": lblActName?.text = act; lblActDetail?.text = "\(petAction.actdetail?.feed_type ?? "") \(petAction.actdetail?.feed_name ?? "") \(petAction.actdetail?.feed_amount ?? 0.0)g"
+            case "병원": lblActName?.text = act; lblActDetail?.text = "\(petAction.actdetail?.hospital_type ?? "") \(petAction.actdetail?.hospital_cost ?? 0)원"
+            case "미용": lblActName?.text = act; lblActDetail?.text = "\(String((petAction.actdetail?.beauty_cost) ?? 0))원"
+            case "몸무게": lblActName?.text = act; lblActDetail?.text =  "\(String((petAction.actdetail?.weight)!))kg"
+            default: lblActName?.text = ""
         }
         
         // 메모
-        lblMemo?.text = petAction.actions?.memo
+        lblMemo?.text = petAction.actdetail?.memo
         
         // 메모 사진
-        memoImgView?.image = UIImage(named: petAction.actions?.memo_image ?? "white")
+        memoImgView?.image = UIImage(named: petAction.actdetail?.memo_image ?? "white") // white 아닌 nil로는 ?
 
         return cell
     }
@@ -338,6 +370,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         // TODO: datasource뿐 아니라 실제 DB에서도 삭제되게 처리하기
         guard editingStyle == .delete else { return }
+        print("셀 삭제시 petActions카운트", petActions?.count ?? 0)
         petActions?.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .fade)
     }

@@ -7,62 +7,45 @@
 
 import Foundation
 
-struct PetAction: Codable {
-    let act_id: Int?
-    let actions: PetActionDetail?
-}
-
-//typealias PetActResult = [PetAction]
-
+// 임시데이터 생성자에서 모든 값 넣지 않아도 되게 우선 var로 함
+// MARK: - Diary
 struct PetDiary: Codable {
     var act_time: String
-    var diary_image: String
+    var diary_image: String?
     var diary_content: String?
 }
 
-struct PetActionDetail: Codable {
-    var act_time : String
-    var memo : String?
-    var memo_image : String?
-    var walk_spend_time : Int?
-    var ordure_shape : String?
-    var ordure_color : String?
-    var feed_type : String?
-    var feed_amount : String?
-    var feed_name : String?
-    var hospital_type : String?
-    var hospital_name : String?
-    var hospital_doctor : String?
-    var hospital_cost : Int?
-    var beauty_type : String?
-    var beauty_cost : Int?
-    var weight : Double?
+// MARK: - Act
+struct Act: Codable {
+    var act: String
+    var actdetail: Actdetail?
+    //let diary_content, diary_image, diary_open_yn: String?
+    //let id, actdetailCount, pet, user: Int
+    //let act_date: String
+    //let reg_datetime: String?
 }
 
 // MARK: - Actdetail
-struct Act: Codable {
-    let act:String?
-    let actdetail:[ActDetail]?
-    let act_date:String?
-    let diary_content:String?
-    let diary_image:String?
-    let diary_open_yn:String?
-    let pet:Int?
-    let user:Int?
+struct Actdetail: Codable {
+    //let id, petact: Int
+    var act_time: String
+    var memo, memo_image: String?
+    var walk_spend_time, hospital_cost, beauty_cost: Int?
+    var feed_amount, weight: Double?
+    var ordure_shape, ordure_color: String?
+    var feed_type, feed_name: String?
+    var hospital_type, beauty_type: String?
 }
 
-struct ActDetail: Codable {
-    let id:Int?
-    let act_time:String?
-    let memo:String?
-    let memo_image:String?
-    let walk_spend_time:Int?
-    let ordure_shape:String?
-    let ordure_color:String?
-    let feed_type:String?
-    let feed_amount:Int?
-    let feed_name:String?
-    let hospital_type:String?
-    let weight:Int?
-}
- 
+
+
+// ActNum.몸무게.rawValue
+//enum ActNum: Int {
+//    case 산책 = 1
+//    case 배변 = 2
+//    case 사료 = 3
+//    case 병원 = 4
+//    case 미용 = 5
+//    case 몸무게 = 6
+//}
+
