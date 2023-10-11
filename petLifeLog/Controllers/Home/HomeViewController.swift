@@ -41,7 +41,7 @@ class HomeViewController: UIViewController {
         today = selected_date // nextDate버튼 비활성화 처리 위하여 오늘 날짜와 비교하기 위해서 받아두기
         nextBtn.isEnabled = false // 오늘 다음 날짜의 기록은 없으니 처음엔 > 버튼 비활성화로 시작하기
         print("called 홈뷰didroad")
-        getDataset() // 세팅된 날짜의 테이블뷰 액션 셀의 row들에 보여줄 액션명, 다이어리 셀에 보여줄 다이어리 데이터 가져오기
+        getHomeListWithAF() // 세팅된 날짜의 테이블뷰 액션 셀의 row들에 보여줄 액션명, 다이어리 셀에 보여줄 다이어리 데이터 가져오기
         setupTableView() // 날짜 맞게 테이블뷰 셋업
         setupDiaryView() // 다이어리 내용 있을시 셋업
         picker.delegate = self // 카메라 피커
@@ -52,27 +52,25 @@ class HomeViewController: UIViewController {
 //    }
     
     // MARK: UI, 데이터 셋업
-    // 메인 네비바상의 선택된 날짜에 현재 접속된 유저의 선택된 강아지의 기록(액션,일기)이 있다면 가져와라.
+    // 샘플 데이터 세팅 : 메인 네비바상의 선택된 날짜에 현재 접속된 유저의 선택된 강아지의 기록(액션,일기)이 있다면 가져와라.
     func getDataset() {
-        getHomeListWithAF()
-        
         //샘플 데이터
-//        if selected_date == sample_data_date {
-//            self.petActions = [
-//                Act(act: "배변", actdetail:Actdetail(act_time : "09:10", memo : "건강한듯", memo_image : "twinlake", ordure_shape : "정상", ordure_color : "검정")),
-//                Act(act: "사료", actdetail:Actdetail(act_time : "10:39", memo : "어제 주문한 수제 간식. 잘 먹는다.", memo_image : "charleyrivers", feed_type:"간식", feed_name: "미국브랜드")),
-//                Act(act: "몸무게", actdetail:Actdetail(act_time : "13:11", weight: 13.2)),
-//                Act(act: "산책", actdetail:Actdetail(act_time : "14:39")),
-//                Act(act: "병원", actdetail:Actdetail(act_time : "15:22", hospital_type: "질병")),
-//                Act(act: "미용", actdetail:Actdetail(act_time : "16:41", beauty_cost: 13000, beauty_type: "미용실"))
-//            ]
-//
-//            petDiary = PetDiary(act_time: "13:26", diary_content: "오늘은 애견동반 호텔에 다녀왔다.")
-//        } else {
-//            petActions = nil
-//            petDiary = nil
-//        }
-//        print("샘플데이터 펫액션 카운트", self.petActions?.count ?? 0)
+        if selected_date == sample_data_date {
+            self.petActions = [
+                Act(act: "배변", actdetail:Actdetail(act_time : "09:10", memo : "건강한듯", memo_image : "twinlake", ordure_shape : "정상", ordure_color : "검정")),
+                Act(act: "사료", actdetail:Actdetail(act_time : "10:39", memo : "어제 주문한 수제 간식. 잘 먹는다.", memo_image : "charleyrivers", feed_type:"간식", feed_name: "미국브랜드")),
+                Act(act: "몸무게", actdetail:Actdetail(act_time : "13:11", weight: 13.2)),
+                Act(act: "산책", actdetail:Actdetail(act_time : "14:39")),
+                Act(act: "병원", actdetail:Actdetail(act_time : "15:22", hospital_type: "질병")),
+                Act(act: "미용", actdetail:Actdetail(act_time : "16:41", beauty_cost: 13000, beauty_type: "미용실"))
+            ]
+
+            petDiary = PetDiary(act_time: "13:26", diary_content: "오늘은 애견동반 호텔에 다녀왔다.")
+        } else {
+            petActions = nil
+            petDiary = nil
+        }
+        print("샘플데이터 펫액션 카운트", self.petActions?.count ?? 0)
         
         //날짜 맞게 테이블뷰,일기 뷰 재셋업(메소드 3개 - 날짜버튼 <,> & unsegue용)
         DispatchQueue.main.async {
@@ -83,6 +81,7 @@ class HomeViewController: UIViewController {
     }
     
     
+    // AF - 메인 네비바상의 선택된 날짜에 현재 접속된 유저의 선택된 강아지의 기록(액션,일기)이 있다면 가져와라.
     func getHomeListWithAF() {
         let url = "http://127.0.0.1:8000/api/pet/act/list"
         let params:Parameters = ["pet_id":pet_id, "act_date":selected_date]
@@ -97,9 +96,27 @@ class HomeViewController: UIViewController {
                 case .success:
                     guard let result = response.value else { return }
                     print("GET 펫액션 응답 결과", result)
+                    // TODO: 받아온 데이터 act_time순으로 정렬하기 or 백엔드에서 정렬해서 가져오기
                     self.petActions = result
                     print("AF안의 펫액션 카운트", self.petActions?.count ?? 0)
-                    //self.petDiary =
+                    
+                    // 받아온 데이터에서 다이어리 세팅. 첫번째 행이 다이어리라고 한다면. postman샘플데이터에 맞게 임시로
+                        if result.count != 0 {
+                        print("첫번쨰", result[0])
+                            if result[0].actdetail != nil {
+                                let diary_act_time = result[0].actdetail?.act_time ?? "00:00"
+                                let the_diary_content = result[0].diary_content
+                                let the_diary_image = result[0].diary_image
+                                let the_diary_yn = result[0].diary_open_yn
+                                //print(diary_act_time, the_diary_image, the_diary_content)
+                                self.petDiary = PetDiary(act_time: diary_act_time, diary_image: the_diary_image, diary_content: the_diary_content, diary_open_yn: the_diary_yn)
+                                //print(self.petDiary)
+                            }
+                    } else {
+                        self.petDiary = nil
+                    }
+                    
+                    
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
                         self.setupDiaryView()
@@ -114,12 +131,14 @@ class HomeViewController: UIViewController {
     
     
     func setupDiaryView() {
-        diaryTime.text = petDiary?.act_time
-        diaryContent.text = petDiary?.diary_content
-        cameraBtn.isHidden = false
-        if petDiary?.diary_image != nil { //이미지 존재 유무에 따라 카메라 버튼 가리기
+        // 다이어리 이미지 있으면 카메라 버튼 비활성화 되게
+        cameraBtn.isEnabled = true
+        if petDiary?.diary_image != nil {
             cameraBtn.isEnabled = false
         }
+
+        diaryTime.text = petDiary?.act_time
+        diaryContent.text = petDiary?.diary_content
         diaryImgView.image = UIImage(named: petDiary?.diary_image ?? "white")
     }
     
@@ -155,13 +174,8 @@ class HomeViewController: UIViewController {
         checkDateCaseLogic()
         
         //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
-        getDataset()
+        getHomeListWithAF()
         print("날짜<버튼")
-        //날짜 맞게 테이블뷰,일기 뷰 재셋업
-//        DispatchQueue.main.async {
-//            self.tableView.reloadData()
-//            self.setupDiaryView()
-//        }
     }
     
     //날짜 +1 버튼(>)
@@ -174,13 +188,8 @@ class HomeViewController: UIViewController {
         checkDateCaseLogic()
         
         //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
-        getDataset()
+        getHomeListWithAF()
         print("날짜>버튼")
-        //날짜 맞게 테이블뷰,일기 뷰 재셋업
-//        DispatchQueue.main.async {
-//            self.tableView.reloadData()
-//            self.setupDiaryView()
-//        }
     }
     
     // 날짜 연산 -> 문자열로 변환 -> 전역변수 날짜 업데이트 -> 네비바에 해당 날짜 표시
@@ -271,14 +280,8 @@ class HomeViewController: UIViewController {
             checkDateCaseLogic()
             
             //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
-            getDataset()
+            getHomeListWithAF()
             print("데이터 갱신하여 뒤로가기 unwindToHome")
-            //날짜 맞게 테이블뷰,일기 뷰 재셋업
-//            DispatchQueue.main.async {
-//                self.tableView.reloadData()
-//                self.setupDiaryView()
-//            }
-            
         }
         
         //Add Action6개 등록버튼(신규등록)으로부터
@@ -325,7 +328,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         let memoImgView = cell.viewWithTag(6) as? UIImageView // 액션 메모 이미지
         
         // 시간
-        lblActTime?.text = petAction.actdetail?.act_time
+        lblActTime?.text = petAction.actdetail?.act_time ?? "00:00"
         
         // 액션명,액션대표이미지
         let act = petAction.act
@@ -342,7 +345,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         // 디테일 - 액션별로 보여줄 디테일이 다르므로 분기 처리(액션 라벨, 각 액션 디테일들)
         switch act {
             case "산책": lblActName?.text = act; lblActDetail?.text = "\(String(petAction.actdetail?.walk_spend_time ?? 0))분"
-            case "배변": lblActDetail?.text = "\(petAction.actdetail?.ordure_color ?? "") \( petAction.actdetail?.ordure_shape ?? "")"
+            case "배변": lblActName?.text = act; lblActDetail?.text = "\(petAction.actdetail?.ordure_color ?? "") \( petAction.actdetail?.ordure_shape ?? "")"
             case "사료": lblActName?.text = act; lblActDetail?.text = "\(petAction.actdetail?.feed_type ?? "") \(petAction.actdetail?.feed_name ?? "") \(petAction.actdetail?.feed_amount ?? 0.0)g"
             case "병원": lblActName?.text = act; lblActDetail?.text = "\(petAction.actdetail?.hospital_type ?? "") \(petAction.actdetail?.hospital_cost ?? 0)원"
             case "미용": lblActName?.text = act; lblActDetail?.text = "\(String((petAction.actdetail?.beauty_cost) ?? 0))원"
@@ -354,7 +357,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         lblMemo?.text = petAction.actdetail?.memo
         
         // 메모 사진
-        memoImgView?.image = UIImage(named: petAction.actdetail?.memo_image ?? "white") // white 아닌 nil로는 ?
+        memoImgView?.image = UIImage(named: "white") // Azure blob 적용전까지는 white로 세팅
+        //memoImgView?.image = UIImage(named: petAction.actdetail?.memo_image ?? "white") // white 아닌 nil로는 ?
 
         return cell
     }

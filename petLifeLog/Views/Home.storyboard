@@ -89,6 +89,7 @@
                         <outlet property="diaryContent" destination="c9e-iy-L5o" id="9qv-HQ-wq5"/>
                         <outlet property="diaryDate" destination="TVj-c1-1M0" id="xyC-Ww-tB6"/>
                         <outlet property="diaryImgView" destination="6sq-uB-brj" id="7wZ-HW-A6q"/>
+                        <outlet property="diaryOpenYN" destination="e1U-s0-2hP" id="KqB-U5-ms4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fas-ua-rmr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

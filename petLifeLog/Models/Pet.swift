@@ -11,15 +11,14 @@ import Foundation
 // MARK: - Diary
 struct PetDiary: Codable {
     var act_time: String
-    var diary_image: String?
-    var diary_content: String?
+    var diary_image,diary_content, diary_open_yn: String?
 }
 
 // MARK: - Act
 struct Act: Codable {
     var act: String
     var actdetail: Actdetail?
-    //let diary_content, diary_image, diary_open_yn: String?
+    var diary_content, diary_image, diary_open_yn: String?
     //let id, actdetailCount, pet, user: Int
     //let act_date: String
     //let reg_datetime: String?

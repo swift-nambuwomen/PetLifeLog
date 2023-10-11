@@ -11,11 +11,12 @@ class AddDiaryViewController: UIViewController {
     
     @IBOutlet weak var diaryDate: UILabel!
     @IBOutlet weak var diaryContent: UITextView!
-    var selectedDate = ""
-    let sample_data_date = "2023-10-04"
-    var petDiary:PetDiary!
+    @IBOutlet weak var diaryOpenYN: UISwitch!
     @IBOutlet weak var diaryImgView: UIImageView!
+    
     let picker = UIImagePickerController()
+    var selectedDate = ""
+    var petDiary:PetDiary!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,9 +28,15 @@ class AddDiaryViewController: UIViewController {
     func drawUI() {
         diaryDate.text = selectedDate + " 일기" // 메인에서 선택된 날짜의 일기를 추가해야 하므로 타이틀은 그 날짜로
         //TODO: 다이어리는 하루 하나 등록 가능하기에, 다이어리 기존 데이터가 있을 시 데이터 들고와서 뿌려줘야 함
-        if selectedDate == sample_data_date { // 샘플 날짜
+        if petDiary != nil {
             diaryContent.text = petDiary.diary_content
             diaryImgView.image = UIImage(named: petDiary.diary_image!)
+            
+            if petDiary.diary_open_yn == "Y" {
+                diaryOpenYN.isOn = true
+            } else {
+                diaryOpenYN.isOn = false
+            }
         }
     }
     
