@@ -184,11 +184,12 @@ class PetInfoViewController: UIViewController {
         
         if let strName = sexseg.titleForSegment(at: sexseg.selectedSegmentIndex) {
             if strName == "수컷"{
-                self.sexType = "T"
+                self.sexType = "M"
             }else{
                 self.sexType = "F"
             }
         }
+        
         
     }
     
@@ -210,7 +211,7 @@ class PetInfoViewController: UIViewController {
             "id": 0,
             "name": name,
             "profile_image": "dog1.jpeg",
-            "birth": datePicker.date.toString(),
+            "birth": "2023-10-10", //datePicker.date.toString(),
             "breed": breed,
             "sex":sexType,
             "user":1
@@ -257,7 +258,7 @@ class PetInfoViewController: UIViewController {
             "id":petId,
             "name": name,
             "profile_image": "dog2.jpeg",
-            "birth": datePicker.date.toString(),
+            "birth": "2023-10-10", //datePicker.date.toString(),
             "breed": breed,
             "sex": sexType,
             "user":1
@@ -324,46 +325,65 @@ extension PetInfoViewController: UIImagePickerControllerDelegate, UINavigationCo
             self.imageview.image = image
         }
         
-        //서버에 이미지 저장하기
-        let selectedImage = UIImage(named: "dog1.jpeg") // 이미지 파일 이름이라고 가정
-        let resizedImage = selectedImage?.resizeImage(newWidth: 300) // resizeImage 함수는 이미지를 리사이즈하는 함수로 가정
+        //print("image: \(image)")
         
-        if let imageData = resizedImage?.jpegData(compressionQuality: 0.5) {
-            AF.upload(
-                multipartFormData: { multipartFormData in
-                    multipartFormData.append(imageData, withName: "file", fileName: "profileImage.jpeg", mimeType: "image/jpeg")
-                },
-                to: "https://petshj.blob.core.windows.net/petimage/", // 실제 서버 주소로 대체해야 합니다.
-                method: .patch,
-                headers: ["Content-Type": "multipart/form-data"]
-            ).responseJSON { response in
-                switch response.result {
-                case .success:
-                    if let statusCode = response.response?.statusCode, statusCode >= 200 {
-                        // 성공적으로 업로드 완료
-                        self.imageview.image = resizedImage
-                        self.dismiss(animated: true, completion: nil)
-                    } else {
-                        // 서버에서 오류 응답
-                        print("서버 오류: \(response)")
-                    }
-                case .failure(let error):
-                    // 업로드 실패
-                    print("업로드 실패: \(error)")
-                }
-            }
-        }
-        else {
-            // 이미지 데이터를 생성하지 못한 경우
-            print("이미지 데이터 생성 실패")
-        }
+//        AF.upload(multipartFormData: { multipartFormData in
+//               multipartFormData.append(image, withName: "dog1")
+//        }, to: URL)
+//        .responseJSON { response in
+//        //응답받아 처리하는곳
+//        }
     }
+        
+        //서버에 이미지 저장하기
+
+//    func uploadDiary(date: String, emoji: String, content: String, _ photo : UIImage, url: String){
+//        //함수 매개변수는 POST할 데이터, url
+//
+//        let body : Parameters = [
+//           "profile_Image" : "dog1.jpeg",
+//            "user" : 1
+//        ]    //POST 함수로 전달할 String 데이터, 이미지 데이터는 제외하고 구성
+//
+//        //multipart 업로드
+//        AF.upload(multipartFormData: { (multipart) in
+//            if let imageData = photo.jpegData(compressionQuality: 1) {
+//                multipart.append(imageData, withName: "photo", fileName: "photo.jpg", mimeType: "image/jpeg")
+//                //이미지 데이터를 POST할 데이터에 덧붙임
+//            }
+//            for (key, value) in body {
+//                multipart.append("\(value)".data(using: .utf8, allowLossyConversion: false)!, withName: "\(key)")
+//                //이미지 데이터 외에 같이 전달할 데이터 (여기서는 user, emoji, date, content 등)
+//            }
+//        }, to: url    //전달할 url
+//        ,method: .post        //전달 방식
+//        ,headers: headers).responseJSON(completionHandler: { (response) in    //헤더와 응답 처리
+//            print(response)
+//
+//            if let err = response.error{    //응답 에러
+//                print(err)
+//                return
+//            }
+//            print("success")        //응답 성공
+//
+//            let json = response.data
+//
+//            if (json != nil){
+//                print(json)
+//            }
+//        })
+//
+//    }
+        
+        
 }
 
 extension Date {
     func toString(format: String) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = format
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = NSTimeZone(name: "ko_KR") as TimeZone?
+        //dateFormatter.dateFormat = format
         return dateFormatter.string(from: self)
     }
 }

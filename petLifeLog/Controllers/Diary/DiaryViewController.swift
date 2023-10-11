@@ -10,22 +10,33 @@ import Alamofire
 
 class DiaryViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
+    @IBOutlet weak var segment: UISegmentedControl!
     @IBOutlet weak var textViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var diary:[PetAction] = []
+    //var diary:[PetAction] = []
+    var diaryAll:[PetDiary] = []
+    var diary:[PetDiary] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         //textView.delegate = self
 
-        getPetInfo(query: 5) {
-            // collectionView 관련 코드를 여기에 작성
-            self.collectionView.dataSource = self
-            self.collectionView.delegate = self
+        if segment.selectedSegmentIndex == 0{
+            getDiary(query: 5) {
+                // collectionView 관련 코드를 여기에 작성
+                self.collectionView.dataSource = self
+                self.collectionView.delegate = self
+            }
+        }else{
+            
+            getDiaryAll() {
+                // collectionView 관련 코드를 여기에 작성
+                self.collectionView.dataSource = self
+                self.collectionView.delegate = self
+            }
         }
-
     }
 
 //    func imageAzure(){
@@ -46,37 +57,34 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
 //            }
 //        }
 //    }
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
 
     @IBAction func meOrAll(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
             //me
+            getDiary(query: 5) {
+                // collectionView 관련 코드를 여기에 작성
+                self.collectionView.dataSource = self
+                self.collectionView.delegate = self
+            }
             
         } else {
             //all
-           
+            getDiaryAll {
+                // collectionView 관련 코드를 여기에 작성
+                self.collectionView.dataSource = self
+                self.collectionView.delegate = self
+            }
         }
     }
     
-    //===============다이어리 데이터 조회===============
-    func getPetInfo(query:Int?, completion: @escaping () -> Void){
-//        guard let query = query
-//        else{
-//            print("query in nil")
-//            return
-//        }
-        
-        let str = "http://127.0.0.1:8000/api/pet/act/list2/"
-//        let params:Parameters = ["query":query]
-        
+    //===============다이어리 데이터 조회(나)===============
+    func getDiary(query:Int?, completion: @escaping () -> Void){
+
+        let str = "http://127.0.0.1:8000/api/pet/act/diary/"
+    
         let alamo = AF.request(str, method: .get)
 
-        
-        //alamo.responseDecodable(of:Pets.self) { response in  //데이터 한건 받을때
-        alamo.responseDecodable(of:[PetAction].self) { response in
+        alamo.responseDecodable(of:[PetDiary].self) { response in
             if let error = response.error {
                     print("Error: \(error.localizedDescription)")
             }
@@ -85,8 +93,6 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
                 if let result = response.value {
                     print(result)
                     self.diary = result
-                    //self.pets.append(reuslt)
-                    
                 }
             }
             DispatchQueue.main.async {
@@ -96,47 +102,110 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
         
     }
     
+    //===============다이어리 데이터 조회(전체)===============
+    func getDiaryAll(completion: @escaping () -> Void){
+        let str = "http://127.0.0.1:8000/api/pet/act/diaryAll/"
+        
+        let alamo = AF.request(str, method: .get)
+        
+        alamo.responseDecodable(of:[PetDiary].self) { response in
+            if let error = response.error {
+                    print("Error: \(error.localizedDescription)")
+            }
+            else {
+                // 성공적으로 디코딩된 데이터 처리
+                if let result = response.value {
+                    print(result)
+                    self.diaryAll = result
+                }
+            }
+            DispatchQueue.main.async {
+                    completion()
+            }
+        }
+        
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return diary.count
+        if segment.selectedSegmentIndex == 0{
+            return diary.count
+        }else{
+            return diaryAll.count
+        }
+        
     }
         
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        
+        //나와 전체일기일때 구분하여 표시
+        if segment.selectedSegmentIndex == 0{
+            let diaryData = diary[indexPath.row]
 
-        let diaryData = diary[indexPath.row]
+            //다이어리 공개된 데이터만 표시(전체일기 표시할때)
+            let imageName = cell.viewWithTag(2) as? UIImageView
 
-        //다이어리 공개된 데이터만 표시(전체일기 표시할때)
-        let imageName = cell.viewWithTag(2) as? UIImageView
+            if diaryData.diary_image == "" {
+                imageName?.isHidden = true
+                // 이미지뷰의 높이를 0으로 설정하여 숨깁니다.
+                imageName?.frame.size.height = 0
+            }else{
+                imageName?.image = UIImage(named: diaryData.diary_image)
+                imageName?.isHidden = false
+                // 이미지가 있는 경우 이미지뷰의 높이를 조절합니다.
+                imageName?.frame.size.height = 100 // 이미지의 높이에 따라 조절하세요.
+            }
 
-        if diaryData.diaryImage == "" {
-            imageName?.isHidden = true
-            // 이미지뷰의 높이를 0으로 설정하여 숨깁니다.
-            imageName?.frame.size.height = 0
-        }else{
-            imageName?.image = UIImage(named: diaryData.diaryImage)
-            imageName?.isHidden = false
-            // 이미지가 있는 경우 이미지뷰의 높이를 조절합니다.
-            imageName?.frame.size.height = 100 // 이미지의 높이에 따라 조절하세요.
+            let textView = cell.viewWithTag(3) as? UITextView
+            textView?.text = diaryData.diary_content
+            
+            // 텍스트뷰 크기 조절
+            textView?.isScrollEnabled = false
+            textView?.sizeToFit()
+            
+            textView?.backgroundColor = .clear
+
+            //셀 테두리 표현
+    //        cell.layer.borderWidth = 2.0;
+    //        cell.layer.borderColor = UIColor.white.cgColor
+            //cell.backgroundColor = UIColor(hex: "#EFFBF5")
+            cell.layer.cornerRadius = 30
         }
+        else{
+            let diaryAllData = diaryAll[indexPath.row]
 
-        let textView = cell.viewWithTag(3) as? UITextView
-        textView?.text = diaryData.diaryContent
-        
-        // 텍스트뷰 크기 조절
-        textView?.isScrollEnabled = false
-        textView?.sizeToFit()
-        
-        textView?.backgroundColor = .clear
+            //다이어리 공개된 데이터만 표시(전체일기 표시할때)
+            let imageName = cell.viewWithTag(2) as? UIImageView
 
-        //셀 테두리 표현
-//        cell.layer.borderWidth = 2.0;
-//        cell.layer.borderColor = UIColor.white.cgColor
-        //cell.backgroundColor = UIColor(hex: "#EFFBF5")
-        cell.layer.cornerRadius = 30
+            if diaryAllData.diary_image == "" {
+                imageName?.isHidden = true
+                // 이미지뷰의 높이를 0으로 설정하여 숨깁니다.
+                imageName?.frame.size.height = 0
+            }else{
+                imageName?.image = UIImage(named: diaryAllData.diary_image)
+                imageName?.isHidden = false
+                // 이미지가 있는 경우 이미지뷰의 높이를 조절합니다.
+                imageName?.frame.size.height = 100 // 이미지의 높이에 따라 조절하세요.
+            }
+
+            let textView = cell.viewWithTag(3) as? UITextView
+            textView?.text = diaryAllData.diary_content
+            
+            // 텍스트뷰 크기 조절
+            textView?.isScrollEnabled = false
+            textView?.sizeToFit()
+            textView?.backgroundColor = .clear
+            
+            cell.layer.cornerRadius = 30
+        }
+        
         
         return cell
     }
-    
 }
 
 extension DiaryViewController: UITextViewDelegate {
@@ -167,7 +236,7 @@ extension DiaryViewController: UICollectionViewDelegateFlowLayout {
         
         // 텍스트뷰를 생성하여 텍스트를 설정하고, 폭을 위에서 계산한 것처럼 설정합니다.
         let textView = UITextView()
-        textView.text = diaryText.diaryContent
+        textView.text = diaryText.diary_content
         textView.font = UIFont.systemFont(ofSize: 14)
         textView.frame.size = CGSize(width: width, height: .greatestFiniteMagnitude)
         textView.isScrollEnabled = false
@@ -175,7 +244,7 @@ extension DiaryViewController: UICollectionViewDelegateFlowLayout {
         
         // 텍스트뷰의 높이에 따라 동적으로 계산된 높이를 설정합니다.
         
-        if let imageName = Bool(diaryText.diaryImage){
+        if let imageName = Bool(diaryText.diary_image){
             if imageName {
                 let dynamicHeight = textView.frame.height + 120 // 이미지와 다른 요소에 따라 조절
                 return CGSize(width: width, height: dynamicHeight)

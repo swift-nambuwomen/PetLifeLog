@@ -95,6 +95,7 @@
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="collectionView" destination="EM9-uY-fBU" id="R9x-JD-SWr"/>
+                        <outlet property="segment" destination="DVo-2B-fqs" id="roo-cf-w8T"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

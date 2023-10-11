@@ -265,6 +265,7 @@
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="lblMemberName" destination="5Rr-2v-ail" id="2wW-MG-cFZ"/>
+                        <outlet property="tabbarItem" destination="F3z-Bl-s4T" id="otM-FN-UQf"/>
                         <outlet property="tableView" destination="f0Z-Mf-G5c" id="JRD-hn-2Nc"/>
                     </connections>
                 </viewController>
