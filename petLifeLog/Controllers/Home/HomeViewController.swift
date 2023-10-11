@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Alamofire
 
 //테스트용 임시 데이터
 let user_id = "admin" // 로그인 후 들고 있어야 할 user_id값
@@ -56,7 +57,25 @@ class HomeViewController: UIViewController {
         // let result = try JSONDecoder().decode(PetAction.self, from: data)
         // self.petActions = result.actions // 디테일
         //petActions:[PetActionDetail]?
+        let url = "http://127.0.0.1:8000/api/pet/act/list"
+        let params:Parameters = ["pet_id":1, "act_date":"2023-10-03"]
+        //let dataRequest = AF.request(url, method: .get, parameters: params)
 
+                
+        AF.request(url, method: .get, parameters: params, encoding: URLEncoding.default).responseDecodable(of: Act.self) { response in
+            print("Request: \(String(describing: response.request))")   // original url request
+            print("Response: \(String(describing: response.response))") // http url response
+            print("Result: \(response.result)")
+            switch response.result {
+                    case .success:
+                        guard let result = response.value else { return }
+                        print("결과",result)
+                    case .failure(let error):
+                        print("에러", error)
+                        break
+                    }
+                }
+        
         //샘플 데이터
         if selected_date == sample_data_date {
             petActions = [PetAction(act_id: 2, actions:PetActionDetail(act_time : "09:10", memo : "건강한듯", memo_image : "twinlake", ordure_shape : "정상", ordure_color : "검정")), PetAction(act_id: 3, actions:PetActionDetail(act_time : "10:39", memo : "어제 주문한 수제 간식. 잘 먹는다.", memo_image : "charleyrivers", feed_type:"간식", feed_name: "미국브랜드")), PetAction(act_id: 6, actions:PetActionDetail(act_time : "13:11", weight: 13.2)), PetAction(act_id: 1, actions:PetActionDetail(act_time : "14:39")), PetAction(act_id: 4, actions:PetActionDetail(act_time : "15:22", hospital_type: "질병")), PetAction(act_id: 5, actions:PetActionDetail(act_time : "16:41", beauty_type: "미용실", beauty_cost: 13000))]
