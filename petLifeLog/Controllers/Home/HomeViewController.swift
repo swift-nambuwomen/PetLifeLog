@@ -132,8 +132,10 @@ class HomeViewController: UIViewController {
     
     func setupDiaryView() {
         // 다이어리 이미지 있으면 카메라 버튼 비활성화 되게
+        //cameraBtn.isHidden = false
         cameraBtn.isEnabled = true
         if petDiary?.diary_image != nil {
+            //cameraBtn.isHidden = true
             cameraBtn.isEnabled = false
         }
 
@@ -447,7 +449,8 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
         
         self.diaryImgView.image = newImage // 받아온 이미지를 update
         picker.dismiss(animated: true, completion: nil) // picker를 닫아줌
-        cameraBtn.isHidden = true
+        //cameraBtn.isHidden = true
+        cameraBtn.isEnabled = false
         
     }
 }
