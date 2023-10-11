@@ -133,11 +133,11 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
 //            return
 //        }
         
-        let str = "http://127.0.0.1:8000/api/pet/"
+        let str = "http://127.0.0.1:8000/api/pet/list?"
         //let str = "http://127.0.0.1:8000/pets/"
         let params:Parameters = ["userId":pet]
         
-        AF.request(str, method: .get, parameters: params, encoding: JSONEncoding.default).responseDecodable(of: [Pets].self) { response in
+        AF.request(str, method: .get, parameters: params).responseDecodable(of: [Pets].self) { response in
             print(response.result)
             switch response.result {
             case .success:
