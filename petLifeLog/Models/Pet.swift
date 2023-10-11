@@ -65,3 +65,4 @@ struct ActDetail: Codable {
     let hospital_type:String?
     let weight:Int?
 }
+ 
