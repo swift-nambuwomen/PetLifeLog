@@ -40,7 +40,7 @@ class PetDetailViewController: UIViewController {
     
     let picker = UIImagePickerController()
     
-    var petAction = PetAction()
+    var petAction:PetAction!
     
     
     override func viewDidLoad() {

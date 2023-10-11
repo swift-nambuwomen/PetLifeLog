@@ -80,7 +80,7 @@ class HomeViewController: UIViewController {
         if selected_date == sample_data_date {
             petActions = [PetAction(act_id: 2, actions:PetActionDetail(act_time : "09:10", memo : "건강한듯", memo_image : "twinlake", ordure_shape : "정상", ordure_color : "검정")), PetAction(act_id: 3, actions:PetActionDetail(act_time : "10:39", memo : "어제 주문한 수제 간식. 잘 먹는다.", memo_image : "charleyrivers", feed_type:"간식", feed_name: "미국브랜드")), PetAction(act_id: 6, actions:PetActionDetail(act_time : "13:11", weight: 13.2)), PetAction(act_id: 1, actions:PetActionDetail(act_time : "14:39")), PetAction(act_id: 4, actions:PetActionDetail(act_time : "15:22", hospital_type: "질병")), PetAction(act_id: 5, actions:PetActionDetail(act_time : "16:41", beauty_type: "미용실", beauty_cost: 13000))]
             
-            petDiary = PetDiary(act_time: "13:26", diary_content: "오늘은 애견동반 호텔에 다녀왔다.")
+            petDiary = PetDiary(act_time: "13:26", diary_image: "no-img", diary_content: "오늘은 애견동반 호텔에 다녀왔다.")
         } else {
             petActions = nil
             petDiary = nil
@@ -211,7 +211,7 @@ class HomeViewController: UIViewController {
         if segue.identifier == "toAddDiary" { // 다이어리 추가 모달창으로 가는 segue
             let targetVC = segue.destination as! AddDiaryViewController
             targetVC.selectedDate = selected_date
-            targetVC.petDiary = petDiary ?? PetDiary() // 상세페이지에서 기존 데이터 뿌려줘야 함. 네비바 날짜의 데이터로.
+            targetVC.petDiary = petDiary ?? nil // 상세페이지에서 기존 데이터 뿌려줘야 함. 네비바 날짜의 데이터로.
         }
         else if segue.identifier == "toAddAct1" || segue.identifier == "toAddAct2" || segue.identifier == "toAddAct3" || segue.identifier == "toAddAct4" || segue.identifier == "toAddAct5" || segue.identifier == "toAddAct6" { // 액션 추가 모달창으로 가는 segue 6개
             let targetVC = segue.destination as! AddPetActionViewController
@@ -225,7 +225,7 @@ class HomeViewController: UIViewController {
         else if segue.identifier == "toActionDetail" { // 액션 상세 편집 모달창으로 가는 segue
             if let selected = tableView.indexPathForSelectedRow {
                 if let targetVC = segue.destination as? PetDetailViewController {
-                    targetVC.petAction = petActions?[selected.row] ?? PetAction() // 상세페이지에서 선택된 액션 데이터 뿌려줘야 함.
+                    targetVC.petAction = petActions?[selected.row] ?? nil // 상세페이지에서 선택된 액션 데이터 뿌려줘야 함.
                 }
             }
         }
