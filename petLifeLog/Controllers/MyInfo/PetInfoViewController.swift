@@ -68,7 +68,7 @@ class PetInfoViewController: UIViewController {
             imageview.image = UIImage(named: imageFile)
             
             let sexType = pet[0].sex
-            if sexType == "수컷" {
+            if sexType == "M" {
                 sexseg.selectedSegmentIndex = 0
             }
             else{
@@ -106,34 +106,36 @@ class PetInfoViewController: UIViewController {
     
     //취소버튼 클릭
     @IBAction func actCancel(_ sender: Any) {
-        self.dismiss(animated: true)
+        //닫히는 화면에서 home아이콘->exit아이콘클릭(ctrl누르고). unwind가 생김.
+        //메인화면에서 back 액션추가해서 데이터 새로조회하도록 내용 추가
+        self.performSegue(withIdentifier: "back", sender: self)
+        //self.dismiss(animated: true)
     }
     
     //저장버튼 클릭
     @IBAction func actSave(_ sender: Any) {
         //var addPet:[String:String] = [:]
 
-        if saveType == "I" {
-            saveInsertPets()
-        }
-        else{
+        if saveType == "U" {
             saveUpdatePets()
+        }else{
+            saveInsertPets()
         }
         
         //사진 저장
 //        UIImageWriteToSavedPhotosAlbum(originalImage, self, #selector(saveImage(_:didFinishSavingWithError:contextInfo:)), nil)
-        let fileURL = getFileURL(imageFile)
 
-        if let image = imageview.image,
-           let data = image.jpegData(compressionQuality: 0.8) {
-            do {
-                try data.write(to: fileURL)
-            }
-            catch{
-                print("저장실패")
-            }
-        }
-        //}
+//        let fileURL = getFileURL(imageFile)
+//
+//        if let image = imageview.image,
+//           let data = image.jpegData(compressionQuality: 0.8) {
+//            do {
+//                try data.write(to: fileURL)
+//            }
+//            catch{
+//                print("저장실패")
+//            }
+//        }
     }
 
     func saveImage(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer)
@@ -166,19 +168,32 @@ class PetInfoViewController: UIViewController {
     }
     
     //사진
-    //파일 가져오기(URL -> file://
-    func getDocPath() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        let documentsDirectory = paths[0]
-        return documentsDirectory
+    
+    
+    //입력박스 일괄 셋팅
+    func setInput(){
+        if let strName = txtName.text {
+            let anyName: Any = strName
+            self.name = anyName
+        }
+        
+        if let strName = txtBreed.text {
+            let anyName: Any = strName
+            self.breed = anyName
+        }
+        
+        if let strName = sexseg.titleForSegment(at: sexseg.selectedSegmentIndex) {
+            if strName == "수컷"{
+                self.sexType = "M"
+            }else{
+                self.sexType = "F"
+            }
+        }
+        
+        
     }
     
-    func getFileURL(_ fileName:String) -> URL {
-        let docPath = getDocPath()
-        let fileURL = docPath.appending(component: fileName)
-        return fileURL
-    }
-    
+
     //입력박스 일괄 셋팅
     func setInput(){
         if let strName = txtName.text {
@@ -197,10 +212,11 @@ class PetInfoViewController: UIViewController {
         
     }
     
+
     //==================== 강아지 정보 신규등록 ============================
     func saveInsertPets() {
         // [http 요청 주소 지정]
-        let url = "http://127.0.0.1/pets/"
+        let url = "http://127.0.0.1:8000/api/pet/create/"
 
 //        // [http 요청 헤더 지정]
 //        let header : HTTPHeaders = [
@@ -214,69 +230,34 @@ class PetInfoViewController: UIViewController {
         let queryString : Parameters = [
             "id": 0,
             "name": name,
-            "profile_image": imageFile,
-            "birth": datePicker.date.toString(),
+            "profile_image": "dog2.jpeg",
+            "birth": "2023-10-10", //datePicker.date.toString(),
             "breed": breed,
             "sex":sexType,
-            "user_id":1
+            "user":1
         ]
         
-        // Alamofire를 사용하여 POST 요청 보내기
-        AF.request(url, method: .post, parameters: queryString, encoding: JSONEncoding.default).responseDecodable(of: Pets.self) { response in
-            switch response.result {
-            case .success:
-                // POST 요청이 성공하고, 응답 데이터를 모델로 디코딩한 경우
-                break
-            case .failure:
-                // POST 요청 중 오류가 발생한 경우
-                break
-            }
-        }
-    }
-    
-    //==================== 강아지 정보 수정 ============================
-    func saveUpdatePets() {
-        // [http 요청 주소 지정]
-        let url = "http://127.0.0.1:8000/pets/\(petId)"
-
-        // [http 요청 헤더 지정]
-//        let headers : HTTPHeaders = [
-//            "Content-Type" : "application/json"
-//        ]
-
-        setInput()
-        
-        // [http 요청 파라미터 지정 실시]
-        //id, name, profile_image, birth, breed, sex, user_id
-        let queryString : Parameters = [
-            "id":petId,
-            "name": name,
-            "profile_image": "dog2.jpeg",
-            "birth": datePicker.date.toString(),
-            "breed": breed,
-            "sex": sexType,
-            "user_id":1
-        ]
         print(queryString)
         
         // Alamofire를 사용하여 POST 요청 보내기
         AF.request(url, method: .post, parameters: queryString, encoding: JSONEncoding.default).responseDecodable(of: Pets.self) { response in
+            print(response.result)
             switch response.result {
             case .success:
                 // POST 요청이 성공하고, 응답 데이터를 모델로 디코딩한 경우
-                let alert = UIAlertController(title: "확인", message: "저장되었습니다.", preferredStyle: .alert)
+                // POST 요청이 성공하고, 응답 데이터를 모델로 디코딩한 경우
+                let alert = UIAlertController(title: "확인", message: "신규등록 되었습니다.", preferredStyle: .alert)
                 let action = UIAlertAction(title: " 확인", style: .default)
                 alert.addAction(action)
                 
                 self.present(alert, animated: true)
-                
+
                 break
             case .failure:
                 // POST 요청 중 오류가 발생한 경우
                 break
             }
         }
-        
     }
     
 }
@@ -317,52 +298,66 @@ extension PetInfoViewController: UIImagePickerControllerDelegate, UINavigationCo
         if let image = info[.originalImage] as? UIImage {
             self.imageview.image = image
         }
-    /*서버에 이미지 저장하기
-//        let resizedImage = resizeImage(image: selectedImage, newWidth: 300)
+        
+        //print("image: \(image)")
+        
+//        AF.upload(multipartFormData: { multipartFormData in
+//               multipartFormData.append(image, withName: "dog1")
+//        }, to: URL)
+//        .responseJSON { response in
+//        //응답받아 처리하는곳
+//        }
+
+        
+        //서버에 이미지 저장하기
+
+//    func uploadDiary(date: String, emoji: String, content: String, _ photo : UIImage, url: String){
+//        //함수 매개변수는 POST할 데이터, url
 //
-//                let imageData = resizedImage.jpegData(compressionQuality: 0.5)
+//        let body : Parameters = [
+//           "profile_Image" : "dog1.jpeg",
+//            "user" : 1
+//        ]    //POST 함수로 전달할 String 데이터, 이미지 데이터는 제외하고 구성
 //
+//        //multipart 업로드
+//        AF.upload(multipartFormData: { (multipart) in
+//            if let imageData = photo.jpegData(compressionQuality: 1) {
+//                multipart.append(imageData, withName: "photo", fileName: "photo.jpg", mimeType: "image/jpeg")
+//                //이미지 데이터를 POST할 데이터에 덧붙임
+//            }
+//            for (key, value) in body {
+//                multipart.append("\(value)".data(using: .utf8, allowLossyConversion: false)!, withName: "\(key)")
+//                //이미지 데이터 외에 같이 전달할 데이터 (여기서는 user, emoji, date, content 등)
+//            }
+//        }, to: url    //전달할 url
+//        ,method: .post        //전달 방식
+//        ,headers: headers).responseJSON(completionHandler: { (response) in    //헤더와 응답 처리
+//            print(response)
 //
-//                Alamofire.upload(
+//            if let err = response.error{    //응답 에러
+//                print(err)
+//                return
+//            }
+//            print("success")        //응답 성공
 //
-//                    multipartFormData: { MultipartFormData in
-//                        if((imageData) != nil){
+//            let json = response.data
 //
+//            if (json != nil){
+//                print(json)
+//            }
+//        })
 //
-//
-//                            MultipartFormData.append(imageData!, withName: "서버 필드명", fileName: "profileImage.jpeg", mimeType: "image/jpeg")
-//                        }
-//
-//                }, to: "서버 주소", method: .patch, headers: header) { (result) in
-//
-//                    switch result {
-//                    case .success(let upload, _, _):
-//
-//                        upload.responseJSON { response in
-//                           // getting success
-//                            if (response.response?.statusCode)! >= 200 {
-//
-//                                self.imgProfile.image = resizedImage
-//                                self.dismiss(animated: true, completion: nil)
-//                            }
-//
-//                        }
-//
-//                    case .failure(let encodingError): break
-//                        // getting error
-//
-//                    }
-//
-//                }
-     */
-        picker.dismiss(animated: true)
-    }
+//    }
+        
+        
 }
 
 extension Date {
     func toString(format: String) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = format
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = NSTimeZone(name: "ko_KR") as TimeZone?
+        //dateFormatter.dateFormat = format
         return dateFormatter.string(from: self)
     }
 }
@@ -380,3 +375,15 @@ extension Date {
 //    }
 //}
 
+extension UIImage {
+    func resizeImage(newWidth: CGFloat) -> UIImage? {
+        //        let scale = newWidth / self.size.width
+        //        let newHeight = self.size.height * scale
+        //        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
+        //        self.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
+        //
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
+    }
+}

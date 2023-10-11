@@ -146,9 +146,11 @@
                         <outlet property="sexseg" destination="r2e-xf-eJo" id="mqZ-Ci-e5g"/>
                         <outlet property="txtBreed" destination="cc1-P6-MMA" id="lB9-OT-yaR"/>
                         <outlet property="txtName" destination="06P-wo-a1G" id="hCS-F5-424"/>
+                        <segue destination="3na-Pv-Fen" kind="unwind" identifier="back" unwindAction="back:" id="Rca-k4-5ad"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bTd-BE-zuK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="3na-Pv-Fen" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="568.70229007633588" y="-54.225352112676056"/>
         </scene>
@@ -234,7 +236,7 @@
                                 </prototypes>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Rr-2v-ail">
-                                <rect key="frame" x="16" y="65" width="361" height="56"/>
+                                <rect key="frame" x="16" y="65" width="221" height="56"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -250,6 +252,10 @@
                                     <segue destination="ZsW-8t-uEb" kind="presentation" id="UaZ-Qz-HYh"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="mypages" translatesAutoresizingMaskIntoConstraints="NO" id="TNK-VW-wSX">
+                                <rect key="frame" x="192" y="65" width="45" height="56"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="JRM-Wb-zRq"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -259,6 +265,7 @@
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="lblMemberName" destination="5Rr-2v-ail" id="2wW-MG-cFZ"/>
+                        <outlet property="tabbarItem" destination="F3z-Bl-s4T" id="otM-FN-UQf"/>
                         <outlet property="tableView" destination="f0Z-Mf-G5c" id="JRD-hn-2Nc"/>
                     </connections>
                 </viewController>
@@ -268,7 +275,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Uls-hM-Fo0"/>
+        <segue reference="UaZ-Qz-HYh"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="dogDefault" width="1200" height="1200"/>
