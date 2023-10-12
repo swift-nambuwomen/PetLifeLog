@@ -14,6 +14,11 @@ let pet_id = 1 // 로그인 후 들고 있어야 할 user_id의 현재 선택 �
 let petBirthday = "2023-09-10" //강아지 생일. 임시데이터.
 let sample_data_date = "2023-10-12"
 
+func processImg(data:Data, imageView:UIImageView){
+    let image = UIImage(data: data)
+    imageView.image = image
+}
+
 class HomeViewController: UIViewController {
     var petDiary:PetDiary?
     var petActions:[Act]?
@@ -30,7 +35,6 @@ class HomeViewController: UIViewController {
     let picker = UIImagePickerController()
     @IBOutlet weak var diaryImgView: UIImageView!
     @IBOutlet weak var cameraBtn: UIButton!
-    @IBOutlet weak var diaryTime: UILabel!
     @IBOutlet weak var diaryContent: UILabel!
     
     
@@ -65,7 +69,7 @@ class HomeViewController: UIViewController {
                 Act(act: "미용", actdetail:Actdetail(act_time : "16:41", beauty_cost: 13000, beauty_type: "미용실"))
             ]
 
-            petDiary = PetDiary(act_time: "13:26", diary_content: "오늘은 애견동반 호텔에 다녀왔다.")
+            petDiary = PetDiary(diary_content: "오늘은 애견동반 호텔에 다녀왔다.")
         } else {
             petActions = nil
             petDiary = nil
@@ -104,12 +108,11 @@ class HomeViewController: UIViewController {
                         if result.count != 0 {
                         print("첫번쨰", result[0])
                             if result[0].actdetail != nil {
-                                let diary_act_time = result[0].actdetail?.act_time ?? "00:00"
                                 let the_diary_content = result[0].diary_content
                                 let the_diary_image = result[0].diary_image
                                 let the_diary_yn = result[0].diary_open_yn
                                 //print(diary_act_time, the_diary_image, the_diary_content)
-                                self.petDiary = PetDiary(act_time: diary_act_time, diary_image: the_diary_image, diary_content: the_diary_content, diary_open_yn: the_diary_yn)
+                                self.petDiary = PetDiary(diary_image: the_diary_image, diary_content: the_diary_content, diary_open_yn: the_diary_yn)
                                 //print(self.petDiary)
                             }
                     } else {
@@ -139,7 +142,6 @@ class HomeViewController: UIViewController {
             cameraBtn.isEnabled = false
         }
 
-        diaryTime.text = petDiary?.act_time
         diaryContent.text = petDiary?.diary_content
         diaryImgView.image = UIImage(named: petDiary?.diary_image ?? "white")
     }

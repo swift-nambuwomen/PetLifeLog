@@ -499,7 +499,7 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="일기 내용" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PbV-jp-3R7">
-                                            <rect key="frame" x="89" y="0.0" width="131" height="45"/>
+                                            <rect key="frame" x="19" y="0.0" width="201" height="45"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <nil key="textColor"/>
@@ -526,13 +526,6 @@
                                                 <action selector="addDiaryPic:" destination="LYk-fL-jyq" eventType="touchUpInside" id="3ta-Nn-eEn"/>
                                             </connections>
                                         </button>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="시간" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gGj-Bl-0hy">
-                                            <rect key="frame" x="20" y="-1" width="63" height="44"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="fxr-rB-sB4">
                                             <rect key="frame" x="244" y="2" width="40" height="40"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -695,7 +688,6 @@
                         <outlet property="dateBtn" destination="Atr-Qz-moW" id="JDN-fa-bWx"/>
                         <outlet property="diaryContent" destination="PbV-jp-3R7" id="hu7-0s-Iih"/>
                         <outlet property="diaryImgView" destination="fxr-rB-sB4" id="g8w-ZA-l4M"/>
-                        <outlet property="diaryTime" destination="gGj-Bl-0hy" id="fht-zf-Bww"/>
                         <outlet property="nextBtn" destination="ru3-on-OU7" id="FKQ-2u-awB"/>
                         <outlet property="prevBtn" destination="OKC-Te-J6g" id="nDb-DL-YUg"/>
                         <outlet property="tableView" destination="JSr-ab-A04" id="ELr-mz-SH2"/>

@@ -10,7 +10,7 @@ import Foundation
 // 임시데이터 생성자에서 모든 값 넣지 않아도 되게 우선 var로 함
 // MARK: - Diary
 struct PetDiary: Codable {
-    var act_time: String
+    //var act_date: String
     var diary_image,diary_content, diary_open_yn: String?
 }
 
