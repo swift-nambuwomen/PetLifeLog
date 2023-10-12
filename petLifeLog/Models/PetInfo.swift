@@ -33,6 +33,14 @@ init(from decoder : Decoder) throws
     }
 }
 
+struct DiaryList: Codable {
+    let pet: Int
+    let act_date: String
+    let diary_image: String
+    let diary_content: String
+}
+
+
 
 
 

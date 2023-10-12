@@ -13,29 +13,21 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
     @IBOutlet weak var segment: UISegmentedControl!
     @IBOutlet weak var textViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var collectionView: UICollectionView!
-    
-    //var diary:[PetAction] = []
-    var diaryAll:[PetDiary] = []
-    var diary:[PetDiary] = []
+
+    var diaryAll:[DiaryList] = []
+    var diary:[DiaryList] = []
+    let pet = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        //textView.delegate = self
-
+        self.collectionView.dataSource = self
+        self.collectionView.delegate = self
+        
         if segment.selectedSegmentIndex == 0{
-            getDiary(query: 5) {
-                // collectionView 관련 코드를 여기에 작성
-                self.collectionView.dataSource = self
-                self.collectionView.delegate = self
-            }
+            getDiary()
         }else{
-            
-            getDiaryAll() {
-                // collectionView 관련 코드를 여기에 작성
-                self.collectionView.dataSource = self
-                self.collectionView.delegate = self
-            }
+            getDiaryAll()
         }
     }
 
@@ -61,30 +53,23 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
     @IBAction func meOrAll(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
             //me
-            getDiary(query: 5) {
-                // collectionView 관련 코드를 여기에 작성
-                self.collectionView.dataSource = self
-                self.collectionView.delegate = self
-            }
-            
+            getDiary()
         } else {
             //all
-            getDiaryAll {
-                // collectionView 관련 코드를 여기에 작성
-                self.collectionView.dataSource = self
-                self.collectionView.delegate = self
-            }
+            getDiaryAll()
         }
     }
     
     //===============다이어리 데이터 조회(나)===============
-    func getDiary(query:Int?, completion: @escaping () -> Void){
+    func getDiary(completion: (() -> Void)? = nil){
 
-        let str = "http://127.0.0.1:8000/api/pet/act/diary/"
-    
-        let alamo = AF.request(str, method: .get)
-
-        alamo.responseDecodable(of:[PetDiary].self) { response in
+        let str = "http://127.0.0.1:8000/api/pet/diary?"
+        let params:Parameters = ["userId":pet]
+        
+        let alamo = AF.request(str, method: .get, parameters: params)
+        print(alamo)
+        alamo.responseDecodable(of:[DiaryList].self) { response in
+            print(response.result)
             if let error = response.error {
                     print("Error: \(error.localizedDescription)")
             }
@@ -96,23 +81,22 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
                 }
             }
             DispatchQueue.main.async {
-                    completion()
+                            completion?()
+                self.collectionView.reloadData() // 데이터가 로드된 후 CollectionView를 갱신
             }
         }
         
     }
     
     //===============다이어리 데이터 조회(전체)===============
-    func getDiaryAll(completion: @escaping () -> Void){
-        let str = "http://127.0.0.1:8000/api/pet/act/diaryAll/"
-        
+    func getDiaryAll(completion: (() -> Void)? = nil){
+        let str = "http://127.0.0.1:8000/api/pet/diaryAll"
         let alamo = AF.request(str, method: .get)
         
-        alamo.responseDecodable(of:[PetDiary].self) { response in
+        alamo.responseDecodable(of:[DiaryList].self) { response in
             if let error = response.error {
                     print("Error: \(error.localizedDescription)")
-            }
-            else {
+            }else {
                 // 성공적으로 디코딩된 데이터 처리
                 if let result = response.value {
                     print(result)
@@ -120,12 +104,14 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
                 }
             }
             DispatchQueue.main.async {
-                    completion()
+                            completion?()
+                self.collectionView.reloadData() // 데이터가 로드된 후 CollectionView를 갱신
             }
         }
         
     }
     
+    //=================CollectionView 처리 =====================================
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -144,8 +130,9 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
         
         //나와 전체일기일때 구분하여 표시
         if segment.selectedSegmentIndex == 0{
+            
             let diaryData = diary[indexPath.row]
-
+            
             //다이어리 공개된 데이터만 표시(전체일기 표시할때)
             let imageName = cell.viewWithTag(2) as? UIImageView
 
@@ -202,8 +189,6 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
             
             cell.layer.cornerRadius = 30
         }
-        
-        
         return cell
     }
 }
@@ -253,7 +238,7 @@ extension DiaryViewController: UICollectionViewDelegateFlowLayout {
                 return CGSize(width: width, height: dynamicHeight)
             }
         }else{
-            return CGSize(width: view.frame.width-40, height: view.frame.height/4)
+            return CGSize(width: view.frame.width, height: view.frame.height/4)
         }
     }
     

@@ -13,7 +13,7 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
     UIGestureRecognizerDelegate{
     //양육자 변수
     @IBOutlet weak var tabbarItem: UITabBarItem!
-    let memberID = "1"
+    let memberID = 1
     var saveType = ""
     var pet:[Pets] = []
     var longPressGesture: UILongPressGestureRecognizer!
@@ -53,7 +53,7 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
     
     //닫기버튼 눌렀을때 화면 갱신
     @IBAction func back(_ segue:UIStoryboardSegue){
-        getPetInfo(pet: 2)
+        getPetInfo(pet: memberID)
         tableView.reloadData()
     }
     
@@ -127,47 +127,27 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
     //url에서 데이터 가져오기
 
     func getPetInfo(pet:Int){
-//        guard let query = query
-//        else{
-//            print("query in nil")
-//            return
-//        }
         
         let str = "http://127.0.0.1:8000/api/pet/list?"
-        //let str = "http://127.0.0.1:8000/pets/"
         let params:Parameters = ["userId":pet]
         
-        AF.request(str, method: .get, parameters: params).responseDecodable(of: [Pets].self) { response in
-            print(response.result)
-            switch response.result {
-            case .success:
-                
-                break
-            case .failure:
-                // POST 요청 중 오류가 발생한 경우
-                print(response.debugDescription)
-                break
+        let alamo = AF.request(str, method: .get, parameters: params)
+
+        //alamo.responseDecodable(of:Pets.self) { response in  //데이터 한건 받을때
+        alamo.responseDecodable(of:[Pets].self) { response in
+            if let error = response.error {
+                    print("Error: \(error.localizedDescription)")
+            }
+            else {
+                // 성공적으로 디코딩된 데이터 처리
+                if let result = response.value {
+                    print(result)
+                    self.pet = result
+                    //self.pets.append(reuslt)
+                    self.tableView.reloadData()
+                }
             }
         }
-        
-//        let alamo = AF.request(str, method: .get, parameters: params)
-//
-//        //alamo.responseDecodable(of:Pets.self) { response in  //데이터 한건 받을때
-//        alamo.responseDecodable(of:[Pets].self) { response in
-//            if let error = response.error {
-//                    print("Error: \(error.localizedDescription)")
-//
-//            }
-//            else {
-//                // 성공적으로 디코딩된 데이터 처리
-//                if let result = response.value {
-//                    print(result)
-//                    self.pet = result
-//                    //self.pets.append(reuslt)
-//                    self.tableView.reloadData()
-//                }
-//            }
-//        }
     }
     
     //메인에서 화면전환후 되돌아가기할때 호출
