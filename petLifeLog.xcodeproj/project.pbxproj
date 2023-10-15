@@ -33,6 +33,7 @@
 		FC9303F42AC45A9C00C883C6 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = FC9303F32AC45A9C00C883C6 /* .gitignore */; };
 		FC9303F72AC45B1C00C883C6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = FC9303F62AC45B1C00C883C6 /* README.md */; };
 		FCCE13512AC292C3005B95C9 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCE13502AC292C3005B95C9 /* HomeViewController.swift */; };
+		FCEEF16F2AD7A4B900D8D97E /* AzureService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEEF16E2AD7A4B900D8D97E /* AzureService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,7 @@
 		FC9303F52AC45AF500C883C6 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		FC9303F62AC45B1C00C883C6 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		FCCE13502AC292C3005B95C9 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		FCEEF16E2AD7A4B900D8D97E /* AzureService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzureService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 		FC518B282AC0AF9B00479461 /* petLifeLog */ = {
 			isa = PBXGroup;
 			children = (
+				FCEEF16D2AD7A36B00D8D97E /* Utils */,
 				FC518B3F2AC0B05300479461 /* Models */,
 				FC518B3E2AC0B03800479461 /* Views */,
 				FC518B3D2AC0B02F00479461 /* Controllers */,
@@ -216,6 +219,14 @@
 			path = MyInfo;
 			sourceTree = "<group>";
 		};
+		FCEEF16D2AD7A36B00D8D97E /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				FCEEF16E2AD7A4B900D8D97E /* AzureService.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -305,6 +316,7 @@
 				FC8C3F012ACC74D5007FD632 /* Pet.swift in Sources */,
 				FC518B2C2AC0AF9B00479461 /* SceneDelegate.swift in Sources */,
 				FC518B632AC269E000479461 /* DiaryViewController.swift in Sources */,
+				FCEEF16F2AD7A4B900D8D97E /* AzureService.swift in Sources */,
 				FC069C822AC9B33300A8023E /* CalendarViewController.swift in Sources */,
 				FBBDA06F2ACCFFB300A1263E /* PetInfoViewController.swift in Sources */,
 				FC7B56812AC5800400E90500 /* PetDetailViewController.swift in Sources */,
@@ -462,6 +474,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = JD28MPPNL4;
+				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = petLifeLog/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -490,6 +503,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = JD28MPPNL4;
+				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = petLifeLog/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

@@ -38,7 +38,7 @@ class PetDetailViewController: UIViewController {
     
     let picker = UIImagePickerController()
     
-    var petAction:Act! // Home뷰로부터 넘겨받은 데이터
+    var petAction:Actdetail! // Home뷰로부터 넘겨받은 데이터
     
     
     override func viewDidLoad() {
@@ -48,33 +48,36 @@ class PetDetailViewController: UIViewController {
         picker.delegate = self // 카메라 피커
     }
     
-    // TODO: 넘겨받은 데이터셋에서 UI내에 각 요소마다 해당하는 데이터가 있을 시 채워 넣게 해야 함.
-            //이미지뷰에 String <-> UIImage 방법
+    
     // MARK: 스토리보드 하나에 6개 액션에 관한 요소들을 전부 모아둔 상태. Cell 선택시 어떤 act_name인지 받아서 해당 액션에 맞는 요소만 뽑아서 UI를 그리게 분기함.
     func drawUI() { //act_name 변수는 acts테이블에 저장된 name칼럼의 6개.
         // 공통으로 들어갈 사항
-        act_time.date = petAction.actdetail?.act_time.toTime() ?? "00:00".toTime()!
-        memo.text = petAction.actdetail?.memo
+        act_time.date = petAction.act_time.toTime() ?? "00:00".toTime()!
+        memo.text = petAction.memo
         //imageView.image = petAction.actions?.memo_image // String, UIImage
         
+        // 액션명에 따라 보여줄 UI가 다르므로 분기처리
         let act = petAction.act
         switch act {
+        // 산책용 뷰
         case "산책" : ActionLabel.title = act; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; WeightView.isHidden = true;
             
-            let myString: String = String(petAction.actdetail?.walk_spend_time ?? 0)
+            let myString: String = String(petAction.walk_spend_time ?? 0)
             waste_time.text = myString
             
+        // 배변용 뷰
         case "배변" : ActionLabel.title = act; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
 
-            if petAction.actdetail?.ordure_shape == "건조" {
+            if petAction.ordure_shape == "건조" {
                 poo_shape.selectedSegmentIndex = 0
-            } else if petAction.actdetail?.ordure_shape == "정상" {
+            } else if petAction.ordure_shape == "정상" {
                 poo_shape.selectedSegmentIndex = 1
             } else {
                 poo_shape.selectedSegmentIndex = 2
             }
             
-            switch petAction.actdetail?.ordure_color {
+            // 받아온 데이터의 액션명에 따라 UI뷰의 세그먼트바 위치에 미리 선택되어있게 함
+            switch petAction.ordure_color {
                 case "초코": poo_color.selectedSegmentIndex = 0
                 case "녹색": poo_color.selectedSegmentIndex = 1
                 case "노랑": poo_color.selectedSegmentIndex = 2
@@ -84,41 +87,45 @@ class PetDetailViewController: UIViewController {
                 default: return
             }
             
+        //사료용 뷰
         case "사료" : ActionLabel.title = act; PooShapeView.isHidden = true; PooColorView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
-            food_brand.text = petAction.actdetail?.feed_name;
-            food_gram.text = String(petAction.actdetail?.feed_amount ?? 0.0);
+            food_brand.text = petAction.feed_name;
+            food_gram.text = String(petAction.feed_amount ?? 0);
             
-            if petAction.actdetail?.feed_type == "사료" {
+            if petAction.feed_type == "사료" {
                 food_type.selectedSegmentIndex = 0
             } else {
                 food_type.selectedSegmentIndex = 1
             }
             
+        //병원용 뷰
         case "병원" : ActionLabel.title = act; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
 
-            if petAction.actdetail?.hospital_type == "예방접종" {
+            if petAction.hospital_type == "예방접종" {
                 hospital_type.selectedSegmentIndex = 0
             } else {
                 hospital_type.selectedSegmentIndex = 1
             }
             
-            let myString: String = String(petAction.actdetail?.beauty_cost ?? 0)
+            let myString: String = String(petAction.beauty_cost ?? 0)
             expences.text = myString
             
+        //미용용 뷰
         case "미용" : ActionLabel.title = act; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
             
-            let myString: String = String(petAction.actdetail?.beauty_cost ?? 0)
+            let myString: String = String(petAction.beauty_cost ?? 0)
             expences.text = myString
             
-            if petAction.actdetail?.beauty_type == "셀프" {
+            if petAction.beauty_type == "셀프" {
                 hair_type.selectedSegmentIndex = 0
             } else {
                 hair_type.selectedSegmentIndex = 1
             }
 
+        //몸무게용 뷰
         case "몸무게" : ActionLabel.title = act; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true;
             
-            let myString: String = String(petAction.actdetail?.weight ?? 0.0)
+            let myString: String = String(petAction.weight ?? 0)
             weight.text = myString
 
         default:
