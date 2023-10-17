@@ -71,7 +71,7 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
     //===============다이어리 데이터 조회(나)===============
     func getDiary(completion: (() -> Void)? = nil){
 
-        let str = "http://127.0.0.1:8000/api/pet/diary?"
+        let str = "http://127.0.0.1:8000/api/pet/diaryList?"
         let params:Parameters = ["userId":pet]
         
         let alamo = AF.request(str, method: .get, parameters: params)

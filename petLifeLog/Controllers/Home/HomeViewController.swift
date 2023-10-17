@@ -38,6 +38,10 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // login check
+        //login()
+        
         let now = Int(Date().timeIntervalSince1970) // unixTime. 1972년 1월 1일부터로부터 몇초가 경과했는지
         setDate(now)
         today = selected_date // nextDate버튼 비활성화 처리 위하여 오늘 날짜와 비교하기 위해서 받아두기
@@ -216,7 +220,17 @@ class HomeViewController: UIViewController {
     }
     
     
-    
+    func login() {
+        // login check
+        let isLogined = UserDefaults.standard.bool(forKey: "isLogined")
+        
+        if !isLogined {
+            let loginStoryboard = UIStoryboard(name: "Auth", bundle: nil)
+            if let vc = loginStoryboard.instantiateViewController(identifier: "login") as? LoginViewController {
+                self.navigationController?.pushViewController(vc, animated: false)
+            }
+        }
+    }
     
     
     // MARK: 화면 전환시 데이터 전달 - selected_date는 글로벌 변수로 둬서 모든 컨트롤러에서 공통으로 쓰도록 함
