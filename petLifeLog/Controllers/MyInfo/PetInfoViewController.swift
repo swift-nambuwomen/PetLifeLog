@@ -11,13 +11,13 @@ import Alamofire
 
 class PetInfoViewController: UIViewController {
     var pet:[Pets] = []
-    var saveType = "" //저장 I/U 구분
+    //var saveType = "" //저장 I/U 구분
     var album:PHPickerViewController?
     let camera = UIImagePickerController()
     var name: Any = ""  // 닉네임
     var breed: Any = "" // 품종
-    var sexType: Any = ""  // 출생일
-    var petId: Any = "" // petId
+    var sexType: Any = ""  // 성별구분
+    var petId: Int = 0 // petId
     var imageFile = ""  // image파일명
     
     //이미지선택 데이터?
@@ -45,13 +45,13 @@ class PetInfoViewController: UIViewController {
         var config = PHPickerConfiguration()
         config.selectionLimit = 1
         config.filter = .images
-        
+
         album = PHPickerViewController(configuration: config)
         album?.delegate = self
         
         datePicker.addTarget(self, action: #selector(actDatePicker(_:)), for: .valueChanged)
         
-        if saveType == "U"{
+        if petId != 0 {
             txtName.text = pet[0].name
             
             if let name = txtName.text {
@@ -116,7 +116,7 @@ class PetInfoViewController: UIViewController {
     @IBAction func actSave(_ sender: Any) {
         //var addPet:[String:String] = [:]
 
-        if saveType == "U" {
+        if petId != 0 {
             saveUpdatePets()
         }else{
             saveInsertPets()
@@ -191,12 +191,14 @@ class PetInfoViewController: UIViewController {
         }
         
         
+        
+        
     }
     
     //==================== 강아지 정보 신규등록 ============================
     func saveInsertPets() {
         // [http 요청 주소 지정]
-        let url = "http://127.0.0.1:8000/api/pet/create/"
+        let url = "http://127.0.0.1:8000/api/pet/petcreate"
 
 //        // [http 요청 헤더 지정]
 //        let header : HTTPHeaders = [
@@ -211,7 +213,7 @@ class PetInfoViewController: UIViewController {
             "id": 0,
             "name": name,
             "profile_image": "dog1.jpeg",
-            "birth": "2023-10-10", //datePicker.date.toString(),
+            "birth": datePicker.date.toDateString(),
             "breed": breed,
             "sex":sexType,
             "user":1
@@ -243,7 +245,7 @@ class PetInfoViewController: UIViewController {
     //==================== 강아지 정보 수정 ============================
     func saveUpdatePets() {
         // [http 요청 주소 지정]
-        let url = "http://127.0.0.1:8000/api/pet/update/\(petId)/"
+        let url = "http://127.0.0.1:8000/api/pet/petupdate/\(petId)"
 
         // [http 요청 헤더 지정]
 //        let headers : HTTPHeaders = [
@@ -258,7 +260,7 @@ class PetInfoViewController: UIViewController {
             "id":petId,
             "name": name,
             "profile_image": "dog2.jpeg",
-            "birth": "2023-10-10", //datePicker.date.toString(),
+            "birth": datePicker.date.toDateString(),
             "breed": breed,
             "sex": sexType,
             "user":1
@@ -337,43 +339,46 @@ extension PetInfoViewController: UIImagePickerControllerDelegate, UINavigationCo
         
         //서버에 이미지 저장하기
 
-//    func uploadDiary(date: String, emoji: String, content: String, _ photo : UIImage, url: String){
-//        //함수 매개변수는 POST할 데이터, url
-//
-//        let body : Parameters = [
-//           "profile_Image" : "dog1.jpeg",
-//            "user" : 1
-//        ]    //POST 함수로 전달할 String 데이터, 이미지 데이터는 제외하고 구성
-//
-//        //multipart 업로드
-//        AF.upload(multipartFormData: { (multipart) in
-//            if let imageData = photo.jpegData(compressionQuality: 1) {
-//                multipart.append(imageData, withName: "photo", fileName: "photo.jpg", mimeType: "image/jpeg")
-//                //이미지 데이터를 POST할 데이터에 덧붙임
-//            }
-//            for (key, value) in body {
-//                multipart.append("\(value)".data(using: .utf8, allowLossyConversion: false)!, withName: "\(key)")
-//                //이미지 데이터 외에 같이 전달할 데이터 (여기서는 user, emoji, date, content 등)
-//            }
-//        }, to: url    //전달할 url
-//        ,method: .post        //전달 방식
-//        ,headers: headers).responseJSON(completionHandler: { (response) in    //헤더와 응답 처리
-//            print(response)
-//
-//            if let err = response.error{    //응답 에러
-//                print(err)
-//                return
-//            }
-//            print("success")        //응답 성공
-//
-//            let json = response.data
-//
-//            if (json != nil){
-//                print(json)
-//            }
-//        })
-//
-//    }
+    func uploadDiary(date: String, _ photo : UIImage, url: String){
+        //함수 매개변수는 POST할 데이터, url
+
+        let headers: HTTPHeaders = ["Content-Type": "multipart/form-data"]
+        
+        let body : Parameters = [
+           "profile_Image" : "dog1.jpeg",
+           "pet":1,
+           "user" : 1
+        ]    //POST 함수로 전달할 String 데이터, 이미지 데이터는 제외하고 구성
+
+        //multipart 업로드
+        AF.upload(multipartFormData: { (multipart) in
+            if let imageData = photo.jpegData(compressionQuality: 1) {
+                multipart.append(imageData, withName: "photo", fileName: "photo.jpg", mimeType: "image/jpeg")
+                //이미지 데이터를 POST할 데이터에 덧붙임
+            }
+            for (key, value) in body {
+                multipart.append("\(value)".data(using: .utf8, allowLossyConversion: false)!, withName: "\(key)")
+                //이미지 데이터 외에 같이 전달할 데이터 (여기서는 user, emoji, date, content 등)
+            }
+        }, to: url    //전달할 url
+        ,method: .post        //전달 방식
+        ,headers: headers).responseJSON(completionHandler: { (response) in    //헤더와 응답 처리
+            print(response)
+
+            if let err = response.error{    //응답 에러
+                print(err)
+                return
+            }
+            print("success")        //응답 성공
+
+            let json = response.data
+
+            if (json != nil){
+                print(json)
+            }
+        })
+
+    }
         
         
 }
@@ -402,6 +407,7 @@ extension Date {
 //}
 
 extension UIImage {
+    //이미지 사이즈 변경
     func resizeImage(newWidth: CGFloat) -> UIImage? {
         //        let scale = newWidth / self.size.width
         //        let newHeight = self.size.height * scale
@@ -412,4 +418,11 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return newImage
     }
+    
+//    func asImage() -> UIImage {
+//        let render = UIGraphicsImageRenderer(bounds: bounds)
+//        return render.image { renderContext in
+//            layer.render(in: renderContext.cgContext)
+//        }
+//    }
 }

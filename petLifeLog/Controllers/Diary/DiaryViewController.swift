@@ -10,19 +10,27 @@ import Alamofire
 
 class DiaryViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
-    @IBOutlet weak var segment: UISegmentedControl!
     @IBOutlet weak var textViewHeightConstraint: NSLayoutConstraint!
+
+    @IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var segment: UISegmentedControl!
+
     @IBOutlet weak var collectionView: UICollectionView!
 
     var diaryAll:[DiaryList] = []
     var diary:[DiaryList] = []
     let pet = 1
+    //사용자 이름 표시
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
+        
+        print("******\(userDefaultId)")
         
         if segment.selectedSegmentIndex == 0{
             getDiary()
@@ -133,50 +141,59 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
             
             let diaryData = diary[indexPath.row]
             
+            let lblDate = cell.viewWithTag(1) as? UILabel
+            lblDate?.text = diaryData.act_date
+            
             //다이어리 공개된 데이터만 표시(전체일기 표시할때)
-            let imageName = cell.viewWithTag(2) as? UIImageView
+            //let imageName = cell.viewWithTag(2) as? UIImageView
 
-            if diaryData.diary_image == "" {
-                imageName?.isHidden = true
-                // 이미지뷰의 높이를 0으로 설정하여 숨깁니다.
-                imageName?.frame.size.height = 0
-            }else{
-                imageName?.image = UIImage(named: diaryData.diary_image)
-                imageName?.isHidden = false
-                // 이미지가 있는 경우 이미지뷰의 높이를 조절합니다.
-                imageName?.frame.size.height = 100 // 이미지의 높이에 따라 조절하세요.
+            //print(diaryData.act_date)
+//            if diaryData.diary_image == "" {
+//                imageName?.isHidden = true
+//                // 이미지뷰의 높이를 0으로 설정하여 숨깁니다.
+//                imageName?.frame.size.height = 0
+//            }else{
+//                imageName?.image = UIImage(named: diaryData.diary_image)
+//                imageName?.isHidden = false
+//                // 이미지가 있는 경우 이미지뷰의 높이를 조절합니다.
+//                imageName?.frame.size.height = 100 // 이미지의 높이에 따라 조절하세요.
+//            }
+
+            if let imageView = cell.viewWithTag(2) as? UIImageView, let textView = cell.viewWithTag(3) as? UITextView {
+                // 이미지가 없는 경우 텍스트 뷰에 데이터 표시
+                if diaryData.diary_image == "" {
+                    imageView.frame.size.height = 0
+                    imageView.isHidden = true
+                    textView.text = diaryData.diary_content
+                    textView.backgroundColor = .clear
+                    cell.layer.cornerRadius = 20
+                } else {
+                    imageView.frame.size.height = 80
+                    //imageViewHeightConstraint?.constant = 80
+                    imageView.isHidden = false
+                    imageView.image = UIImage(named: diaryData.diary_image)
+                    // 이미지 뷰 크기 조절 (0.5배 축소)
+                    imageView.transform = CGAffineTransform(scaleX: 0.4, y: 0.4)
+                    textView.text = diaryData.diary_content // 이미지가 있는 경우 텍스트를 지우거나 다른 내용을 설정
+                    cell.layer.cornerRadius = 20
+                    textView.backgroundColor = .clear
+                }
             }
-
-            let textView = cell.viewWithTag(3) as? UITextView
-            textView?.text = diaryData.diary_content
-            
-            // 텍스트뷰 크기 조절
-            textView?.isScrollEnabled = false
-            textView?.sizeToFit()
-            
-            textView?.backgroundColor = .clear
-
-            //셀 테두리 표현
-    //        cell.layer.borderWidth = 2.0;
-    //        cell.layer.borderColor = UIColor.white.cgColor
-            //cell.backgroundColor = UIColor(hex: "#EFFBF5")
-            cell.layer.cornerRadius = 30
         }
         else{
             let diaryAllData = diaryAll[indexPath.row]
 
+            let lblDate = cell.viewWithTag(1) as? UILabel
+            lblDate?.text = diaryAllData.act_date
+            
             //다이어리 공개된 데이터만 표시(전체일기 표시할때)
             let imageName = cell.viewWithTag(2) as? UIImageView
 
             if diaryAllData.diary_image == "" {
                 imageName?.isHidden = true
-                // 이미지뷰의 높이를 0으로 설정하여 숨깁니다.
-                imageName?.frame.size.height = 0
             }else{
                 imageName?.image = UIImage(named: diaryAllData.diary_image)
                 imageName?.isHidden = false
-                // 이미지가 있는 경우 이미지뷰의 높이를 조절합니다.
-                imageName?.frame.size.height = 100 // 이미지의 높이에 따라 조절하세요.
             }
 
             let textView = cell.viewWithTag(3) as? UITextView
@@ -184,68 +201,58 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
             
             // 텍스트뷰 크기 조절
             textView?.isScrollEnabled = false
-            textView?.sizeToFit()
+            //textView?.sizeToFit()
             textView?.backgroundColor = .clear
             
-            cell.layer.cornerRadius = 30
+            cell.layer.cornerRadius = 20
         }
         return cell
     }
 }
 
-extension DiaryViewController: UITextViewDelegate {
-    func textViewDidChange(_ textView: UITextView) {
-        // 텍스트 뷰의 내용이 변경될 때마다 호출됩니다.
-        // 텍스트 뷰의 높이를 동적으로 조절하고 최대 높이를 설정합니다.
-        let maxHeight: CGFloat = 200 // 최대 높이
-        let fixedWidth = textView.frame.size.width
-        let newSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: .greatestFiniteMagnitude))
-
-        if newSize.height <= maxHeight {
-            textViewHeightConstraint.constant = newSize.height
-        } else {
-            textViewHeightConstraint.constant = maxHeight
-        }
-    }
-}
-
-
 extension DiaryViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        let diaryText = diary[indexPath.row]
-        
-        let width = collectionView.bounds.width - 16 // 여기서 16은 여백 등을 고려한 값
-        
-        collectionView.backgroundColor = UIColor(hex: "#E0F2F7")
-        
-        // 텍스트뷰를 생성하여 텍스트를 설정하고, 폭을 위에서 계산한 것처럼 설정합니다.
-        let textView = UITextView()
-        textView.text = diaryText.diary_content
-        textView.font = UIFont.systemFont(ofSize: 14)
-        textView.frame.size = CGSize(width: width, height: .greatestFiniteMagnitude)
-        textView.isScrollEnabled = false
-        textView.sizeToFit()
-        
-        // 텍스트뷰의 높이에 따라 동적으로 계산된 높이를 설정합니다.
-        
-        if let imageName = Bool(diaryText.diary_image){
-            if imageName {
-                let dynamicHeight = textView.frame.height + 120 // 이미지와 다른 요소에 따라 조절
-                return CGSize(width: width, height: dynamicHeight)
-            }else{
-                let dynamicHeight = textView.frame.height + 20
-                return CGSize(width: width, height: dynamicHeight)
-            }
-        }else{
-            return CGSize(width: view.frame.width, height: view.frame.height/4)
-        }
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        if segment.selectedSegmentIndex == 0{
+//            let diaryText = diary[indexPath.row]
+//        }else{
+//            let diaryText = diaryAll[indexPath.row]
+//        }
+
+//        var width = collectionView.bounds.width - 16 // 여기서 16은 여백 등을 고려한 값
+//        //print("\(diaryText.diary_content) \(collectionView.bounds.width)")
+//        collectionView.backgroundColor = UIColor(hex: "#E0F2F7")
+//
+//        // 텍스트뷰의 높이에 따라 동적으로 계산된 높이를 설정합니다.
+//        let imageName = diaryText.diary_image
+//        let textView = UITextView()
+//        textView.text = diaryText.diary_content
+//
+//        var dynamicHeight = 0.0
+//
+//        //이미지의 파일이름체크하여 공백제거하고 nil체크하여 이미지가 없으면 사이즈 작게, 이미지 있으면 높이조절하여 크기조절
+//        //9월 14일 데이터화면표시 체크, 이미지는 없지만 글자수는 많음. 이미지틀만큼 비어있음.
+//        if imageName.trimmingCharacters(in: .whitespaces) == "" {
+//            dynamicHeight = 50.0
+//            let size = textView.sizeThatFits(CGSize(width: collectionView.frame.width, height: CGFloat.greatestFiniteMagnitude))
+//            textView.backgroundColor = .clear
+//            textView.sizeToFit()
+//            return CGSize(width: collectionView.frame.width, height: size.height + dynamicHeight)
+//        } else {
+//            dynamicHeight = 200.0
+//            // 이미지 데이터가 없는 경우, 텍스트 뷰의 크기에 맞게 설정
+//            let size = textView.sizeThatFits(CGSize(width: collectionView.frame.width, height: CGFloat.greatestFiniteMagnitude))
+//            textView.backgroundColor = .clear
+//            textView.sizeToFit()
+//            return CGSize(width: collectionView.frame.width, height: size.height + dynamicHeight)
+//        }
+
+//        return CGSize(width: 360, height: 240)
+//    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
             // 컬렉션 뷰 내용의 인셋을 설정
             // UIEdgeInsets(top: CGFloat, left: CGFloat, bottom: CGFloat, right: CGFloat)
-            return UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0) // 첫 번째 셀 위쪽 간격을 설정
+            return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10) // 첫 번째 셀 위쪽 간격을 설정
         }
     
     //collectionview 셀의 수평 간격
@@ -255,11 +262,8 @@ extension DiaryViewController: UICollectionViewDelegateFlowLayout {
     
     //collectionview 셀의 수직 간격
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 2
+        return 4
     }
-
-    
-   
 }
 
 //색상컬러

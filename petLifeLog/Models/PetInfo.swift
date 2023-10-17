@@ -7,6 +7,8 @@
 
 import Foundation
 
+var userDefaultId = 0
+
 struct Pets: Codable {
     let id: Int
     let name, profileImage, birth, breed: String
@@ -38,6 +40,16 @@ struct DiaryList: Codable {
     let act_date: String
     let diary_image: String
     let diary_content: String
+
+    init(from decoder : Decoder) throws
+    {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        pet = (try? values.decode(Int.self, forKey: .pet)) ?? 0
+        act_date = (try? values.decode(String.self, forKey: .act_date)) ?? ""
+        diary_image = (try? values.decode(String.self, forKey: .diary_image)) ?? ""
+        diary_content = (try? values.decode(String.self, forKey: .diary_content)) ?? ""
+    }
+
 }
 
 
