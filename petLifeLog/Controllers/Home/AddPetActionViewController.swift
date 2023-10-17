@@ -10,8 +10,29 @@ import Alamofire
 
 // pet_id, user_id, selected_date, baseURL은 홈컨트롤러의 글로벌 변수를 가져다 씀
 class AddPetActionViewController: UIViewController {
-    var paths = "pet/act"
-    var params:Parameters = [:]
+    var paths = "api/pet/act"
+    var params:Parameters = [ // 알라모 파이어용 파라미터. 6개 액션의 공통된 2개는 미리 넣어둠.
+        "pet":pet_id,
+        "act_date":selected_date
+    ]
+    
+    // 산책
+    @IBOutlet weak var walk_time: UIDatePicker!
+    // 배변
+    @IBOutlet weak var poo_time: UIDatePicker!
+    @IBOutlet weak var poo_type: UISegmentedControl!
+    @IBOutlet weak var poo_color: UISegmentedControl!
+    // 식사
+    @IBOutlet weak var feed_time: UIDatePicker!
+    @IBOutlet weak var feed_type: UISegmentedControl!
+    // 병원
+    @IBOutlet weak var hospital_time: UIDatePicker!
+    @IBOutlet weak var hospital_type: UISegmentedControl!
+    // 미용
+    @IBOutlet weak var hair_time: UIDatePicker!
+    // 몸무게
+    @IBOutlet weak var weight_time: UIDatePicker!
+    @IBOutlet weak var weight: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,27 +40,23 @@ class AddPetActionViewController: UIViewController {
     }
     
     // MARK: 6개 액션 등록 메소드에서 공통으로 쓸 AF
-    func postDataViaAF(params:Parameters, handler:()->()){
+    //func updateOrCreateDataViaAF(params: params, handler: <#T##() -> ()#>){
+    func updateOrCreateDataViaAF(){
+        print("called 액션 등록 버튼 via AF")
         let url = "\(baseURL+paths)"
-        
-        //TODO: theParams += param 딕셔너리 extension 만들어서 합치기
-        var theParams:Parameters = [
-            "pet":pet_id, // 장고 모델 컬럼명에 맞춰서 JSON key값은 pet_id가 아닌 pet으로 보내야함
-            "act_date":selected_date
-            // "user_id":user_id
-        ]
-        //let dataRequest = AF.request(url, method: .get, parameters: params)
-        AF.request(url, method: .post, parameters: theParams, encoding: JSONEncoding.default).responseDecodable(of: Actdetail.self) { response in
-            //print("Request: \(String(describing: response.request))")   // original url request
+        let dataRequest = AF.request(url, method: .post, parameters: params, encoding: URLEncoding.default)
+        dataRequest.responseDecodable(of: Actdetail.self) { response in
+            print("Request: \(String(describing: response.request))")   // original url request
             //print("Response: \(String(describing: response.response))") // http url response
             //print("Result: \(response.result)")
             switch response.result {
             case .success:
-                //TODO: (응답 받아서 알럿)
-                
-                self.dismiss(animated: true) // 등록 후 홈뷰로 가고 홈뷰를 새로 고침 홈뷰에 will로?
+                guard let result = response.value else { return }
+                print("액션 POST 응답 결과", result)
+                self.alert(title: "등록되었습니다.")
             case .failure(let error):
-                print("액션 POST 에러", error)
+                print("액션 POST 실패", error.localizedDescription)
+                self.alert(title: "등록 실패")
                 break
             }
         }
@@ -48,86 +65,99 @@ class AddPetActionViewController: UIViewController {
     
     // MARK: - 등록 버튼 - 6개 액션 기록 저장하기. 저장된 데이터를 가지고 홈으로 돌아갈 수 있도록 스토리보드에서 unwind함
     @IBAction func AddFood(_ sender: Any) {
-        // 저장할 데이터 : pet_act테이블에 act_date= selectedDate, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =3 && pet_act_detail테이블의 feed_type
+        print("사료 등록")
+        // 식사타입 세그먼트바에 현재 선택된 값 받음
+        var food_type = ""
+        switch feed_type.selectedSegmentIndex {
+            case 0: food_type = "사료"
+            case 1: food_type = "간식"
+            default: return
+        }
         params = [
-            "act_id":3,
-            "feed_type":""
+            "pet":pet_id,
+            "act_date":selected_date,
+            "act_time":feed_time.date.toTimeString(),
+            "act":3,
+            "feed_type":food_type
         ]
-        // postDataViaAF(params: params, handler: <#T##() -> ()#>)
+        // Alamofire의 파라미터에 대입
+        self.params["act_time"] = feed_time.date.toTimeString()
+        self.params["act"] = 3
+        self.params["feed_type"] = food_type
+        updateOrCreateDataViaAF()
     }
-    
     
     @IBAction func AddPoo(_ sender: Any) {
-        // 저장할 데이터 : pet_act테이블에 act_date= selectedDate, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =2 && pet_act_detail테이블의 ordure_shape=?, ordure_color=?
-        params = [
-            "act_id":2,
-            "ordure_shape":"",
-            "ordure_color":""
-        ]
-        // postDataViaAF(params: params, handler: <#T##() -> ()#>)
+        print("배변 등록")
+        // 배변타입 세그먼트바에 현재 선택된 값 받음
+        var ordure_type = ""
+        switch poo_type.selectedSegmentIndex {
+        case 0: ordure_type = "건조"
+        case 1: ordure_type = "정상"
+        case 2: ordure_type = "설사"
+        default: return
+        }
+        
+        // 배변컬러 세그먼트바에 현재 선택된 값 받음
+        var ordure_color = ""
+        switch poo_color.selectedSegmentIndex {
+        case 0: ordure_color = "초코"
+        case 1: ordure_color = "녹색"
+        case 2: ordure_color = "노랑"
+        case 3: ordure_color = "빨강"
+        case 4: ordure_color = "검정"
+        case 5: ordure_color = "보라"
+        default: return
+        }
+        // Alamofire의 파라미터에 대입
+        self.params["act_time"] = poo_time.date.toTimeString()
+        self.params["act"] = 2
+        self.params["ordure_shape"] = ordure_type
+        self.params["ordure_color"] = ordure_color
+        updateOrCreateDataViaAF()
     }
-    
     
     @IBAction func AddWalk(_ sender: Any) {
-        // 저장할 데이터 : pet_act테이블에 act_date= selectedDate, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =1
-        params = [
-            "act_id":1
-        ]
-        // postDataViaAF(params: params, handler: <#T##() -> ()#>)
+        print("산책 등록")
+        // Alamofire의 파라미터에 대입
+        self.params["act_time"] = walk_time.date.toTimeString()
+        self.params["act"] = 1
+        updateOrCreateDataViaAF()
     }
     
-    
     @IBAction func AddWeight(_ sender: Any) {
-        // 저장할 데이터 : pet_act테이블에 act_date= selectedDate, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =6 && pet_act_detail테이블의 weight=?
-        params = [
-            "act_id":6,
-            "weight":0
-        ]
-        // postDataViaAF(params: params, handler: <#T##() -> ()#>)
+        print("체중 등록")
+        // Alamofire의 파라미터에 대입
+        self.params["act_time"] = weight_time.date.toTimeString()
+        self.params["weight"] = Double(weight.text ?? "") ?? 0.0
+        self.params["act"] = 6
+        updateOrCreateDataViaAF()
     }
     
     @IBAction func AddHair(_ sender: Any) {
-        // 저장할 데이터 : pet_act테이블에 act_date= selectedDate, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =5
-        params = [
-            "act_id":5,
-        ]
-        // postDataViaAF(params: params, handler: <#T##() -> ()#>)
+        print("미용 등록")
+        // Alamofire의 파라미터에 대입
+        self.params["act_time"] = hair_time.date.toTimeString()
+        self.params["act"] = 5
+        updateOrCreateDataViaAF()
+        
     }
-    
     
     @IBAction func AddHospital(_ sender: Any) {
-        // 저장할 데이터 : pet_act테이블에 act_date= 해당 날짜, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, act_id =4 && pet_act_detail 테이블의 hospital_type = ?
-        params = [
-            "act_id":4,
-            "hospital_type":""
-        ]
-        // postDataViaAF(params: params, handler: <#T##() -> ()#>)
-    }
-    
-    
-    // MARK: - 취소 버튼 - 저장없이 창 닫기
-    @IBAction func closeView1(_ sender: Any) {
-        self.dismiss(animated: true)
-    }
-    
-    @IBAction func closeView2(_ sender: Any) {
-        self.dismiss(animated: true)
-    }
-    
-    @IBAction func closeView3(_ sender: Any) {
-        self.dismiss(animated: true)
-    }
-    
-    @IBAction func closeView4(_ sender: Any) {
-        self.dismiss(animated: true)
-    }
-    
-    @IBAction func closeView5(_ sender: Any) {
-        self.dismiss(animated: true)
-    }
-    
-    @IBAction func closeView6(_ sender: Any) {
-        self.dismiss(animated: true)
+        print("병원 등록")
+        var hospital_seg = ""
+        // 병원타입 세그먼트바에 현재 선택된 값 받음
+        switch hospital_type.selectedSegmentIndex {
+        case 0: hospital_seg = "예방접종"
+        case 1: hospital_seg = "질병"
+        default: return
+        }
+        
+        // Alamofire의 파라미터에 대입
+        self.params["act_time"] = hospital_time.date.toTimeString()
+        self.params["hospital_type"] = hospital_seg
+        self.params["act"] = 4
+        updateOrCreateDataViaAF()
     }
     
     /*

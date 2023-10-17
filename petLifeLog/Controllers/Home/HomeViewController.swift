@@ -8,10 +8,10 @@
 import UIKit
 import Alamofire
 
-// 테스트용 임시 데이터
+// 테스트용 임시 데이터(홈에서 쓰이는 5개의 컨트롤러는 이 글로벌 변수의 user,pet,birth를 가져다 씀)
 let user_id = 1 // 로그인 후 들고 있어야 할 user_id값
 let pet_id = 1 // 로그인 후 들고 있어야 할 user_id의 현재 선택 되어있는 pet_id의 값
-let pet_birth = "2023-09-10" //현재 pet의 강아지 생일
+let pet_birth = "2021-04-16" // 로그인 후 들고 있어야 할 현재 pet의 강아지 생일
 
 // 글로벌 변수 - 다른 컨트롤러에서도 쓰임
 let baseURL = "http://127.0.0.1:8000/"
@@ -31,7 +31,6 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var prevBtn: UIBarButtonItem!
     
     // 다이어리용
-    
     @IBOutlet weak var diaryImgView: UIImageView!
     @IBOutlet weak var cameraBtn: UIButton!
     @IBOutlet weak var diaryContent: UILabel!
@@ -48,6 +47,11 @@ class HomeViewController: UIViewController {
         setupTableView() // 날짜 맞게 테이블뷰 셋업
         setupDiaryView() // 다이어리 내용 있을시 셋업
         picker.delegate = self // 카메라 피커
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        checkDateCaseLogic()
+        getActDataViaAF() //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
     }
     
     
@@ -68,10 +72,8 @@ class HomeViewController: UIViewController {
                 case .success:
                     guard let result = response.value else { return }
                     print("GET 펫액션 via AF 응답 결과", result)
-
                     self.act = result // PetAct
                     self.actdetail = result.actdetail // PetActDetail
-                    print("Act안의 Actdetail 카운트: ", self.actdetail?.count ?? 0)
                     
                     // 받아온 데이터에서 다이어리 객체 세팅.
                     let the_diary_content = result.diary_content
@@ -91,6 +93,25 @@ class HomeViewController: UIViewController {
         }
     }
     
+    // AF - 테이블뷰 셀 스와이프시 등록된 액션 삭제
+    func deleteDataViaAF(_ pk:Int){
+        print("called 액션 삭제 스와이프 via AF")
+        let paths = "api/pet/act/\(pk)"
+        let url = "\(baseURL+paths)"
+        
+        let dataRequest = AF.request(url, method: .delete, parameters: nil, encoding: JSONEncoding.default)
+        dataRequest.responseData { response in
+            switch response.result {
+            case .success:
+                print("액션 삭제 DELETE 응답 결과", response)
+                //self.alert(title: "삭제되었습니다")
+            case .failure(let error):
+                self.alert(title: "삭제실패")
+                print("액션 삭제 DELETE 에러", error)
+                break
+            }
+        }
+    }
     
     func setupDiaryView() {
         // 다이어리 이미지 있으면 카메라 버튼 비활성화 되게
@@ -252,7 +273,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("tableview의 petActions카운트", actdetail?.count ?? 0)
         return actdetail?.count ?? 0// 셀 row 수는 Act 안의 Actdetail 데이터의 개수
     }
     
@@ -272,28 +292,28 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         // 시간
         lblActTime?.text = petAction.act_time
-        print("시간", petAction.act_time.toDate() ?? "00:00")
         
         // 액션명,액션대표이미지
-        let act = petAction.act // 알라모파이어로 가져온 데이터 내의 act명
-        switch act { // 액션별로 보여줄 대표 이미지가 다르므로 분기 처리
-            case "산책": actImgView?.image = UIImage(named: "walk")
-            case "배변": actImgView?.image = UIImage(named: "poo")
-            case "사료": actImgView?.image = UIImage(named: "food")
-            case "병원": actImgView?.image = UIImage(named: "hospital")
-            case "미용": actImgView?.image = UIImage(named: "hair")
-            case "몸무게": actImgView?.image = UIImage(named: "weight")
+        let act_id = petAction.act // 알라모파이어로 가져온 데이터 내의 act명
+        let act_name = petAction.act_name
+        switch act_id { // 액션별로 보여줄 대표 이미지가 다르므로 분기 처리
+            case 1: actImgView?.image = UIImage(named: "walk")
+            case 2: actImgView?.image = UIImage(named: "poo")
+            case 3: actImgView?.image = UIImage(named: "food")
+            case 4: actImgView?.image = UIImage(named: "hospital")
+            case 5: actImgView?.image = UIImage(named: "hair")
+            case 6: actImgView?.image = UIImage(named: "weight")
             default: actImgView?.image = UIImage(named: "walk")
         }
         
         // 디테일 - 액션별로 테이블뷰 셀에 보여줄 디테일이 다르므로 분기 처리(액션 라벨, 각 액션 디테일들)
-        switch act {
-            case "산책": lblActName?.text = act; lblActDetail?.text = "\(String(petAction.walk_spend_time ?? 0))분"
-            case "배변": lblActName?.text = act; lblActDetail?.text = "\(petAction.ordure_color ?? "") \( petAction.ordure_shape ?? "")"
-            case "사료": lblActName?.text = act; lblActDetail?.text = "\(petAction.feed_type ?? "") \(petAction.feed_name ?? "") \(petAction.feed_amount ?? 0)g"
-            case "병원": lblActName?.text = act; lblActDetail?.text = "\(petAction.hospital_type ?? "") \(petAction.hospital_cost ?? 0)원"
-            case "미용": lblActName?.text = act; lblActDetail?.text = "\(String((petAction.beauty_cost) ?? 0))원"
-            case "몸무게": lblActName?.text = act; lblActDetail?.text =  "\(String((petAction.weight) ?? 0))g" // DB데이터타입이 int라서 Double형 kg이 아닌 g으로 함
+        switch act_id {
+            case 1: lblActName?.text = act_name; lblActDetail?.text = "\(String(petAction.walk_spend_time ?? 0))분"
+            case 2: lblActName?.text = act_name; lblActDetail?.text = "\(petAction.ordure_color ?? "") \( petAction.ordure_shape ?? "")"
+            case 3: lblActName?.text = act_name; lblActDetail?.text = "\(petAction.feed_type ?? "") \(petAction.feed_name ?? "") \(petAction.feed_amount ?? 0)g"
+            case 4: lblActName?.text = act_name; lblActDetail?.text = "\(petAction.hospital_type ?? "") \(petAction.hospital_cost ?? 0)원"
+            case 5: lblActName?.text = act_name; lblActDetail?.text = "\(String((petAction.beauty_cost) ?? 0))원"
+        case 6: lblActName?.text = act_name; lblActDetail?.text =  "\(String((petAction.weight) ?? 0.0))kg"
             default: lblActName?.text = ""
         }
         
@@ -307,6 +327,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    
     // 테이블 액션 셀 삭제 가능하게
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         var result = false
@@ -318,18 +339,60 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         // TODO: datasource뿐 아니라 실제 DB에서도 삭제되게 처리하기
         if editingStyle == .delete {
-            //TODO: 삭제할거냐고 묻고 응답 따라 삭제 하기
-            let alert = UIAlertController(title: "삭제", message: "삭제?", preferredStyle: .alert)
-            let action = UIAlertAction(title: "확인", style: .default)
-            alert.addAction(action)
-            self.present(alert, animated: true)
-            
+            //TODO: 삭제할거냐고 응답 따라 삭제
+            let pk = actdetail?[indexPath.row].id ?? 0
+            print("스와이프된 셀의 petActDetail의 pk는 ", pk)
+            deleteDataViaAF(pk) // 알라모파이어로 DB 데이터 삭제
             actdetail?.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
         }
     }
 
+}
+
+// MARK: HTTP응답 Alert 띄우기 위함
+extension UIViewController {
+  typealias AlertActionHandler = ((UIAlertAction) -> Void)
+  
+  /// only 'title' is required parameter. you can ignore rest of them
+  ///
+  /// - Parameters:
+  ///   - title: Title string. required.
+  ///   - message: Message for alert.
+  ///   - okTitle: Title for confirmation action. If you don't probide 'okHandler', this will be ignored.
+  ///   - okHandler: Closure for confirmation action. If it's implemented, alertController will have two alertAction.
+  ///   - cancelTitle: Title for cancel/dissmis action.
+  ///   - cancelHandler: Closure for cancel/dissmis action.
+  ///   - completion: Closure will be called right after the alertController presented.
+  func alert(title: String,
+             message: String? = nil,
+             okTitle: String = "OK",
+             okHandler: AlertActionHandler? = nil,
+             cancelTitle: String? = nil,
+             cancelHandler: AlertActionHandler? = nil,
+             completion: (() -> Void)? = nil) {
+    
+    let alert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    
+    if let okClosure = okHandler {
+        let okAction: UIAlertAction = UIAlertAction(title: okTitle, style: UIAlertAction.Style.default, handler: okClosure)
+      alert.addAction(okAction)
+        let cancelAction: UIAlertAction = UIAlertAction(title: cancelTitle, style: UIAlertAction.Style.cancel, handler: cancelHandler)
+      alert.addAction(cancelAction)
+    } else {
+        if cancelTitle != nil {
+    
+        let cancelAction: UIAlertAction = UIAlertAction(title: okTitle, style: UIAlertAction.Style.cancel, handler: cancelHandler)
+            alert.addAction(cancelAction)
+      } else {
+          let cancelAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: cancelHandler)
+            alert.addAction(cancelAction)
+      }
+
+    }
+    self.present(alert, animated: true, completion: completion)
+  }
 }
 
 

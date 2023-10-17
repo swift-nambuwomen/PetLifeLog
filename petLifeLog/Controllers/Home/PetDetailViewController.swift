@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import Alamofire
 class PetDetailViewController: UIViewController {
     //UI 그리기 위한 뷰
     @IBOutlet weak var ActionLabel: UINavigationItem!
@@ -39,7 +39,12 @@ class PetDetailViewController: UIViewController {
     let picker = UIImagePickerController()
     
     var petAction:Actdetail! // Home뷰로부터 넘겨받은 데이터
-    
+    var params:Parameters = [ // 알라모 파이어용 파라미터. 6개 액션의 공통된 2개는 미리 넣어둠.
+        "pet":pet_id,
+        "act_date":selected_date
+    ]
+    var act_name = "" // UI 분기용. petAction.act_name
+    var act_id = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +54,7 @@ class PetDetailViewController: UIViewController {
     }
     
     
-    // MARK: 스토리보드 하나에 6개 액션에 관한 요소들을 전부 모아둔 상태. Cell 선택시 어떤 act_name인지 받아서 해당 액션에 맞는 요소만 뽑아서 UI를 그리게 분기함.
+    // MARK: UI-스토리보드 하나에 6개 액션에 관한 요소들을 전부 모아둔 상태. Cell 선택시 어떤 act_name인지 받아서 해당 액션에 맞는 요소만 뽑아서 UI를 그리고 받아온 값을 대입하도록 분기함.
     func drawUI() { //act_name 변수는 acts테이블에 저장된 name칼럼의 6개.
         // 공통으로 들어갈 사항
         act_time.date = petAction.act_time.toTime() ?? "00:00".toTime()!
@@ -57,16 +62,17 @@ class PetDetailViewController: UIViewController {
         //imageView.image = petAction.actions?.memo_image // String, UIImage
         
         // 액션명에 따라 보여줄 UI가 다르므로 분기처리
-        let act = petAction.act
-        switch act {
+        act_name = petAction.act_name ?? ""
+        act_id = petAction.act
+        switch act_id {
         // 산책용 뷰
-        case "산책" : ActionLabel.title = act; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; WeightView.isHidden = true;
+        case 1: ActionLabel.title = act_name; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; WeightView.isHidden = true;
             
             let myString: String = String(petAction.walk_spend_time ?? 0)
             waste_time.text = myString
             
         // 배변용 뷰
-        case "배변" : ActionLabel.title = act; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
+        case 2 : ActionLabel.title = act_name; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
 
             if petAction.ordure_shape == "건조" {
                 poo_shape.selectedSegmentIndex = 0
@@ -88,7 +94,7 @@ class PetDetailViewController: UIViewController {
             }
             
         //사료용 뷰
-        case "사료" : ActionLabel.title = act; PooShapeView.isHidden = true; PooColorView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
+        case 3 : ActionLabel.title = act_name; PooShapeView.isHidden = true; PooColorView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
             food_brand.text = petAction.feed_name;
             food_gram.text = String(petAction.feed_amount ?? 0);
             
@@ -99,7 +105,7 @@ class PetDetailViewController: UIViewController {
             }
             
         //병원용 뷰
-        case "병원" : ActionLabel.title = act; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
+        case 4 : ActionLabel.title = act_name; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
 
             if petAction.hospital_type == "예방접종" {
                 hospital_type.selectedSegmentIndex = 0
@@ -107,11 +113,11 @@ class PetDetailViewController: UIViewController {
                 hospital_type.selectedSegmentIndex = 1
             }
             
-            let myString: String = String(petAction.beauty_cost ?? 0)
+            let myString: String = String(petAction.hospital_cost ?? 0)
             expences.text = myString
             
         //미용용 뷰
-        case "미용" : ActionLabel.title = act; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
+        case 5 : ActionLabel.title = act_name; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; TimeView.isHidden = true; WeightView.isHidden = true;
             
             let myString: String = String(petAction.beauty_cost ?? 0)
             expences.text = myString
@@ -123,7 +129,7 @@ class PetDetailViewController: UIViewController {
             }
 
         //몸무게용 뷰
-        case "몸무게" : ActionLabel.title = act; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true;
+        case 6 : ActionLabel.title = act_name; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; TimeView.isHidden = true;
             
             let myString: String = String(petAction.weight ?? 0)
             weight.text = myString
@@ -183,11 +189,158 @@ class PetDetailViewController: UIViewController {
         }
     }
     
-    // MARK: 취소버튼 - 모달창 사라지게. 등록버튼 - 데이터 들고갈 수 있게 스토리보드상에서 unwind segue로 홈으로 연결함
-    @IBAction func goHome(_ sender: Any) {
-        self.dismiss(animated: true)
+    // MARK: [등록]버튼 AF -> [뒤로]버튼 데이터 들고갈 수 있게 스토리보드상에서 unwind segue로 홈으로 연결함
+    @IBAction func putData(_ sender: Any) {
+        // 현재 뷰의 데이터에 맞는 UI에서 파라미터를 얻는다.
+            switch act_id {
+            case 1 : updateWalk()
+            case 2 : updatePoo()
+            case 3 : updateFood()
+            case 4 : updateHospital()
+            case 5 : updateHair()
+            case 6 :updateWeight()
+            default:return
+        }
     }
+    
+    
+    // 알라모 파이어로 통신
+    func updateDataViaAF(){
+        print("called 액션 수정 버튼 via AF")
+        let pk = petAction.id
+        let paths = "api/pet/act/\(pk)"
+        let url = "\(baseURL+paths)"
+        
+        print("parameter값",params)
+        let dataRequest = AF.request(url, method: .put, parameters: params, encoding: JSONEncoding.default)
+        dataRequest.responseDecodable(of: Actdetail.self) { response in
+            // print("Request: \(String(describing: response.request))")   // original url request
+            print("Response: \(String(describing: response.response))") // http url response
+            //print("Result: \(response.result)")
+            switch response.result {
+            case .success:
+                guard let result = response.value else { return }
+                print("액션 수정 PUT 응답 결과", result)
+                self.alert(title: "수정되었습니다.")
+            case .failure(let error):
+                print("액션 수정 PUT 에러", error)
+                self.alert(title: "실패했습니다.")
+                break
+            }
+        }
+    }
+    
+    // MARK: - UI에 따라 보여지는 필드들이 다르므로 분기해서 데이터를 얻음-> Params대입-> AF호출
+    func updateWalk() {
+        print("산책 수정")
+        // Alamofire의 파라미터에 대입
+        self.params["act_time"] = act_time.date.toTimeString()
+        self.params["act"] = 1
+        self.params["walk_spend_time"] = Int(waste_time.text ?? "") ?? 0
+        self.params["memo"] = memo.text ?? ""
+        updateDataViaAF()
+    }
+    
+    func updatePoo() {
+        print("배변 수정")
+        // 배변타입 세그먼트바에 현재 선택된 값 받음
+        var ordure_type = ""
+        switch poo_shape.selectedSegmentIndex {
+        case 0: ordure_type = "건조"
+        case 1: ordure_type = "정상"
+        case 2: ordure_type = "설사"
+        default: return
+        }
+        
+        // 배변컬러 세그먼트바에 현재 선택된 값 받음
+        var ordure_color = ""
+        switch poo_color.selectedSegmentIndex {
+        case 0: ordure_color = "초코"
+        case 1: ordure_color = "녹색"
+        case 2: ordure_color = "노랑"
+        case 3: ordure_color = "빨강"
+        case 4: ordure_color = "검정"
+        case 5: ordure_color = "보라"
+        default: return
+        }
+        
+        // Alamofire의 파라미터에 대입
+        self.params["act_time"] = act_time.date.toTimeString()
+        self.params["act"] = 2
+        self.params["ordure_shape"] = ordure_type
+        self.params["ordure_color"] = ordure_color
+        self.params["memo"] = memo.text ?? ""
+        updateDataViaAF()
+    }
+    
+    func updateFood() {
+        print("사료 수정")
+        // 사료타입 세그먼트바에 현재 선택된 값 받음
+        var food_name = ""
+        switch food_type.selectedSegmentIndex {
+        case 0: food_name = "사료"
+        case 1: food_name = "간식"
+        default: return
+        }
 
+        // Alamofire의 파라미터에 대입
+        self.params["act_time"] = act_time.date.toTimeString()
+        self.params["act"] = 3
+        self.params["feed_type"] = food_name
+        self.params["feed_name"] = food_brand.text ?? ""
+        self.params["feed_amount"] = Int(food_gram.text ?? "")
+        self.params["memo"] = memo.text ?? ""
+        updateDataViaAF()
+    }
+    
+    func updateHospital() {
+        print("병원 수정")
+        // 병원타입 세그먼트바에 현재 선택된 값 받음
+        var hospital_seg = ""
+        switch hospital_type.selectedSegmentIndex {
+        case 0: hospital_seg = "예방접종"
+        case 1: hospital_seg = "질병"
+        default: return
+        }
+
+        // Alamofire의 파라미터에 대입
+        self.params["act_time"] = act_time.date.toTimeString()
+        self.params["act"] = 4
+        self.params["hospital_type"] = hospital_seg
+        self.params["hospital_cost"] = Int(expences.text ?? "") ?? 0
+        self.params["memo"] = memo.text ?? ""
+        updateDataViaAF()
+    }
+    
+    func updateHair() {
+        print("미용 수정")
+        // 미용타입 세그먼트바에 현재 선택된 값 받음
+        var beauty_type = ""
+        if hair_type.selectedSegmentIndex == 0 {
+            beauty_type = "셀프"
+        } else {
+            beauty_type = "미용실"
+        }
+        
+        // Alamofire의 파라미터에 대입
+        self.params["act_time"] = act_time.date.toTimeString()
+        self.params["act"] = 5
+        self.params["beauty_type"] = beauty_type
+        self.params["beauty_cost"] = Int(expences.text ?? "") ?? 0
+        self.params["memo"] = memo.text ?? ""
+        updateDataViaAF()
+    }
+    
+    func updateWeight() {
+        print("체중 수정")
+        // Alamofire의 파라미터에 대입
+        self.params["act_time"] = act_time.date.toTimeString()
+        self.params["act"] = 6
+        self.params["weight"] = Double(weight.text ?? "") ?? 0.0
+        self.params["memo"] = memo.text ?? ""
+        updateDataViaAF()
+    }
+    
     
     /*
     // MARK: - Navigation

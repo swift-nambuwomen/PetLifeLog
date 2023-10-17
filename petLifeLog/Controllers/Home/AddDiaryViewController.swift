@@ -11,8 +11,13 @@ import Alamofire
 // pet_id, user_id, selected_date, baseURL은 홈컨트롤러의 글로벌 변수를 가져다 씀
 class AddDiaryViewController: UIViewController {
     let paths = "api/pet/diary"
-
-    var petDiary:PetDiary!
+    var params:Parameters = [ // 알라모 파이어용 파라미터
+        "pet":pet_id,
+        "user":user_id,
+        "act_date":selected_date
+    ]
+    
+    var petDiary:PetDiary! // 이전 화면에서 받아온 다이어리
     
     @IBOutlet weak var diaryDate: UILabel!
     @IBOutlet weak var diaryContent: UITextView!
@@ -46,29 +51,25 @@ class AddDiaryViewController: UIViewController {
     
     
     // AF - 등록버튼 누를시 호출될 메소드
-    func updateOrCreateDataViaAF(_ params:Parameters) {
+    func updateOrCreateDataViaAF() {
         let url = "\(baseURL+paths)"
-        print("다이어리뷰의 URL\(url)")
+        print("다이어리뷰의 URL \(url)")
             
         let dataRequest = AF.request(url, method: .post, parameters: params, encoding: JSONEncoding.default)
 
         dataRequest.responseDecodable(of: PetDiary.self) { response in
-            print("Request: \(String(describing: response.request))")   // original url request
+            //print("Request: \(String(describing: response.request))")   // original url request
             //print("Response: \(String(describing: response.response))") // http url response
             //print("Result: \(response.result)")
             switch response.result {
                 case .success:
                     guard let result = response.value else { return }
                     print("다이어리 POST 응답 결과", result)
-                
-                    // 알럿
-                    let alert = UIAlertController(title: "알림", message: "등록되었습니다!", preferredStyle: .alert)
-                    let action = UIAlertAction(title: "확인", style: .default)
-                    alert.addAction(action)
-                    self.present(alert, animated: true)
-                    break
+                    self.alert(title: "성공했습니다.")
                 case .failure(let error):
                     print("다이어리 POST 응답 에러", error.localizedDescription)
+                    self.alert(title: "실패했습니다.")
+                    break
                 }
         }
     }
@@ -76,37 +77,27 @@ class AddDiaryViewController: UIViewController {
     // MARK: [뒤로] 버튼은 저장된 데이터를 가지고 홈으로 돌아갈 수 있도록 스토리보드에서 unwind함
     // [등록] 버튼
     @IBAction func addDiary(_ sender: Any) {
-        // 저장할 데이터 : PetAct테이블의 act_date = selected_date, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, diary_content=텍스트필드내용, diary_image=장치내 이미지명, diary_open_yn=스위치바 상태
+        // 공개 여부 스위치의 상태값 받아옴
         var new_diary_flag = "N"
         if diaryOpenYN.isOn{
             new_diary_flag = "Y"
         }
-        // 실제 필요한 것만 딕셔너리 insert해야함 null안됨
-        let params:Parameters = [
-            "pet":pet_id, // 장고 모델 컬럼명에 맞춰서 JSON key값은 pet_id가 아닌 pet으로 보내야함
-            "user":user_id, // 마찬가지 이유로 JSON key값은 user로
-            "act_date":selected_date,
-            "diary_content":diaryContent.text ?? "",
-            "diary_open_yn":new_diary_flag
-            //"diary_image":
-        ]
-        updateOrCreateDataViaAF(params)
+
+        self.params["diary_content"] = diaryContent.text ?? ""
+        self.params["diary_open_yn"] = new_diary_flag
+        //self.params["diary_image"] = 이미지명
+        updateOrCreateDataViaAF()
     }
     
     // TODO: 장치 이미지명 가져와서 AF에 넣기
     func getImgNamefromDevice(){
     }
     
+    // 이미지 이름 AF 통해 DB에 넣는 메소드
     func addImgNameViaAF() {
-        // 저장할 데이터 : PetAct테이블의 act_date = selected_date, pet_id=접속된 개 아이디, user_id=접속된 유저 아이디, diary_image=장치내 이미지명
         //var imgName:String
-        let params:Parameters = [
-            "pet":pet_id, // 장고 모델 컬럼명에 맞춰서 JSON key값은 pet_id가 아닌 pet으로 보내야함
-            "user":user_id, // 마찬가지 이유로 JSON key값은 user로
-            "act_date":selected_date,
-            "diary_image":"no-img" // no-img가 아닌 장치로부터 가져온 이미지명
-        ]
-        updateOrCreateDataViaAF(params)
+        //self.params["diary_image"] = "no-img" // no-img가 아닌 장치로부터 가져온 이미지명
+        updateOrCreateDataViaAF()
     }
     
     

@@ -6,8 +6,8 @@
 //
 
 import Foundation
+import Alamofire
 
-// 임시데이터 생성자에서 모든 값 넣지 않아도 되게 우선 var로 함
 // MARK: - Diary
 struct PetDiary: Codable {
     let id: Int // 수정 삭제용 pk
@@ -23,18 +23,19 @@ struct Act: Codable {
 
 // MARK: - Actdetail
 struct Actdetail: Codable {
-    // 3개 플러스. backend 보낼 용도
-    let pet_id:Int?
-    let act_date:String?
-    // front AF로 받을 용도
-    let id:Int //수정,삭제용 pk
-    let act: String
+    let pet:Int? // backend 필수
+    let act_name:String?
+    let act:Int
+    let act_date:String? // backend 필수
+    let id:Int // backend 수정,삭제용 pk
     let act_time: String
     let memo, memo_image: String?
-    let walk_spend_time, hospital_cost, beauty_cost, feed_amount, weight: Int?
+    let walk_spend_time, hospital_cost, beauty_cost, feed_amount: Int?
+    let weight: Double?
     let ordure_shape, ordure_color: String?
     let feed_type, feed_name: String?
     let hospital_type, beauty_type: String?
 }
+
 
 

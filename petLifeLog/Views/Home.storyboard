@@ -127,12 +127,12 @@
                                     <navigationItem title="액션명" id="pg7-9P-MDx">
                                         <barButtonItem key="leftBarButtonItem" title="뒤로" id="SOB-wW-LqW">
                                             <connections>
-                                                <action selector="goHome:" destination="TEX-pa-Az5" id="A3V-Bz-qJi"/>
+                                                <segue destination="dug-bw-XOK" kind="unwind" unwindAction="unwindToHome:" id="bWG-x1-LTY"/>
                                             </connections>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" title="등록" id="bLu-da-hsJ">
                                             <connections>
-                                                <segue destination="dug-bw-XOK" kind="unwind" unwindAction="unwindToHome:" id="2yb-AR-aCv"/>
+                                                <action selector="putData:" destination="TEX-pa-Az5" id="7DM-N5-FC3"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -455,7 +455,6 @@
                                     <navigationItem title="날짜 선택 후 홈으로" id="eQm-5Z-nd2">
                                         <barButtonItem key="leftBarButtonItem" title="홈으로" id="jxE-hk-jDY">
                                             <connections>
-                                                <action selector="pressedDone:" destination="BBf-vP-PNV" id="Jp4-q4-87f"/>
                                                 <segue destination="7M8-q0-2yj" kind="unwind" unwindAction="unwindToHome:" id="peZ-Y8-xdl"/>
                                             </connections>
                                         </barButtonItem>
@@ -727,24 +726,23 @@
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                     </datePicker>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="viG-vE-ENQ">
-                                        <rect key="frame" x="194" y="161" width="54" height="35"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="tintColor" systemColor="systemMintColor"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" title="등록"/>
-                                        <connections>
-                                            <action selector="AddWalk:" destination="d4R-YR-V4r" eventType="touchUpInside" id="5tD-4c-KEd"/>
-                                            <segue destination="Xhf-iE-mrP" kind="unwind" identifier="" unwindAction="unwindToHome:" id="575-Te-nsy"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qyn-gr-Xge">
-                                        <rect key="frame" x="49" y="161" width="54" height="35"/>
+                                        <rect key="frame" x="62" y="179" width="54" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" systemColor="systemMintColor"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="뒤로"/>
                                         <connections>
-                                            <action selector="closeView3:" destination="d4R-YR-V4r" eventType="touchUpInside" id="6CN-Lk-5H8"/>
+                                            <segue destination="Xhf-iE-mrP" kind="unwind" identifier="" unwindAction="unwindToHome:" id="575-Te-nsy"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qyn-gr-Xge">
+                                        <rect key="frame" x="183" y="179" width="54" height="35"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="tintColor" systemColor="systemMintColor"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="등록"/>
+                                        <connections>
+                                            <action selector="AddWalk:" destination="d4R-YR-V4r" eventType="touchUpInside" id="6CN-Lk-5H8"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -759,6 +757,9 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Xf5-jU-n7d"/>
                     </view>
+                    <connections>
+                        <outlet property="walk_time" destination="D8i-EL-ThG" id="qyE-pJ-t3y"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XFl-0C-9A6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="Xhf-iE-mrP" userLabel="Exit" sceneMemberID="exit"/>
@@ -792,7 +793,7 @@
                                         <color key="backgroundColor" systemColor="systemGray2Color"/>
                                     </view>
                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hkB-as-cJ5" userLabel="View2">
-                                        <rect key="frame" x="0.0" y="89" width="297" height="62"/>
+                                        <rect key="frame" x="0.0" y="71" width="297" height="62"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="일시" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8gI-OQ-fsP">
@@ -809,8 +810,35 @@
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemGray2Color"/>
                                     </view>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Dk-zM-wo0" userLabel="View4">
+                                        <rect key="frame" x="0.0" y="196" width="297" height="71"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fbN-bH-1SY">
+                                                <rect key="frame" x="60" y="18" width="54" height="35"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="tintColor" systemColor="systemMintColor"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" title="뒤로"/>
+                                                <connections>
+                                                    <segue destination="dhZ-fn-H51" kind="unwind" unwindAction="unwindToHome:" id="Zsn-xP-gW9"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jyE-qF-f4e">
+                                                <rect key="frame" x="182" y="18" width="54" height="35"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="tintColor" systemColor="systemMintColor"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" title="등록"/>
+                                                <connections>
+                                                    <action selector="AddFood:" destination="R7D-td-z7V" eventType="touchUpInside" id="3I7-iK-fg6"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemGray2Color"/>
+                                    </view>
                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="078-5b-qx2" userLabel="View3">
-                                        <rect key="frame" x="0.0" y="159" width="297" height="65"/>
+                                        <rect key="frame" x="0.0" y="141" width="297" height="65"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="급식 종류" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pnu-e5-vCk">
@@ -831,34 +859,6 @@
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemGray2Color"/>
                                     </view>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Dk-zM-wo0" userLabel="View4">
-                                        <rect key="frame" x="0.0" y="221" width="297" height="71"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fbN-bH-1SY">
-                                                <rect key="frame" x="194" y="8" width="54" height="35"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <color key="tintColor" systemColor="systemMintColor"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="filled" title="등록"/>
-                                                <connections>
-                                                    <action selector="AddFood:" destination="R7D-td-z7V" eventType="touchUpInside" id="Wfd-Ya-1m6"/>
-                                                    <segue destination="dhZ-fn-H51" kind="unwind" unwindAction="unwindToHome:" id="Zsn-xP-gW9"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jyE-qF-f4e">
-                                                <rect key="frame" x="49" y="8" width="54" height="35"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <color key="tintColor" systemColor="systemMintColor"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="filled" title="뒤로"/>
-                                                <connections>
-                                                    <action selector="closeView1:" destination="R7D-td-z7V" eventType="touchUpInside" id="3I7-iK-fg6"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                        <color key="backgroundColor" systemColor="systemGray2Color"/>
-                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemGray2Color"/>
                                 <userDefinedRuntimeAttributes>
@@ -871,6 +871,10 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="LM9-th-zod"/>
                     </view>
+                    <connections>
+                        <outlet property="feed_time" destination="ZK6-Ny-jol" id="7HM-fe-dag"/>
+                        <outlet property="feed_type" destination="4DN-4u-eX0" id="ymq-DD-APf"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZA0-wH-NWd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="dhZ-fn-H51" userLabel="Exit" sceneMemberID="exit"/>
@@ -908,24 +912,23 @@
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                     </datePicker>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CQF-6A-1Di">
-                                        <rect key="frame" x="194" y="164" width="54" height="35"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="tintColor" systemColor="systemMintColor"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" title="등록"/>
-                                        <connections>
-                                            <action selector="AddHair:" destination="H3F-H8-630" eventType="touchUpInside" id="4Cp-tZ-4ch"/>
-                                            <segue destination="s24-yq-DLB" kind="unwind" unwindAction="unwindToHome:" id="hZT-HI-gY2"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="96V-St-Ssd">
-                                        <rect key="frame" x="49" y="164" width="54" height="35"/>
+                                        <rect key="frame" x="58" y="165" width="54" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" systemColor="systemMintColor"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="뒤로"/>
                                         <connections>
-                                            <action selector="closeView5:" destination="H3F-H8-630" eventType="touchUpInside" id="UcQ-LY-Xak"/>
+                                            <segue destination="s24-yq-DLB" kind="unwind" unwindAction="unwindToHome:" id="hZT-HI-gY2"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="96V-St-Ssd">
+                                        <rect key="frame" x="186" y="165" width="54" height="35"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="tintColor" systemColor="systemMintColor"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="등록"/>
+                                        <connections>
+                                            <action selector="AddHair:" destination="H3F-H8-630" eventType="touchUpInside" id="UcQ-LY-Xak"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -940,6 +943,9 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="DOZ-HD-qyT"/>
                     </view>
+                    <connections>
+                        <outlet property="hair_time" destination="HK5-vZ-wKY" id="VPW-sL-ihn"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uTb-oB-Kzr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="s24-yq-DLB" userLabel="Exit" sceneMemberID="exit"/>
@@ -1011,25 +1017,24 @@
                                         <rect key="frame" x="39" y="47" width="219" height="75"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                     </datePicker>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aLU-ZA-QBn">
-                                        <rect key="frame" x="194" y="289" width="54" height="35"/>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HRL-xK-IVK">
+                                        <rect key="frame" x="180" y="289" width="54" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" systemColor="systemMintColor"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="등록"/>
                                         <connections>
-                                            <action selector="AddPoo:" destination="XMV-yN-Y0i" eventType="touchUpInside" id="Y2C-Pv-XSu"/>
-                                            <segue destination="UOM-mH-6GA" kind="unwind" unwindAction="unwindToHome:" id="gCY-g7-MBN"/>
+                                            <action selector="AddPoo:" destination="XMV-yN-Y0i" eventType="touchUpInside" id="MTo-KF-dYs"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HRL-xK-IVK">
-                                        <rect key="frame" x="49" y="289" width="54" height="35"/>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aLU-ZA-QBn">
+                                        <rect key="frame" x="63" y="289" width="54" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" systemColor="systemMintColor"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="뒤로"/>
                                         <connections>
-                                            <action selector="closeView2:" destination="XMV-yN-Y0i" eventType="touchUpInside" id="MTo-KF-dYs"/>
+                                            <segue destination="UOM-mH-6GA" kind="unwind" unwindAction="unwindToHome:" id="gCY-g7-MBN"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -1044,6 +1049,11 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="z3I-Zg-GoO"/>
                     </view>
+                    <connections>
+                        <outlet property="poo_color" destination="Kfi-8L-VTU" id="z0p-eq-r64"/>
+                        <outlet property="poo_time" destination="Vso-qw-fBb" id="U97-Oy-4mN"/>
+                        <outlet property="poo_type" destination="TAL-XR-43y" id="Yh7-iL-uHD"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NAk-OM-EkV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="UOM-mH-6GA" userLabel="Exit" sceneMemberID="exit"/>
@@ -1089,13 +1099,12 @@
                                         </segments>
                                     </segmentedControl>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nrd-Cm-PzA">
-                                        <rect key="frame" x="199" y="211" width="54" height="35"/>
+                                        <rect key="frame" x="53" y="211" width="54" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" systemColor="systemMintColor"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" title="등록"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="뒤로"/>
                                         <connections>
-                                            <action selector="AddHospital:" destination="gVe-Ot-3HJ" eventType="touchUpInside" id="zbF-K3-JYa"/>
                                             <segue destination="78Y-d9-Xdq" kind="unwind" identifier="" unwindAction="unwindToHome:" id="RDk-SC-49P"/>
                                         </connections>
                                     </button>
@@ -1107,13 +1116,13 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4FJ-HD-zLc">
-                                        <rect key="frame" x="54" y="211" width="54" height="35"/>
+                                        <rect key="frame" x="189" y="211" width="54" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" systemColor="systemMintColor"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" title="뒤로"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="등록"/>
                                         <connections>
-                                            <action selector="closeView6:" destination="gVe-Ot-3HJ" eventType="touchUpInside" id="ZDn-2P-aNK"/>
+                                            <action selector="AddHospital:" destination="gVe-Ot-3HJ" eventType="touchUpInside" id="ZDn-2P-aNK"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -1128,6 +1137,10 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="eqX-Lc-h5n"/>
                     </view>
+                    <connections>
+                        <outlet property="hospital_time" destination="8J0-ic-2Lx" id="xjg-bC-bNx"/>
+                        <outlet property="hospital_type" destination="Y5j-DN-w92" id="7H0-d0-Joh"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X14-4C-O4h" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="78Y-d9-Xdq" userLabel="Exit" sceneMemberID="exit"/>
@@ -1184,25 +1197,24 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KnB-GW-MrN">
-                                        <rect key="frame" x="194" y="220" width="54" height="35"/>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LUz-Y2-4mv">
+                                        <rect key="frame" x="192" y="220" width="54" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" systemColor="systemMintColor"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="등록"/>
                                         <connections>
-                                            <action selector="AddWeight:" destination="P4X-dd-auI" eventType="touchUpInside" id="ra6-KD-1RE"/>
-                                            <segue destination="8Tr-qK-Fvw" kind="unwind" unwindAction="unwindToHome:" id="VIa-CD-F9E"/>
+                                            <action selector="AddWeight:" destination="P4X-dd-auI" eventType="touchUpInside" id="7Dd-BN-DBC"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LUz-Y2-4mv">
-                                        <rect key="frame" x="49" y="220" width="54" height="35"/>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KnB-GW-MrN">
+                                        <rect key="frame" x="52" y="220" width="54" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" systemColor="systemMintColor"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="뒤로"/>
                                         <connections>
-                                            <action selector="closeView4:" destination="P4X-dd-auI" eventType="touchUpInside" id="7Dd-BN-DBC"/>
+                                            <segue destination="8Tr-qK-Fvw" kind="unwind" unwindAction="unwindToHome:" id="VIa-CD-F9E"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -1217,6 +1229,10 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ui2-Ni-T7c"/>
                     </view>
+                    <connections>
+                        <outlet property="weight" destination="7Y9-BT-LFD" id="bFa-Ug-zI5"/>
+                        <outlet property="weight_time" destination="GRy-lZ-iA4" id="m70-2b-PJQ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="phv-yI-42P" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="8Tr-qK-Fvw" userLabel="Exit" sceneMemberID="exit"/>

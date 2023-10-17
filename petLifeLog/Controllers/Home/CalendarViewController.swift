@@ -34,15 +34,16 @@ class CalendarViewController: UIViewController {
     }
     
     
-    // MARK: 홈으로 버튼 - 스토리보드상에서 unwind segue로 홈으로 연결
-    @IBAction func pressedDone(_ sender: Any) {
-        new_date = calendar.date.toDateString()
-    }
-    
-    // MARK: 날짜선택 버튼 - 선택해야 새로운 date가 변수에 지정, 저장되어 홈으로 보내짐
+    // MARK: [홈으로] 버튼 - 스토리보드상에서 unwind segue로 홈으로 연결됨.
+    // MARK: [날짜선택] 버튼 - 선택해야 새로운 date가 변수에 지정, 저장되어 홈으로 보내짐
     @IBAction func setDate(_ sender: Any) {
         new_date = calendar.date.toDateString()
-        print("새로 선택된 날짜 \(new_date) 가지고 홈으로")
+        print("새로 선택된 날짜 \(selected_date) 가지고")
+    // TODO: 지금은 [날짜 선택] 버튼 입력 후 [홈으로] 버튼 눌러야 데이터 적용&화면 전환 됨. 모달창 바로 사라지면서 홈뷰 새 날짜에 맞춰 reload 되도록 하는 방법
+//        guard let pvc = self.presentingViewController else { return }
+//        self.dismiss(animated: true) {
+//            pvc.present(HomeViewController(), animated: true, completion: nil)
+//        }
     }
     
     /*
