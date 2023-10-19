@@ -7,8 +7,6 @@
 
 import Foundation
 
-var userDefaultId = 0
-
 struct Pets: Codable {
     let id: Int
     let name, profileImage, birth, breed: String

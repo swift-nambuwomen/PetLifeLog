@@ -13,8 +13,9 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
     UIGestureRecognizerDelegate{
     //양육자 변수
     @IBOutlet weak var tabbarItem: UITabBarItem!
-    let memberID = 1
-    var saveType = ""
+    let memberID = UserDefaults.standard.integer(forKey: "userId")
+    let memberName = UserDefaults.standard.string(forKey: "nickName")
+
     var pet:[Pets] = []
     var petId = 0
     var selectedRowIndex: Int? // 현재 선택된 행의 인덱스
@@ -25,8 +26,18 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("******\(userDefaultId)")
-        lblMemberName.text = "\(memberID)님의 강아지들"
+        print("******\(memberID)")
+        
+        if let memberName = memberName {
+            lblMemberName.text = "\(memberName)님의 강아지들"
+        }
+        else {
+            lblMemberName.text = "닉네임이 설정되어 있지 않습니다."
+        }
+        
+        if memberID == 0 {
+            print("로그인정보 없음")
+        }
         
         getPetInfo(member: memberID)
         
@@ -104,8 +115,8 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
         let selectedPet = pet[rowIndex]
         
         petId = selectedPet.id
-        userDefaultId = petId
-        print("펫id : \(petId)")
+
+        UserDefaults.standard.setValue(petId, forKey: PetDefaultsKey.petId.rawValue)
         
         //선택한 로우와 기존에 선택된 로우의 펫id값이 다를때는 기존 색상으로 변경
         // 이전에 선택한 셀의 배경색을 초기 상태로 되돌립니다.
@@ -124,20 +135,7 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
             currentSelectedCell?.backgroundColor = UIColor.systemGray5 // 변경하고자 하는 배경색으로 설정
             selectedRowIndex = rowIndex
         }
-        
-        let itemImage = selectedPet.profileImage
-        
-        if let originalImage = UIImage(named: itemImage) {
-            let imageSize = CGSize(width: 20, height: 20) // 원하는 크기로 조절
-            let resizedImage = UIGraphicsImageRenderer(size: imageSize).image { _ in
-                originalImage.draw(in: CGRect(origin: .zero, size: imageSize))
-            }
-            tabBarItem.image = resizedImage
-        }
-        
-        
     }
-    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let select = tableView.indexPathForSelectedRow else { return }
@@ -163,11 +161,9 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
 //        lblName.text = userDefaults.string(forKey: "name")
     }
 
-    //url에서 데이터 가져오기
-
     func getPetInfo(member:Int){
         
-        let str = "http://127.0.0.1:8000/api/pet/list?"
+        let str = SITE_URL + "/api/pet/list?"
         let params:Parameters = ["userId":member]
         
         let alamo = AF.request(str, method: .get, parameters: params)

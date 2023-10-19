@@ -20,7 +20,7 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
 
     var diaryAll:[DiaryList] = []
     var diary:[DiaryList] = []
-    let pet = 1
+    let memberID = UserDefaults.standard.integer(forKey: "userId")
     //사용자 이름 표시
     
     
@@ -29,8 +29,6 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
 
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
-        
-        print("******\(userDefaultId)")
         
         if segment.selectedSegmentIndex == 0{
             getDiary()
@@ -72,7 +70,7 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
     func getDiary(completion: (() -> Void)? = nil){
 
         let str = "http://127.0.0.1:8000/api/pet/diaryList?"
-        let params:Parameters = ["userId":pet]
+        let params:Parameters = ["userId":memberID]
         
         let alamo = AF.request(str, method: .get, parameters: params)
         print(alamo)
@@ -143,21 +141,6 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
             
             let lblDate = cell.viewWithTag(1) as? UILabel
             lblDate?.text = diaryData.act_date
-            
-            //다이어리 공개된 데이터만 표시(전체일기 표시할때)
-            //let imageName = cell.viewWithTag(2) as? UIImageView
-
-            //print(diaryData.act_date)
-//            if diaryData.diary_image == "" {
-//                imageName?.isHidden = true
-//                // 이미지뷰의 높이를 0으로 설정하여 숨깁니다.
-//                imageName?.frame.size.height = 0
-//            }else{
-//                imageName?.image = UIImage(named: diaryData.diary_image)
-//                imageName?.isHidden = false
-//                // 이미지가 있는 경우 이미지뷰의 높이를 조절합니다.
-//                imageName?.frame.size.height = 100 // 이미지의 높이에 따라 조절하세요.
-//            }
 
             if let imageView = cell.viewWithTag(2) as? UIImageView, let textView = cell.viewWithTag(3) as? UITextView {
                 // 이미지가 없는 경우 텍스트 뷰에 데이터 표시
@@ -168,12 +151,11 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
                     textView.backgroundColor = .clear
                     cell.layer.cornerRadius = 20
                 } else {
-                    imageView.frame.size.height = 80
                     //imageViewHeightConstraint?.constant = 80
                     imageView.isHidden = false
                     imageView.image = UIImage(named: diaryData.diary_image)
                     // 이미지 뷰 크기 조절 (0.5배 축소)
-                    imageView.transform = CGAffineTransform(scaleX: 0.4, y: 0.4)
+                    //imageView.transform = CGAffineTransform(scaleX: 0.5, y: 0.3)
                     textView.text = diaryData.diary_content // 이미지가 있는 경우 텍스트를 지우거나 다른 내용을 설정
                     cell.layer.cornerRadius = 20
                     textView.backgroundColor = .clear
@@ -187,22 +169,42 @@ class DiaryViewController: UIViewController, UICollectionViewDataSource, UIColle
             lblDate?.text = diaryAllData.act_date
             
             //다이어리 공개된 데이터만 표시(전체일기 표시할때)
-            let imageName = cell.viewWithTag(2) as? UIImageView
-
-            if diaryAllData.diary_image == "" {
-                imageName?.isHidden = true
-            }else{
-                imageName?.image = UIImage(named: diaryAllData.diary_image)
-                imageName?.isHidden = false
-            }
-
-            let textView = cell.viewWithTag(3) as? UITextView
-            textView?.text = diaryAllData.diary_content
+//            let imageName = cell.viewWithTag(2) as? UIImageView
+//
+//            if diaryAllData.diary_image == "" {
+//                imageName?.isHidden = true
+//            }else{
+//                imageName?.image = UIImage(named: diaryAllData.diary_image)
+//                imageName?.isHidden = false
+//            }
+//
+//            let textView = cell.viewWithTag(3) as? UITextView
+//            textView?.text = diaryAllData.diary_content
+//
+//            // 텍스트뷰 크기 조절
+//            textView?.isScrollEnabled = false
+//            //textView?.sizeToFit()
+//            textView?.backgroundColor = .clear
             
-            // 텍스트뷰 크기 조절
-            textView?.isScrollEnabled = false
-            //textView?.sizeToFit()
-            textView?.backgroundColor = .clear
+            if let imageView = cell.viewWithTag(2) as? UIImageView, let textView = cell.viewWithTag(3) as? UITextView {
+                // 이미지가 없는 경우 텍스트 뷰에 데이터 표시
+                if diaryAllData.diary_image == "" {
+                    imageView.frame.size.height = 0
+                    imageView.isHidden = true
+                    textView.text = diaryAllData.diary_content
+                    textView.backgroundColor = .clear
+                    cell.layer.cornerRadius = 20
+                } else {
+                    //imageViewHeightConstraint?.constant = 80
+                    imageView.isHidden = false
+                    imageView.image = UIImage(named: diaryAllData.diary_image)
+                    // 이미지 뷰 크기 조절 (0.5배 축소)
+                    imageView.transform = CGAffineTransform(scaleX: 0.5, y: 0.3)
+                    textView.text = diaryAllData.diary_content // 이미지가 있는 경우 텍스트를 지우거나 다른 내용을 설정
+                    cell.layer.cornerRadius = 20
+                    textView.backgroundColor = .clear
+                }
+            }
             
             cell.layer.cornerRadius = 20
         }
