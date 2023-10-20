@@ -55,6 +55,14 @@ class PetInfoViewController: UIViewController {
         
         datePicker.addTarget(self, action: #selector(actDatePicker(_:)), for: .valueChanged)
         
+        imageview.isUserInteractionEnabled = true //이미지뷰에 클릭허용
+        
+        //탭 제스처 생성 추가
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
+        imageview.addGestureRecognizer(tapGesture)
+        
+        self.view.addSubview(imageview)
+        
         if petId != 0 {
             txtName.text = pet[0].name
             
@@ -67,10 +75,21 @@ class PetInfoViewController: UIViewController {
             petId = pet[0].id
             txtBreed.text = pet[0].breed
             
-            let imageName = pet[0].profileImage
-            //저장한 이미지 불러오기 String(describing: UIImage(data: imageData)!)
-            //let str = String(decoding: data, as: UTF8.self))
-            imageview.image = UIImage(named: imageName)
+            if pet[0].profileImage != "" && IMAGE_URL != "" {
+                let imageName = IMAGE_URL + pet[0].profileImage
+                
+                if let image = URL(string: imageName) {
+                    URLSession.shared.dataTask(with: image) { (data, response, error) in
+                        if let data = data, let image = UIImage(data: data) {
+                            DispatchQueue.main.async {
+                                self.imageview.image = image
+                            }
+                        } else {
+                            print("이미지를 불러올 수 없습니다: \(error?.localizedDescription ?? "알 수 없는 오류")")
+                        }
+                    }.resume()
+                }
+            }
             
             let sexType = pet[0].sex
             if sexType == "M" {
@@ -123,21 +142,42 @@ class PetInfoViewController: UIViewController {
             saveUpdatePets()
         }else{
             //이미지 데이터가 있으면 처리
+            var url = ""
+            
             if let image = selectedImage {
-                let url = "http://127.0.0.1:8000/api/pet/create"
-                //let url = SITE_URL + "/api/pet/create"
+                //let url = "http://127.0.0.1:8000/api/pet/create"
+                url = SITE_URL + "/api/pet/create"
                 saveInsertUploadImage(photo: image, url: url)
                 //이미지 데이터가 없으면 처리
             } else {
                 // 이미지가 nil인 경우 처리
-                let url = "http://127.0.0.1:8000/api/pet/petcreate"
-                //let url = SITE_URL + "/api/pet/petcreate"
+                //let url = "http://127.0.0.1:8000/api/pet/petcreate"
+                url = SITE_URL + "/api/pet/petcreate"
                 saveInsertPets()
             }
         }
     }
     
     //================================사진선택==========================================
+    @objc func imageViewTapped(){
+        let alert = UIAlertController(title: "이미지선택", message: "", preferredStyle: .actionSheet)
+        
+        let actionCamera = UIAlertAction(title: "사진찍기", style: .default) { action in
+            self.camera.sourceType = .camera
+            self.present(self.camera, animated: false) }
+        alert.addAction(actionCamera)
+        
+        let actionPhoto = UIAlertAction(title: "사진 보관함", style: .default) { action in
+            self.camera.sourceType = .photoLibrary
+            self.present(self.camera, animated: false) }
+        alert.addAction(actionPhoto)
+        
+        let actionCancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        alert.addAction(actionCancel)
+        
+        present(alert, animated: true)
+    }
+    
     @IBAction func actProfile(_ sender: UIButton) {
         let alert = UIAlertController(title: "이미지선택", message: "", preferredStyle: .actionSheet)
         
@@ -186,7 +226,7 @@ class PetInfoViewController: UIViewController {
         setInput()
         let fileName = "\(UUID().uuidString).png"
         
-        if let imageName = selectedImage{
+        if selectedImage != nil{
             let body : Parameters = [
                 "id": 0,
                 "name": name,
@@ -277,7 +317,7 @@ class PetInfoViewController: UIViewController {
         setInput()
         let fileName = "\(UUID().uuidString).png"
         
-        if let imageName = selectedImage{
+        if selectedImage != nil{
             let body : Parameters = [
                 "id": petId,
                 "name": name,

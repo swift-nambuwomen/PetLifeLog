@@ -37,14 +37,11 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
         
         if memberID == 0 {
             print("로그인정보 없음")
+        }else{
+            getPetInfo(member: memberID)
         }
         
-        getPetInfo(member: memberID)
-        
         tableView.dataSource = self
-
-        //tableView.delegate = self
-        
     }
     
     //닫기버튼 눌렀을때 화면 갱신
@@ -87,8 +84,24 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
         let imageProfile = cell.viewWithTag(5) as? UIImageView
         let btnPetSelect = cell.viewWithTag(6) as? UIButton
         
-        if let image = pet.profileImage as String? {
-            imageProfile?.image = UIImage(named: image)
+        //이미지  https://stpetlifelog.blob.core.windows.net/petphoto/46/e99e3bd2-21cd-4d79-99cd-0dbde67fbb4a
+        if pet.profileImage != "" && IMAGE_URL != "" {
+            let imageName = IMAGE_URL + pet.profileImage
+            
+            if let image = URL(string: imageName) {
+                URLSession.shared.dataTask(with: image) { (data, response, error) in
+                    if let data = data, let image = UIImage(data: data) {
+                        DispatchQueue.main.async {
+                            imageProfile?.image = image
+                        }
+                    } else {
+                        print("이미지를 불러올 수 없습니다: \(error?.localizedDescription ?? "알 수 없는 오류")")
+                    }
+                }.resume()
+            }
+        }else{
+            //이미지가 없을시 기본이미지 표시
+            
         }
         petId = pet.id
         lblName?.text = pet.name
@@ -154,15 +167,9 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
     override func viewWillAppear(_ animated: Bool) {
         tableView.reloadData()
     }
-    
-    //양육자의 Id를 앱실행할때 유지
-    func loadSetting(){
-//        let userDefaults = UserDefaults.standard
-//        lblName.text = userDefaults.string(forKey: "name")
-    }
 
     func getPetInfo(member:Int){
-        
+        //let str = "http://127.0.0.1:8000/api/pet/list?"
         let str = SITE_URL + "/api/pet/list?"
         let params:Parameters = ["userId":member]
         
