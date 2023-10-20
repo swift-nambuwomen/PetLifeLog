@@ -76,7 +76,7 @@ class PetInfoViewController: UIViewController {
             txtBreed.text = pet[0].breed
             
             if pet[0].profileImage != "" && IMAGE_URL != "" {
-                let imageName = IMAGE_URL + pet[0].profileImage
+                let imageName = IMAGE_URL + "/" + pet[0].profileImage
                 
                 if let image = URL(string: imageName) {
                     URLSession.shared.dataTask(with: image) { (data, response, error) in
@@ -160,25 +160,6 @@ class PetInfoViewController: UIViewController {
     
     //================================사진선택==========================================
     @objc func imageViewTapped(){
-        let alert = UIAlertController(title: "이미지선택", message: "", preferredStyle: .actionSheet)
-        
-        let actionCamera = UIAlertAction(title: "사진찍기", style: .default) { action in
-            self.camera.sourceType = .camera
-            self.present(self.camera, animated: false) }
-        alert.addAction(actionCamera)
-        
-        let actionPhoto = UIAlertAction(title: "사진 보관함", style: .default) { action in
-            self.camera.sourceType = .photoLibrary
-            self.present(self.camera, animated: false) }
-        alert.addAction(actionPhoto)
-        
-        let actionCancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-        alert.addAction(actionCancel)
-        
-        present(alert, animated: true)
-    }
-    
-    @IBAction func actProfile(_ sender: UIButton) {
         let alert = UIAlertController(title: "이미지선택", message: "", preferredStyle: .actionSheet)
         
         let actionCamera = UIAlertAction(title: "사진찍기", style: .default) { action in

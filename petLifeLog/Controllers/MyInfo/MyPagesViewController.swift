@@ -39,6 +39,7 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
             print("로그인정보 없음")
         }else{
             getPetInfo(member: memberID)
+            //getPetInfo(member: memberID)
         }
         
         tableView.dataSource = self
@@ -86,7 +87,7 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
         
         //이미지  https://stpetlifelog.blob.core.windows.net/petphoto/46/e99e3bd2-21cd-4d79-99cd-0dbde67fbb4a
         if pet.profileImage != "" && IMAGE_URL != "" {
-            let imageName = IMAGE_URL + pet.profileImage
+            let imageName = IMAGE_URL + "/" + pet.profileImage
             
             if let image = URL(string: imageName) {
                 URLSession.shared.dataTask(with: image) { (data, response, error) in
