@@ -50,6 +50,28 @@ struct DiaryList: Codable {
 
 }
 
+//myInfo 한달 지출비용
+struct CostData: Codable {
+    let petID, feedAmount, hospitalCost, beautyCost: Int
+
+    enum CodingKeys: String, CodingKey {
+        case petID = "pet_id"
+        case feedAmount = "feed_amount"
+        case hospitalCost = "hospital_cost"
+        case beautyCost = "beauty_cost"
+    }
+    
+    init(from decoder : Decoder) throws
+    {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        petID = (try? values.decode(Int.self, forKey: .petID)) ?? 0
+        feedAmount = (try? values.decode(Int.self, forKey: .feedAmount)) ?? 0
+        hospitalCost = (try? values.decode(Int.self, forKey: .hospitalCost)) ?? 0
+        beautyCost = (try? values.decode(Int.self, forKey: .beautyCost)) ?? 0
+    }
+}
+
+
 
 
 

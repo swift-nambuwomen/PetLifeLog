@@ -8,6 +8,7 @@
 import UIKit
 import PhotosUI
 import Alamofire
+import Kingfisher
 
 class PetInfoViewController: UIViewController {
     var pet:[Pets] = []
@@ -19,10 +20,6 @@ class PetInfoViewController: UIViewController {
     var sexType: Any = ""  // 성별구분
     var petId: Int = 0 // petId
     var selectedImage: UIImage?  // image파일명
-    var imageURL:URL?
-    
-    let memberID = UserDefaults.standard.integer(forKey: "userId")
-    //petId = PetDefaultsKey.petId
     
     //이미지선택 데이터?
     static let originalImage = UIImagePickerController.InfoKey.originalImage
@@ -63,6 +60,11 @@ class PetInfoViewController: UIViewController {
         
         self.view.addSubview(imageview)
         
+        getPetInfo()
+    }
+    
+    //초기 화면 데이터
+    func getPetInfo() {
         if petId != 0 {
             txtName.text = pet[0].name
             
@@ -79,15 +81,33 @@ class PetInfoViewController: UIViewController {
                 let imageName = IMAGE_URL + "/" + pet[0].profileImage
                 
                 if let image = URL(string: imageName) {
-                    URLSession.shared.dataTask(with: image) { (data, response, error) in
-                        if let data = data, let image = UIImage(data: data) {
-                            DispatchQueue.main.async {
-                                self.imageview.image = image
-                            }
-                        } else {
-                            print("이미지를 불러올 수 없습니다: \(error?.localizedDescription ?? "알 수 없는 오류")")
-                        }
-                    }.resume()
+                    ImageCache.default.removeImage(forKey: image.cacheKey)
+                    
+                    let processor = RoundCornerImageProcessor(cornerRadius: 20) // 모서리 둥글게
+                    
+                    imageview?.kf.indicatorType = .activity
+                    imageview?.clipsToBounds = true
+                    imageview?.layer.cornerRadius = 55
+                    
+                    imageview?.kf.setImage(
+                      with: image,
+                      placeholder: UIImage(systemName: "photo"),
+                      options: [
+                              .processor(processor),
+                              .cacheOriginalImage
+                          ],
+                      completionHandler: nil
+                    )
+                    
+//                    URLSession.shared.dataTask(with: image) { (data, response, error) in
+//                        if let data = data, let image = UIImage(data: data) {
+//                            DispatchQueue.main.async {
+//                                self.imageview.image = image
+//                            }
+//                        } else {
+//                            print("이미지를 불러올 수 없습니다: \(error?.localizedDescription ?? "알 수 없는 오류")")
+//                        }
+//                    }.resume()
                 }
             }
             
@@ -117,12 +137,20 @@ class PetInfoViewController: UIViewController {
             txtName.text = ""
             txtBreed.text = ""
             sexseg.selectedSegmentIndex = 0
-//            lblBirth.text = ""
 
         }
     }
     
     //==========================버튼, 달력 이벤트================================
+    
+    @IBAction func actDeleteImage(_ sender: Any) {
+        let url = SITE_URL + "/api/pet/delete/\(petId)"
+        
+        if imageview.image != nil{
+            updatePetWithImage(url: url) //주소만 변경
+        }
+    }
+    
     //달력 선택시
     @IBAction func actDatePicker(_ sender: UIDatePicker) {
         view.endEditing(true)
@@ -138,22 +166,30 @@ class PetInfoViewController: UIViewController {
 
     //저장버튼
     @IBAction func actSave(_ sender: Any) {
+        var url = ""
+        
+        //등록, 수정구분 -> 이미지 있는지 없는지 체크하여 저장
+        //수정
         if petId != 0 {
-            saveUpdatePets()
+            if let image = selectedImage {
+                url = SITE_URL + "/api/pet/update/\(petId)"
+                updatePetWithImage(url: url)
+            }else{
+                url = SITE_URL + "/api/pet/petupdate/\(petId)"
+                updatePet(url: url)
+            }
         }else{
             //이미지 데이터가 있으면 처리
-            var url = ""
-            
             if let image = selectedImage {
                 //let url = "http://127.0.0.1:8000/api/pet/create"
                 url = SITE_URL + "/api/pet/create"
-                saveInsertUploadImage(photo: image, url: url)
+                insertPetWithImage(url: url)
                 //이미지 데이터가 없으면 처리
             } else {
                 // 이미지가 nil인 경우 처리
                 //let url = "http://127.0.0.1:8000/api/pet/petcreate"
                 url = SITE_URL + "/api/pet/petcreate"
-                saveInsertPets()
+                insertPet(url: url)
             }
         }
     }
@@ -171,6 +207,9 @@ class PetInfoViewController: UIViewController {
             self.camera.sourceType = .photoLibrary
             self.present(self.camera, animated: false) }
         alert.addAction(actionPhoto)
+        
+        let actionPhotoDelete = UIAlertAction(title: "사진 삭제", style: .destructive) { action in }
+        alert.addAction(actionPhotoDelete)
         
         let actionCancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
         alert.addAction(actionCancel)
@@ -200,60 +239,55 @@ class PetInfoViewController: UIViewController {
     }
     
     //서버에 이미지 저장하기(신규등록)
-    func saveInsertUploadImage(photo : UIImage, url: String){
+    func insertPetWithImage(url: String){
         //함수 매개변수는 POST할 데이터, url
         let headers: HTTPHeaders = ["Content-Type": "multipart/form-data"]
         
         setInput()
         let fileName = "\(UUID().uuidString).png"
-        
-        if selectedImage != nil{
-            let body : Parameters = [
+        let body : Parameters = [
                 "id": 0,
                 "name": name,
                 "profile": fileName,
                 "birth": datePicker.date.toDateString(),
                 "breed": breed,
                 "sex": sexType,
-                "user": memberID
-            ]
-            print(body)
-            if let imageData = selectedImage?.pngData() {
-                AF.upload(multipartFormData: { multipart in
-                    for (key, value) in body {
-                        multipart.append("\(value)".data(using: .utf8)!, withName: key)
-                    }
-                    multipart.append(imageData, withName: "profile", fileName: fileName, mimeType: "image/png")
+                "user": USER_ID
+        ]
+        print(body)
+            
+        if let imageData = selectedImage?.pngData() {
+            AF.upload(multipartFormData: { multipart in
+                for (key, value) in body {
+                    multipart.append("\(value)".data(using: .utf8)!, withName: key)
+                }
+                multipart.append(imageData, withName: "profile", fileName: fileName, mimeType: "image/png")
+                
+            }, to: url, method: .post, headers: headers)
+            //.responseJSON { response in
+            .responseDecodable(of:Pets.self) { response in
+                switch response.result {
+                case .success:
+                    let alert = UIAlertController(title: "확인", message: "등록 되었습니다.", preferredStyle: .alert)
+                    let action = UIAlertAction(title: " 확인", style: .default)
+                    alert.addAction(action)
                     
-                }, to: url, method: .post, headers: headers)
-                .responseJSON { response in
-                    switch response.result {
-                    case .success:
-                        let alert = UIAlertController(title: "확인", message: "등록 되었습니다.", preferredStyle: .alert)
-                        let action = UIAlertAction(title: " 확인", style: .default)
-                        alert.addAction(action)
-                        
-                        self.present(alert, animated: true)
-                        
-                        break
-                    case .failure:
-                        // POST 요청 중 오류가 발생한 경우
-                        break
-                    }
+                    self.present(alert, animated: true)
+                    
+                    break
+                case .failure:
+                    // POST 요청 중 오류가 발생한 경우
+                    break
                 }
             }
         }else{
-            print("이미지가 없습니다.")
-            return
+            
         }
 
     }
     
     //==================== 강아지 정보 신규등록 ============================
-    func saveInsertPets() {
-        // [http 요청 주소 지정]
-        let url = SITE_URL + "/api/pet/petcreate"
-
+    func insertPet(url: String) {
         setInput()
         
         // [http 요청 파라미터 지정 실시]
@@ -265,7 +299,7 @@ class PetInfoViewController: UIViewController {
             "birth": datePicker.date.toDateString(),
             "breed": breed,
             "sex":sexType,
-            "user": memberID
+            "user": USER_ID
         ]
         
         print(queryString)
@@ -291,14 +325,13 @@ class PetInfoViewController: UIViewController {
     
     //==================== 강아지 정보 수정 ============================
     //서버에 이미지 저장하기(수정)
-    func saveUpdateUploadImage(photo : UIImage, url: String){
-        //함수 매개변수는 POST할 데이터, url
-        let headers: HTTPHeaders = ["Content-Type": "multipart/form-data"]
+    func updatePetWithImage(url: String){
         
+        let headers: HTTPHeaders = ["Content-Type": "multipart/form-data"]
         setInput()
         let fileName = "\(UUID().uuidString).png"
         
-        if selectedImage != nil{
+        if imageview.image != nil{
             let body : Parameters = [
                 "id": petId,
                 "name": name,
@@ -306,10 +339,11 @@ class PetInfoViewController: UIViewController {
                 "birth": datePicker.date.toDateString(),
                 "breed": breed,
                 "sex": sexType,
-                "user": memberID
+                "user": USER_ID
             ]
+            
             print(body)
-            if let imageData = selectedImage?.pngData() {
+            if let imageData = imageview.image?.pngData() {
                 AF.upload(multipartFormData: { multipart in
                     for (key, value) in body {
                         multipart.append("\(value)".data(using: .utf8)!, withName: key)
@@ -317,10 +351,17 @@ class PetInfoViewController: UIViewController {
                     multipart.append(imageData, withName: "profile", fileName: fileName, mimeType: "image/png")
                     
                 }, to: url, method: .put, headers: headers)
-                .responseJSON { response in
+                //.responseJSON { response in
+                .responseDecodable(of:Pets.self) { response in
                     switch response.result {
                     case .success:
-                        print("이미지 업로드 성공")
+                        let alert = UIAlertController(title: "확인", message: "수정되었습니다.", preferredStyle: .alert)
+                        let action = UIAlertAction(title: " 확인", style: .default)
+                        alert.addAction(action)
+                        
+                        self.present(alert, animated: true)
+                        
+                        break
                     case .failure(let error):
                         print("이미지 업로드 실패 : \(error)")
                     }
@@ -334,10 +375,7 @@ class PetInfoViewController: UIViewController {
 
     }
     
-    func saveUpdatePets() {
-        // [http 요청 주소 지정]
-        let url = SITE_URL + "/api/pet/petupdate/\(petId)"
-
+    func updatePet(url: String) {
         setInput()
         
         // [http 요청 파라미터 지정 실시]
@@ -349,7 +387,7 @@ class PetInfoViewController: UIViewController {
             "birth": datePicker.date.toDateString(),
             "breed": breed,
             "sex": sexType,
-            "user": memberID
+            "user": USER_ID
         ]
         print(queryString)
         
@@ -373,21 +411,31 @@ class PetInfoViewController: UIViewController {
         
     }
     
-    // 이미지를 문서 디렉토리에 저장하고 URL을 반환하는 함수
-    func saveImageToDocumentsDirectory(_ image: UIImage) -> URL? {
-        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let fileURL = documentsDirectory?.appendingPathComponent("myImage.jpg")
-        if let data = image.jpegData(compressionQuality: 1.0) {
-            do {
-                try data.write(to: fileURL!)
-                return fileURL
-            } catch {
-                print("Error saving image: \(error)")
-                return nil
-            }
-        }
-        return nil
+    //이미지 삭제
+    func deletePetImage(url: String){
+        
     }
+    
+    //pet 데이터 삭제
+    func deletePet(url: String){
+        
+    }
+    
+    // 이미지를 문서 디렉토리에 저장하고 URL을 반환하는 함수
+//    func saveImageToDocumentsDirectory(_ image: UIImage) -> URL? {
+//        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+//        let fileURL = documentsDirectory?.appendingPathComponent("myImage.jpg")
+//        if let data = image.jpegData(compressionQuality: 1.0) {
+//            do {
+//                try data.write(to: fileURL!)
+//                return fileURL
+//            } catch {
+//                print("Error saving image: \(error)")
+//                return nil
+//            }
+//        }
+//        return nil
+//    }
     
 }
 
@@ -430,11 +478,11 @@ extension PetInfoViewController: UIImagePickerControllerDelegate, UINavigationCo
             self.imageview.image = image
             
             selectedImage = image
-            // 이미지를 저장하고 URL을 가져올 수 있습니다
-            if let image = saveImageToDocumentsDirectory(image) {
-               print("Image URL: \(image)")
-               imageURL = image
-            }
+//            // 이미지를 저장하고 URL을 가져올 수 있습니다
+//            if let image = saveImageToDocumentsDirectory(image) {
+//               print("Image URL: \(image)")
+//               imageURL = image
+//            }
         }
     }
 }
@@ -448,19 +496,6 @@ extension Date {
         return dateFormatter.string(from: self)
     }
 }
-
-
-//extension PetInfoViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-//
-//    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-//        picker.dismiss(animated: true)
-//    }
-//
-//    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-//        guard let image = info[.originalImage] as? UIImage else { return }
-//        picker.dismiss(animated: true)
-//    }
-//}
 
 extension UIImage {
     //이미지 사이즈 변경
