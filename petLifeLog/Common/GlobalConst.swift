@@ -45,9 +45,9 @@ enum PetDefaultsKey: String, CaseIterable {
 
 let USER_ID = UserDefaults.standard.integer(forKey: UserDefaultsKey.userId.rawValue)
 let NICK_NAME = UserDefaults.standard.integer(forKey: UserDefaultsKey.nickName.rawValue)
-let PET_ID = UserDefaults.standard.integer(forKey: PetDefaultsKey.petId.rawValue)
-let PET_NAME = UserDefaults.standard.integer(forKey: PetDefaultsKey.petName.rawValue)
-let PET_IMG = UserDefaults.standard.integer(forKey: PetDefaultsKey.petImage.rawValue)
+var PET_ID = UserDefaults.standard.integer(forKey: PetDefaultsKey.petId.rawValue)
+var PET_NAME = UserDefaults.standard.integer(forKey: PetDefaultsKey.petName.rawValue)
+var PET_IMG = UserDefaults.standard.integer(forKey: PetDefaultsKey.petImage.rawValue)
 
 
 func getReaAddress() -> String {

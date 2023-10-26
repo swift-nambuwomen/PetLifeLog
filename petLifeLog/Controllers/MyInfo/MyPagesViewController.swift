@@ -34,6 +34,7 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
         }else{
             getPetInfo(userId: USER_ID)
         }
+
         
         navigationItem.title = "\(NICK_NAME)님의 강아지들"
         

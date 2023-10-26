@@ -40,7 +40,7 @@ class PetDetailViewController: UIViewController {
     
     var petAction:Actdetail! // Home뷰로부터 넘겨받은 데이터
     var params:Parameters = [ // 알라모 파이어용 파라미터. 6개 액션의 공통된 2개는 미리 넣어둠.
-        "pet":pet_id,
+        "pet":PET_ID,
         "act_date":selected_date
     ]
     var act_name = "" // UI 분기용. petAction.act_name
@@ -209,7 +209,7 @@ class PetDetailViewController: UIViewController {
         print("called 액션 수정 버튼 via AF")
         let pk = petAction.id
         let paths = "api/pet/act/\(pk)"
-        let url = "\(baseURL+paths)"
+        let url = "\(actReg_url)/\(pk)"
         
         print("parameter값",params)
         let dataRequest = AF.request(url, method: .put, parameters: params, encoding: JSONEncoding.default)

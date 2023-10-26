@@ -7,6 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7319172B2AE5FC650010052F /* Home2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7319172A2AE5FC650010052F /* Home2ViewController.swift */; };
+		733F8CB12AE2289F006C1D03 /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733F8CAF2AE2289F006C1D03 /* Character.swift */; };
+		733F8CB22AE2289F006C1D03 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733F8CB02AE2289F006C1D03 /* CustomTableViewCell.swift */; };
+		733F8CBC2AE4E90C006C1D03 /* DiaryVIewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733F8CBB2AE4E90C006C1D03 /* DiaryVIewCell.swift */; };
+		73918B592AD78408004FB9DD /* Auth.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 73918B582AD78408004FB9DD /* Auth.storyboard */; };
+		73918B7C2AD79B59004FB9DD /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73918B7B2AD79B59004FB9DD /* LoginViewController.swift */; };
+		73918B7F2AD917CC004FB9DD /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73918B7E2AD917CC004FB9DD /* Config.swift */; };
+		73918B812AD91A52004FB9DD /* GlobalConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73918B802AD91A52004FB9DD /* GlobalConst.swift */; };
+		73918B832AD91AB9004FB9DD /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73918B822AD91AB9004FB9DD /* Utils.swift */; };
+		73918B852AD928A6004FB9DD /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73918B842AD928A6004FB9DD /* User.swift */; };
+		73918BA72ADADA4B004FB9DD /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73918BA62ADADA4B004FB9DD /* StatsViewController.swift */; };
+		73918BA92ADAE106004FB9DD /* JoinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73918BA82ADAE106004FB9DD /* JoinViewController.swift */; };
+		73C1AB442AE0C1410011ECFD /* ActCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C1AB432AE0C1410011ECFD /* ActCalendarViewController.swift */; };
+		DC6B12FF3BAD77AE18205492 /* Pods_petLifeLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A09C8C43438C3BCDF928F1A /* Pods_petLifeLog.framework */; };
 		FBBDA06E2ACCFFB300A1263E /* MyPagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBDA06C2ACCFFB300A1263E /* MyPagesViewController.swift */; };
 		FBBDA06F2ACCFFB300A1263E /* PetInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBDA06D2ACCFFB300A1263E /* PetInfoViewController.swift */; };
 		FBBDA0722ACCFFF400A1263E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = FBBDA0712ACCFFF400A1263E /* Alamofire */; };
@@ -37,6 +51,22 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2A09C8C43438C3BCDF928F1A /* Pods_petLifeLog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_petLifeLog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		35062AABA5C68886D375D0EF /* Pods-petLifeLog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-petLifeLog.debug.xcconfig"; path = "Target Support Files/Pods-petLifeLog/Pods-petLifeLog.debug.xcconfig"; sourceTree = "<group>"; };
+		7319172A2AE5FC650010052F /* Home2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home2ViewController.swift; sourceTree = "<group>"; };
+		733F8CAF2AE2289F006C1D03 /* Character.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Character.swift; sourceTree = "<group>"; };
+		733F8CB02AE2289F006C1D03 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
+		733F8CBB2AE4E90C006C1D03 /* DiaryVIewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiaryVIewCell.swift; sourceTree = "<group>"; };
+		73918B582AD78408004FB9DD /* Auth.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Auth.storyboard; sourceTree = "<group>"; };
+		73918B7B2AD79B59004FB9DD /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		73918B7E2AD917CC004FB9DD /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		73918B802AD91A52004FB9DD /* GlobalConst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalConst.swift; sourceTree = "<group>"; };
+		73918B822AD91AB9004FB9DD /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		73918B842AD928A6004FB9DD /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		73918BA62ADADA4B004FB9DD /* StatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
+		73918BA82ADAE106004FB9DD /* JoinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinViewController.swift; sourceTree = "<group>"; };
+		73C1AB432AE0C1410011ECFD /* ActCalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActCalendarViewController.swift; sourceTree = "<group>"; };
+		D88F18542715E42D8BCAF085 /* Pods-petLifeLog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-petLifeLog.release.xcconfig"; path = "Target Support Files/Pods-petLifeLog/Pods-petLifeLog.release.xcconfig"; sourceTree = "<group>"; };
 		FBBDA06C2ACCFFB300A1263E /* MyPagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPagesViewController.swift; sourceTree = "<group>"; };
 		FBBDA06D2ACCFFB300A1263E /* PetInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetInfoViewController.swift; sourceTree = "<group>"; };
 		FBBDA6532ACD00B900A1263E /* PetInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetInfo.swift; sourceTree = "<group>"; };
@@ -74,12 +104,49 @@
 			buildActionMask = 2147483647;
 			files = (
 				FBBDA0722ACCFFF400A1263E /* Alamofire in Frameworks */,
+				DC6B12FF3BAD77AE18205492 /* Pods_petLifeLog.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2E46F31B4066C39103C423D4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2A09C8C43438C3BCDF928F1A /* Pods_petLifeLog.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		443E8B2966004A32E24FE147 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				35062AABA5C68886D375D0EF /* Pods-petLifeLog.debug.xcconfig */,
+				D88F18542715E42D8BCAF085 /* Pods-petLifeLog.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		73918B7A2AD79B32004FB9DD /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				73918B7B2AD79B59004FB9DD /* LoginViewController.swift */,
+				73918BA82ADAE106004FB9DD /* JoinViewController.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		73918B7D2AD9176E004FB9DD /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				73918B7E2AD917CC004FB9DD /* Config.swift */,
+				73918B802AD91A52004FB9DD /* GlobalConst.swift */,
+				73918B822AD91AB9004FB9DD /* Utils.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		FC518B1D2AC0AF9B00479461 = {
 			isa = PBXGroup;
 			children = (
@@ -87,6 +154,8 @@
 				FC9303F62AC45B1C00C883C6 /* README.md */,
 				FC518B282AC0AF9B00479461 /* petLifeLog */,
 				FC518B272AC0AF9B00479461 /* Products */,
+				443E8B2966004A32E24FE147 /* Pods */,
+				2E46F31B4066C39103C423D4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -102,6 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				FCEEF16D2AD7A36B00D8D97E /* Utils */,
+				73918B7D2AD9176E004FB9DD /* Common */,
 				FC518B3F2AC0B05300479461 /* Models */,
 				FC518B3E2AC0B03800479461 /* Views */,
 				FC518B3D2AC0B02F00479461 /* Controllers */,
@@ -121,6 +191,7 @@
 		FC518B3D2AC0B02F00479461 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				73918B7A2AD79B32004FB9DD /* Auth */,
 				FCCE13522AC2932C005B95C9 /* Home */,
 				FCCE13532AC29333005B95C9 /* Diary */,
 				FCCE13542AC2933F005B95C9 /* Board */,
@@ -139,6 +210,7 @@
 				FC518B482AC0B25800479461 /* Board.storyboard */,
 				FC518B402AC0B0F300479461 /* Stats.storyboard */,
 				FC518B422AC0B0F300479461 /* MyInfo.storyboard */,
+				73918B582AD78408004FB9DD /* Auth.storyboard */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -146,8 +218,12 @@
 		FC518B3F2AC0B05300479461 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				733F8CAF2AE2289F006C1D03 /* Character.swift */,
+				733F8CB02AE2289F006C1D03 /* CustomTableViewCell.swift */,
+				733F8CBB2AE4E90C006C1D03 /* DiaryVIewCell.swift */,
 				FC8C3F002ACC74D5007FD632 /* Pet.swift */,
 				FBBDA6532ACD00B900A1263E /* PetInfo.swift */,
+				73918B842AD928A6004FB9DD /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -181,6 +257,7 @@
 				FC7B56802AC5800400E90500 /* PetDetailViewController.swift */,
 				FC7194E82AC33AFD00391BD4 /* AddPetActionViewController.swift */,
 				FC7194EA2AC3413D00391BD4 /* AddDiaryViewController.swift */,
+				7319172A2AE5FC650010052F /* Home2ViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -206,6 +283,8 @@
 		FCCE13552AC2934B005B95C9 /* Stats */ = {
 			isa = PBXGroup;
 			children = (
+				73918BA62ADADA4B004FB9DD /* StatsViewController.swift */,
+				73C1AB432AE0C1410011ECFD /* ActCalendarViewController.swift */,
 			);
 			path = Stats;
 			sourceTree = "<group>";
@@ -234,9 +313,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FC518B3A2AC0AF9C00479461 /* Build configuration list for PBXNativeTarget "petLifeLog" */;
 			buildPhases = (
+				E71C896F51F2C824831526AE /* [CP] Check Pods Manifest.lock */,
 				FC518B222AC0AF9B00479461 /* Sources */,
 				FC518B232AC0AF9B00479461 /* Frameworks */,
 				FC518B242AC0AF9B00479461 /* Resources */,
+				20DE55287FCC4A004796FF12 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -276,6 +357,7 @@
 			mainGroup = FC518B1D2AC0AF9B00479461;
 			packageReferences = (
 				FBBDA0702ACCFFF400A1263E /* XCRemoteSwiftPackageReference "Alamofire" */,
+				73C1AB3E2ADFA4EE0011ECFD /* XCRemoteSwiftPackageReference "FSCalendar" */,
 			);
 			productRefGroup = FC518B272AC0AF9B00479461 /* Products */;
 			projectDirPath = "";
@@ -300,11 +382,54 @@
 				FC518B462AC0B0F300479461 /* MyInfo.storyboard in Resources */,
 				FC518B312AC0AF9B00479461 /* Main.storyboard in Resources */,
 				FC9303F42AC45A9C00C883C6 /* .gitignore in Resources */,
+				73918B592AD78408004FB9DD /* Auth.storyboard in Resources */,
 				FC518B492AC0B25800479461 /* Board.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		20DE55287FCC4A004796FF12 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-petLifeLog/Pods-petLifeLog-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-petLifeLog/Pods-petLifeLog-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-petLifeLog/Pods-petLifeLog-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E71C896F51F2C824831526AE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-petLifeLog-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		FC518B222AC0AF9B00479461 /* Sources */ = {
@@ -312,20 +437,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC518B2A2AC0AF9B00479461 /* AppDelegate.swift in Sources */,
+				733F8CBC2AE4E90C006C1D03 /* DiaryVIewCell.swift in Sources */,
 				FBBDA06E2ACCFFB300A1263E /* MyPagesViewController.swift in Sources */,
+				73918BA92ADAE106004FB9DD /* JoinViewController.swift in Sources */,
 				FC8C3F012ACC74D5007FD632 /* Pet.swift in Sources */,
 				FC518B2C2AC0AF9B00479461 /* SceneDelegate.swift in Sources */,
+				73918BA72ADADA4B004FB9DD /* StatsViewController.swift in Sources */,
+				73918B7F2AD917CC004FB9DD /* Config.swift in Sources */,
 				FC518B632AC269E000479461 /* DiaryViewController.swift in Sources */,
 				FCEEF16F2AD7A4B900D8D97E /* AzureService.swift in Sources */,
 				FC069C822AC9B33300A8023E /* CalendarViewController.swift in Sources */,
 				FBBDA06F2ACCFFB300A1263E /* PetInfoViewController.swift in Sources */,
+				73C1AB442AE0C1410011ECFD /* ActCalendarViewController.swift in Sources */,
+				733F8CB22AE2289F006C1D03 /* CustomTableViewCell.swift in Sources */,
+				73918B852AD928A6004FB9DD /* User.swift in Sources */,
 				FC7B56812AC5800400E90500 /* PetDetailViewController.swift in Sources */,
 				FC7194E92AC33AFD00391BD4 /* AddPetActionViewController.swift in Sources */,
+				73918B812AD91A52004FB9DD /* GlobalConst.swift in Sources */,
 				FCCE13512AC292C3005B95C9 /* HomeViewController.swift in Sources */,
 				FC7194E72AC3352000391BD4 /* BoardDetailViewController.swift in Sources */,
 				FBBDA6542ACD00B900A1263E /* PetInfo.swift in Sources */,
+				73918B7C2AD79B59004FB9DD /* LoginViewController.swift in Sources */,
+				7319172B2AE5FC650010052F /* Home2ViewController.swift in Sources */,
 				FC518B572AC0C81600479461 /* AddBoardViewController.swift in Sources */,
 				FC7194EB2AC3413D00391BD4 /* AddDiaryViewController.swift in Sources */,
+				733F8CB12AE2289F006C1D03 /* Character.swift in Sources */,
+				73918B832AD91AB9004FB9DD /* Utils.swift in Sources */,
 				FC518B4D2AC0B65C00479461 /* BoardViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -468,6 +605,7 @@
 		};
 		FC518B3B2AC0AF9C00479461 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 35062AABA5C68886D375D0EF /* Pods-petLifeLog.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -497,6 +635,7 @@
 		};
 		FC518B3C2AC0AF9C00479461 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D88F18542715E42D8BCAF085 /* Pods-petLifeLog.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -548,6 +687,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		73C1AB3E2ADFA4EE0011ECFD /* XCRemoteSwiftPackageReference "FSCalendar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/WenchaoD/FSCalendar";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		FBBDA0702ACCFFF400A1263E /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";

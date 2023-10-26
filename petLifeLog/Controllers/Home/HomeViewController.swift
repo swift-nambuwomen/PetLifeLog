@@ -9,15 +9,15 @@ import UIKit
 import Alamofire
 
 // 테스트용 임시 데이터(홈에서 쓰이는 5개의 컨트롤러는 이 글로벌 변수의 user,pet,birth를 가져다 씀)
-let user_id = 1 // 로그인 후 들고 있어야 할 user_id값
-let pet_id = 1 // 로그인 후 들고 있어야 할 user_id의 현재 선택 되어있는 pet_id의 값
+//let user_id = 1 // 로그인 후 들고 있어야 할 user_id값
+//let pet_id = 1 // 로그인 후 들고 있어야 할 user_id의 현재 선택 되어있는 pet_id의 값
 let pet_birth = "2021-04-16" // 로그인 후 들고 있어야 할 현재 pet의 강아지 생일
-
-// 글로벌 변수 - 다른 컨트롤러에서도 쓰임
-let baseURL = "http://127.0.0.1:8000/"
-var selected_date = "" // 네비바용. 사용자가 선택한 날짜. yyyy-MM-dd.
-var today = "" // < > 날짜 이동 버튼, 날짜에 따라 비활성화 처리용 대조 데이터.
-let picker = UIImagePickerController()
+//
+//// 글로벌 변수 - 다른 컨트롤러에서도 쓰임
+//let baseURL = "http://127.0.0.1:8000/"
+//var selected_date = "" // 네비바용. 사용자가 선택한 날짜. yyyy-MM-dd.
+//var today = "" // < > 날짜 이동 버튼, 날짜에 따라 비활성화 처리용 대조 데이터.
+//let picker = UIImagePickerController()
 class HomeViewController: UIViewController {
     // AF로 가져온 Act를 [actdetail]과 diary로 분리함
     var act:Act?
@@ -40,7 +40,14 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         
         // login check
-        //login()
+        login()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.didDismissDetailNotification(_:)),
+            name: NSNotification.Name("DataInsertSuccess"),
+            object: nil
+        )
         
         let now = Int(Date().timeIntervalSince1970) // unixTime. 1972년 1월 1일부터로부터 몇초가 경과했는지
         setDate(now)
@@ -58,13 +65,20 @@ class HomeViewController: UIViewController {
         getActDataViaAF() //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
     }
     
+    @objc func didDismissDetailNotification(_ notification: Notification) {
+        print("didDismissDetailNotification")
+//        DispatchQueue.main.async {
+//            self.tableView.reloadData()
+            getActDataViaAF()
+//        }
+    }
     
     // MARK: UI, 데이터 셋업
 
     // AF - 메인 네비바상의 선택된 날짜에 현재 접속된 유저의 선택된 강아지의 기록(액션,일기)이 있다면 가져와라.
     func getActDataViaAF() {
-        let url = "\(baseURL+paths)"
-        let params:Parameters = ["pet_id":pet_id, "act_date":selected_date]
+        let url = "\(actList_url)"
+        let params:Parameters = ["pet_id":PET_ID, "act_date":selected_date]
         let dataRequest = AF.request(url, method: .get, parameters: params)
 
         print("called GET ActionList")
@@ -127,13 +141,13 @@ class HomeViewController: UIViewController {
         }
 
         diaryContent.text = petDiary?.diary_content
-        diaryImgView.image = UIImage(named: petDiary?.diary_image ?? "white")
+        //diaryImgView.image = UIImage(named: petDiary?.diary_image ?? "white")
     }
     
     func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.rowHeight = UITableView.automaticDimension // 동적 셀 높이
+//        tableView.rowHeight = UITableView.automaticDimension // 동적 셀 높이
         //tableView.separatorStyle = .none //cell구분선 없애기
     }
     
@@ -253,14 +267,14 @@ class HomeViewController: UIViewController {
     // MARK: 뒤로 가기(unwind segue). 데이터를 가지고 홈으로 돌아옵니다.
     @IBAction func unwindToHome (_ unwindSegue : UIStoryboardSegue) {
         // 캘린더 - [홈으로] 버튼으로부터
-        let calendarVC = unwindSegue.source as? CalendarViewController
-        if calendarVC?.new_date != "" { //new_date가 초기설정값인 ""이 아니라면
-            dateBtn.setTitle(calendarVC?.new_date, for: .normal) // 받아온 new_date를 네비바 타이틀에 설정
-            if let calendarVC { selected_date = calendarVC.new_date} // 받아온 new_date를 갱신날짜 변수에 지정
-            checkDateCaseLogic()
-            getActDataViaAF() //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
-            print("데이터 갱신하여 뒤로가기 unwindToHome")
-        }
+//        let calendarVC = unwindSegue.source as? CalendarViewController
+//        if calendarVC?.new_date != "" { //new_date가 초기설정값인 ""이 아니라면
+//            dateBtn.setTitle(calendarVC?.new_date, for: .normal) // 받아온 new_date를 네비바 타이틀에 설정
+//            if let calendarVC { selected_date = calendarVC.new_date} // 받아온 new_date를 갱신날짜 변수에 지정
+//            checkDateCaseLogic()
+//            getActDataViaAF() //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
+//            print("데이터 갱신하여 뒤로가기 unwindToHome")
+//        }
         
         //Add Action6개 등록버튼(신규등록)으로부터
         //let addActionVC = unwindSegue.source as? AddPetActionViewController
@@ -273,6 +287,15 @@ class HomeViewController: UIViewController {
         
     }
 
+    @IBAction func petActionAdd(_ sender: UIButton) {
+//        let vc = AddPetActionViewController()
+        let storyboard = "addAction\(sender.tag)"
+        
+        guard let vc = self.storyboard?.instantiateViewController(identifier: storyboard) as? AddPetActionViewController else { return }
+                
+        vc.modalPresentationStyle = UIModalPresentationStyle.formSheet
+        present(vc, animated: true, completion: nil)
+    }
 }
 
 
@@ -304,21 +327,39 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         let lblMemo = cell.viewWithTag(5) as? UILabel // 메모
         let memoImgView = cell.viewWithTag(6) as? UIImageView // 액션 메모 이미지
         
+        lblMemo?.text = ""
         // 시간
         lblActTime?.text = petAction.act_time
         
         // 액션명,액션대표이미지
         let act_id = petAction.act // 알라모파이어로 가져온 데이터 내의 act명
         let act_name = petAction.act_name
+        let image = UIImage(systemName: "circle.fill")
+        
+        actImgView?.image = image
+    
+        //actImgView?.tintColor = UIColor(named: "#FF7E79")
+
         switch act_id { // 액션별로 보여줄 대표 이미지가 다르므로 분기 처리
-            case 1: actImgView?.image = UIImage(named: "walk")
-            case 2: actImgView?.image = UIImage(named: "poo")
-            case 3: actImgView?.image = UIImage(named: "food")
-            case 4: actImgView?.image = UIImage(named: "hospital")
-            case 5: actImgView?.image = UIImage(named: "hair")
-            case 6: actImgView?.image = UIImage(named: "weight")
-            default: actImgView?.image = UIImage(named: "walk")
-        }
+//        case 1: actImgView?.tintColor = UIColor(named: "AAA517") //.image = UIImage(named: "walk")
+//            case 2: actImgView?.image = UIImage(named: "poo")
+//            case 3: actImgView?.image = UIImage(named: "food")UIImage(systemName: "doc.text.image")
+//            case 4: actImgView?.image = UIImage(named: "hospital")
+//            case 5: actImgView?.image = UIImage(named: "hair")
+//            case 6: actImgView?.image = UIImage(named: "weight")
+//            default: actImgView?.tintColor = UIColor(named: "AAA517") //UIImage(named: "walk")
+//        }
+        
+            case 1: actImgView?.tintColor = UIColor(hex: "#AAA517") //.image = UIImage(named: "walk")
+                case 2: actImgView?.tintColor = UIColor(hex: "#FF7E79")
+                case 3: actImgView?.tintColor = UIColor(hex: "#FA9E04")
+                case 4: actImgView?.tintColor = UIColor(hex: "hospital")
+                case 5: actImgView?.tintColor = UIColor(hex: "#09BCF1")
+                case 6: actImgView?.tintColor = UIColor(hex: "#FF85FF")
+                default: actImgView?.tintColor = UIColor(hex: "#AAA517")
+            //UIImage(named: "walk")
+
+            }
         
         // 디테일 - 액션별로 테이블뷰 셀에 보여줄 디테일이 다르므로 분기 처리(액션 라벨, 각 액션 디테일들)
         switch act_id {

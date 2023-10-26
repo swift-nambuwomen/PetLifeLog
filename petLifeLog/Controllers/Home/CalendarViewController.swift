@@ -20,7 +20,7 @@ class CalendarViewController: UIViewController {
     
     func setupCalendarAttribute() {
         calendar.setDate(selected_date.toDate()!, animated: true) // 네비바 선택된 날짜가 달력에 자동선택되게
-        calendar.minimumDate = pet_birth.toDate() // 강아지 생일부터 선택 가능
+       // calendar.minimumDate = pet_birth.toDate() // 강아지 생일부터 선택 가능
         calendar.maximumDate = today.toDate() // 미래 기록은 안되게
     }
     

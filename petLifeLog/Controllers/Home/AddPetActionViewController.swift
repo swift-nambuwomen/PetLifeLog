@@ -11,8 +11,9 @@ import Alamofire
 // pet_id, user_id, selected_date, baseURL은 홈컨트롤러의 글로벌 변수를 가져다 씀
 class AddPetActionViewController: UIViewController {
     var paths = "api/pet/act"
+    //var paths = actReg_url
     var params:Parameters = [ // 알라모 파이어용 파라미터. 6개 액션의 공통된 2개는 미리 넣어둠.
-        "pet":pet_id,
+        "pet":PET_ID,
         "act_date":selected_date
     ]
     
@@ -37,14 +38,17 @@ class AddPetActionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("AddPet뷰 호출 - 홈에 선택된 날짜", selected_date)
+//        feed_time.frame.size = CGSize(width: 250, height: 150)
+////        feed_time.backgroundColor = UIColor(hex: "FFFFFF")
+//        feed_time.subviews[0].subviews[0].subviews[2].backgroundColor = feed_time.tintColor;
     }
     
     // MARK: 6개 액션 등록 메소드에서 공통으로 쓸 AF
     //func updateOrCreateDataViaAF(params: params, handler: <#T##() -> ()#>){
     func updateOrCreateDataViaAF(){
         print("called 액션 등록 버튼 via AF")
-        let url = "\(baseURL+paths)"
-        let dataRequest = AF.request(url, method: .post, parameters: params, encoding: URLEncoding.default)
+        //let url = "\(baseURL+paths)"
+        let dataRequest = AF.request(actReg_url, method: .post, parameters: params, encoding: URLEncoding.default)
         dataRequest.responseDecodable(of: Actdetail.self) { response in
             print("Request: \(String(describing: response.request))")   // original url request
             //print("Response: \(String(describing: response.response))") // http url response
@@ -53,7 +57,9 @@ class AddPetActionViewController: UIViewController {
             case .success:
                 guard let result = response.value else { return }
                 print("액션 POST 응답 결과", result)
-                self.alert(title: "등록되었습니다.")
+//                self.alert(title: "등록되었습니다.")
+                NotificationCenter.default.post(name: NSNotification.Name("DataInsertSuccess"), object: nil, userInfo: nil)
+                self.dismiss(animated: true)
             case .failure(let error):
                 print("액션 POST 실패", error.localizedDescription)
                 self.alert(title: "등록 실패")
@@ -74,7 +80,7 @@ class AddPetActionViewController: UIViewController {
             default: return
         }
         params = [
-            "pet":pet_id,
+            "pet":UserDefaults.standard.integer(forKey: "petId"),
             "act_date":selected_date,
             "act_time":feed_time.date.toTimeString(),
             "act":3,
@@ -104,9 +110,10 @@ class AddPetActionViewController: UIViewController {
         case 0: ordure_color = "초코"
         case 1: ordure_color = "녹색"
         case 2: ordure_color = "노랑"
-        case 3: ordure_color = "빨강"
-        case 4: ordure_color = "검정"
-        case 5: ordure_color = "보라"
+        case 3: ordure_color = "갈색"
+        case 4: ordure_color = "빨강"
+        case 5: ordure_color = "검정"
+        case 6: ordure_color = "보라"
         default: return
         }
         // Alamofire의 파라미터에 대입
@@ -169,5 +176,8 @@ class AddPetActionViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
+    @IBAction func actDisMiss(_ sender: Any) {
+        self.dismiss(animated: true)
+    }
+    
 }

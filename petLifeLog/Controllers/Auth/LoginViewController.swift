@@ -18,13 +18,25 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         
         
-        emailTextField.text = "jsoarchi@nate.com"
-        passwordTextField.text = "1234"
+        print("TARGET_IPHONE_SIMULATOR : \(TARGET_IPHONE_SIMULATOR)")
+        
+        if TARGET_IPHONE_SIMULATOR == 1 {
+          // Simulator
+            emailTextField.text = "jsoarchi@nate.com"
+            passwordTextField.text = "1234"
+        } else {
+          // Device
+            emailTextField.text = ""
+            passwordTextField.text = ""
+        }
         
         // 화면의 Back 버튼 숨김
         self.navigationController?.isNavigationBarHidden = true
     }
     
+    func getOsVersion() -> String {
+        return UIDevice.current.systemVersion
+    }
 
     /*
     // MARK: - Navigation
@@ -75,10 +87,15 @@ class LoginViewController: UIViewController {
                     UserDefaults.standard.setValue(user.nickName, forKey: UserDefaultsKey.nickName.rawValue)
                
                     let pet = user.pets[0]
+                    print("login pet 정보 : \(pet)")
                     UserDefaults.standard.setValue(pet.name, forKey: PetDefaultsKey.petName.rawValue)
                     UserDefaults.standard.setValue(pet.profileImage, forKey: PetDefaultsKey.petImage.rawValue)
                     UserDefaults.standard.setValue(pet.id, forKey: PetDefaultsKey.petId.rawValue)
                     
+                    PET_ID = UserDefaults.standard.integer(forKey: PetDefaultsKey.petId.rawValue)
+                    PET_NAME = UserDefaults.standard.integer(forKey: PetDefaultsKey.petName.rawValue)
+                    PET_IMG = UserDefaults.standard.integer(forKey: PetDefaultsKey.petImage.rawValue)
+            
                     self.navigationController?.popToRootViewController(animated: true)
                 
                 } else {

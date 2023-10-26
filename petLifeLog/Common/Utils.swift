@@ -36,6 +36,7 @@ class Utils {
             UserDefaultsKey.allCases.forEach { UserDefaults.standard.removeObject(forKey: $0.rawValue) }
         }
     }
+
     
     //이미지저장
     static func uploadImageToServer<T: Decodable>(url: String, imageName: String, image: UIImage, parameters: [String: Any], responseType: T.Type, completion: @escaping (Result<T, Error>) -> Void)  {
@@ -80,6 +81,7 @@ class Utils {
 //            print(error)
 //        }
 //    }
+
 }
 
 

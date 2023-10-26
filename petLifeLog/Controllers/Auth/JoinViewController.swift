@@ -122,12 +122,12 @@ class JoinViewController: UIViewController {
                     return
                 }
   
-                UserDefaults.standard.setValue(true, forKey: "isLogined")
-                UserDefaults.standard.setValue(user.id, forKey: "userId")
-                UserDefaults.standard.setValue(user.nickName, forKey: "nickName")
+                UserDefaults.standard.set(true, forKey: UserDefaultsKey.isLogined.rawValue)
+                UserDefaults.standard.setValue(user.id, forKey: UserDefaultsKey.userId.rawValue)
+                UserDefaults.standard.setValue(user.nickName, forKey: UserDefaultsKey.nickName.rawValue)
 
                 let petStoryboard = UIStoryboard(name: "MyInfo", bundle: nil)
-                if let vc = petStoryboard.instantiateViewController(identifier: "PetInfo") as? PetInfoViewController {
+                if let vc = petStoryboard.instantiateViewController(identifier: "MyInfo") as? MyPagesViewController {
                     self.navigationController?.pushViewController(vc, animated: false)
                 }
             

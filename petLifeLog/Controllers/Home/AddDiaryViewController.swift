@@ -10,10 +10,11 @@ import Alamofire
 
 // pet_id, user_id, selected_date, baseURL은 홈컨트롤러의 글로벌 변수를 가져다 씀
 class AddDiaryViewController: UIViewController {
+
     let paths = "api/pet/diary"
     var params:Parameters = [ // 알라모 파이어용 파라미터
-        "pet":pet_id,
-        "user":user_id,
+        "pet":PET_ID,
+        "user":USER_ID,
         "act_date":selected_date
     ]
     
@@ -52,10 +53,10 @@ class AddDiaryViewController: UIViewController {
     
     // AF - 등록버튼 누를시 호출될 메소드
     func updateOrCreateDataViaAF() {
-        let url = "\(baseURL+paths)"
-        print("다이어리뷰의 URL \(url)")
+//        let url = "\(baseURL+paths)"
+//        print("다이어리뷰의 URL \(url)")
             
-        let dataRequest = AF.request(url, method: .post, parameters: params, encoding: JSONEncoding.default)
+        let dataRequest = AF.request(diaryReg_url, method: .post, parameters: params, encoding: JSONEncoding.default)
 
         dataRequest.responseDecodable(of: PetDiary.self) { response in
             //print("Request: \(String(describing: response.request))")   // original url request
