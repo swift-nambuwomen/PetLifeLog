@@ -25,6 +25,9 @@ class HomeViewController: UIViewController {
     var petDiary:PetDiary?
     let paths = "api/pet/act/list"
     
+    
+    
+    @IBOutlet weak var lblMyPet: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var dateBtn: UIButton! // 날짜 지정하기 위함
     @IBOutlet weak var nextBtn: UIBarButtonItem!
@@ -38,14 +41,23 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // login check
+        self.navigationController?.isNavigationBarHidden = false
+        print("didload 실행")
         login()
+        // login check
         
+        lblMyPet?.text = PET_NAME
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.didDismissDetailNotification(_:)),
             name: NSNotification.Name("DataInsertSuccess"),
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.didDismissCalendarNotification(_:)),
+            name: NSNotification.Name("DateChanged"),
             object: nil
         )
         
@@ -61,7 +73,8 @@ class HomeViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        checkDateCaseLogic()
+
+        login()
         getActDataViaAF() //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
     }
     
@@ -73,12 +86,27 @@ class HomeViewController: UIViewController {
 //        }
     }
     
+    @objc func didDismissCalendarNotification(_ notification: Notification) {
+        print("didDismissCalendarNotification")
+        print("didDismissCalendarNotification")
+        
+        guard let new_date = notification.userInfo?["new_date"] as? String else { return }
+        print("new_date:::::\(new_date)")
+        dateBtn.setTitle(new_date, for: .normal) // 받아온 new_date를 네비바 타이틀에 설정
+        selected_date = new_date
+        checkDateCaseLogic()
+        getActDataViaAF() //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
+
+    }
+    
     // MARK: UI, 데이터 셋업
 
     // AF - 메인 네비바상의 선택된 날짜에 현재 접속된 유저의 선택된 강아지의 기록(액션,일기)이 있다면 가져와라.
     func getActDataViaAF() {
         let url = "\(actList_url)"
+
         let params:Parameters = ["pet_id":PET_ID, "act_date":selected_date]
+        print("params : \(params)")
         let dataRequest = AF.request(url, method: .get, parameters: params)
 
         print("called GET ActionList")
@@ -190,6 +218,8 @@ class HomeViewController: UIViewController {
     
     // 날짜 연산 -> 문자열로 변환 -> 전역변수 날짜 업데이트 -> 네비바에 해당 날짜 표시
     func setDate(_ date: Int) {
+        print("test")
+        print("\(selected_date)")
         let timeInterval = TimeInterval(date) // Int를 unixTime으로 변환
         let changedDate = Date(timeIntervalSince1970: timeInterval) // unixTime을 Date타입으로 변환
         selected_date = changedDate.toDateString() // Date를 스트링으로 변환 후 selected_date갱신.갱신된 날짜에서 재연산하여야하니까 최종 변환값을 대입해줘야함.
@@ -236,6 +266,7 @@ class HomeViewController: UIViewController {
     
     func login() {
         // login check
+        print("isLogined : \(UserDefaults.standard.bool(forKey: "isLogined")) ")
         let isLogined = UserDefaults.standard.bool(forKey: "isLogined")
         
         if !isLogined {

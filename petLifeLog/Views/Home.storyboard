@@ -440,33 +440,15 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2eE-Cb-Njm">
-                                <rect key="frame" x="0.0" y="49" width="393" height="316"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="316"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" style="inline" translatesAutoresizingMaskIntoConstraints="NO" id="JSt-Mp-mZY">
-                                <rect key="frame" x="33" y="49" width="393" height="479"/>
+                                <rect key="frame" x="39" y="0.0" width="393" height="316"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <locale key="locale" localeIdentifier="ko_KR"/>
                             </datePicker>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uld-aT-ixV">
-                                <rect key="frame" x="0.0" y="5" width="393" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <items>
-                                    <navigationItem title="날짜 선택 후 홈으로" id="eQm-5Z-nd2">
-                                        <barButtonItem key="leftBarButtonItem" title="홈으로" id="jxE-hk-jDY">
-                                            <connections>
-                                                <segue destination="7M8-q0-2yj" kind="unwind" unwindAction="unwindToHome:" id="peZ-Y8-xdl"/>
-                                            </connections>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" title="날짜 선택" id="mOf-Qs-Idi">
-                                            <connections>
-                                                <action selector="setDate:" destination="BBf-vP-PNV" id="1ud-gr-eQN"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="VC3-a0-jAr"/>
                     </view>
@@ -476,7 +458,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="u3o-6O-mAy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="7M8-q0-2yj" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="122.90076335877862" y="-1010.2112676056339"/>
         </scene>
@@ -488,8 +469,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="characterWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2du-HN-VPs">
+                                <rect key="frame" x="8" y="103" width="377" height="30"/>
+                                <color key="backgroundColor" red="0.2588235438" green="0.56078433989999998" blue="0.92156863209999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Vpb-vw-djp"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" systemColor="systemBackgroundColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="JSr-ab-A04">
-                                <rect key="frame" x="8" y="118" width="377" height="552"/>
+                                <rect key="frame" x="8" y="133" width="377" height="545"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="uTz-J7-Yu5">
                                     <rect key="frame" x="0.0" y="128" width="377" height="175"/>
@@ -511,7 +502,7 @@
                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="35" id="bQF-Xq-sO6"/>
                                                         <constraint firstAttribute="height" constant="35" id="oQx-bP-3Yt"/>
                                                     </constraints>
-                                                    <color key="tintColor" systemColor="systemMintColor"/>
+                                                    <color key="tintColor" red="0.2588235438" green="0.56078433989999998" blue="0.92156863209999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="filled" image="camera" catalog="system" title=""/>
                                                     <connections>
@@ -526,7 +517,7 @@
                                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="35" id="ub4-Xg-rUj"/>
                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="35" id="xsq-db-tbW"/>
                                                     </constraints>
-                                                    <color key="tintColor" systemColor="systemMintColor"/>
+                                                    <color key="tintColor" red="0.2588235438" green="0.56078433989999998" blue="0.92156863209999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="filled" title="">
                                                         <imageReference key="image" image="pencil" catalog="system" symbolScale="default"/>
@@ -617,16 +608,16 @@
                                 </prototypes>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AUL-Fn-Q3n">
-                                <rect key="frame" x="8" y="691" width="377" height="70"/>
+                                <rect key="frame" x="8" y="699" width="377" height="70"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" distribution="fillEqually" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="YYz-Ht-aYJ">
-                                        <rect key="frame" x="8" y="8" width="365" height="60"/>
+                                        <rect key="frame" x="8" y="8" width="365" height="55"/>
                                         <subviews>
                                             <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mn5-EP-5hJ">
-                                                <rect key="frame" x="0.0" y="0.0" width="55" height="60"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="55" id="8z8-Jq-oqG"/>
-                                                    <constraint firstAttribute="height" constant="60" id="vCo-y8-jNb"/>
+                                                    <constraint firstAttribute="height" constant="55" id="vCo-y8-jNb"/>
                                                 </constraints>
                                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <state key="normal" title="Button"/>
@@ -641,7 +632,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QLu-tc-5Pq">
-                                                <rect key="frame" x="62" y="0.0" width="55" height="60"/>
+                                                <rect key="frame" x="62" y="0.0" width="55" height="55"/>
                                                 <color key="tintColor" systemColor="systemMintColor"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="filled" image="icon-injec" imagePlacement="top" subtitle="병 원" imagePadding="2">
@@ -650,11 +641,11 @@
                                                     </backgroundConfiguration>
                                                 </buttonConfiguration>
                                                 <connections>
-                                                    <segue destination="gVe-Ot-3HJ" kind="presentation" identifier="toAddAct6" id="zv9-C1-mee"/>
+                                                    <action selector="petActionAdd:" destination="LYk-fL-jyq" eventType="touchUpInside" id="Hqv-ks-bC4"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wY8-VY-WQm">
-                                                <rect key="frame" x="124" y="0.0" width="55" height="60"/>
+                                                <rect key="frame" x="124" y="0.0" width="55" height="55"/>
                                                 <color key="tintColor" systemColor="systemMintColor"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="filled" image="icon-shop" imagePlacement="top" subtitle="미 용" imagePadding="3">
@@ -663,11 +654,11 @@
                                                     </backgroundConfiguration>
                                                 </buttonConfiguration>
                                                 <connections>
-                                                    <segue destination="H3F-H8-630" kind="presentation" identifier="toAddAct5" id="Qd5-Kq-BmI"/>
+                                                    <action selector="petActionAdd:" destination="LYk-fL-jyq" eventType="touchUpInside" id="vuq-9N-ZMu"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WkO-2g-HoW">
-                                                <rect key="frame" x="186" y="0.0" width="55" height="60"/>
+                                                <rect key="frame" x="186" y="0.0" width="55" height="55"/>
                                                 <color key="tintColor" red="0.70398873090000003" green="0.64452278610000002" blue="0.78048747780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="filled" image="icon-weight" imagePlacement="top" subtitle="체중" imagePadding="3">
@@ -680,7 +671,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vOh-3m-04g">
-                                                <rect key="frame" x="248" y="0.0" width="55" height="60"/>
+                                                <rect key="frame" x="248" y="0.0" width="55" height="55"/>
                                                 <color key="tintColor" systemColor="systemMintColor"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="filled" image="icon-bone" imagePlacement="top" subtitle="사료" imagePadding="3">
@@ -693,7 +684,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SMB-3z-fiI">
-                                                <rect key="frame" x="310" y="0.0" width="55" height="60"/>
+                                                <rect key="frame" x="310" y="0.0" width="55" height="55"/>
                                                 <color key="tintColor" systemColor="systemMintColor"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <state key="normal" title="산책"/>
@@ -719,11 +710,14 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="AUL-Fn-Q3n" firstAttribute="top" secondItem="JSr-ab-A04" secondAttribute="bottom" constant="21" id="2rx-eI-Pow"/>
+                            <constraint firstItem="P41-zq-wi3" firstAttribute="trailing" secondItem="2du-HN-VPs" secondAttribute="trailing" constant="8" id="7OL-GN-Fx1"/>
                             <constraint firstItem="P41-zq-wi3" firstAttribute="trailing" secondItem="AUL-Fn-Q3n" secondAttribute="trailing" constant="8" id="C4m-Rq-MA2"/>
-                            <constraint firstItem="JSr-ab-A04" firstAttribute="top" secondItem="P41-zq-wi3" secondAttribute="top" constant="15" id="Edp-aM-bht"/>
                             <constraint firstItem="P41-zq-wi3" firstAttribute="trailing" secondItem="JSr-ab-A04" secondAttribute="trailing" constant="8" id="Nnd-ye-qBa"/>
-                            <constraint firstItem="P41-zq-wi3" firstAttribute="bottom" secondItem="AUL-Fn-Q3n" secondAttribute="bottom" constant="8" id="dI8-5G-SQh"/>
+                            <constraint firstItem="2du-HN-VPs" firstAttribute="leading" secondItem="P41-zq-wi3" secondAttribute="leading" constant="8" id="QaO-1Q-kcT"/>
+                            <constraint firstItem="P41-zq-wi3" firstAttribute="bottom" secondItem="AUL-Fn-Q3n" secondAttribute="bottom" id="dI8-5G-SQh"/>
                             <constraint firstItem="AUL-Fn-Q3n" firstAttribute="leading" secondItem="P41-zq-wi3" secondAttribute="leading" constant="8" id="lXj-oz-FIQ"/>
+                            <constraint firstItem="JSr-ab-A04" firstAttribute="top" secondItem="2du-HN-VPs" secondAttribute="bottom" id="mM8-ub-hdh"/>
+                            <constraint firstItem="2du-HN-VPs" firstAttribute="top" secondItem="P41-zq-wi3" secondAttribute="top" id="vPV-FM-Fbz"/>
                             <constraint firstItem="JSr-ab-A04" firstAttribute="leading" secondItem="P41-zq-wi3" secondAttribute="leading" constant="8" id="vai-Zm-sRa"/>
                         </constraints>
                     </view>
@@ -738,25 +732,15 @@
                                 <action selector="prevDate:" destination="LYk-fL-jyq" id="t8n-zm-oBU"/>
                             </connections>
                         </barButtonItem>
-                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="Atr-Qz-moW">
-                            <rect key="frame" x="89" y="5" width="215" height="34.333333333333336"/>
+                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="341-J4-UNo">
+                            <rect key="frame" x="104.66666666666669" y="5" width="184" height="34.333333333333336"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain">
-                                <backgroundConfiguration key="background"/>
-                                <attributedString key="attributedTitle">
-                                    <fragment content="2023-09-22">
-                                        <attributes>
-                                            <font key="NSFont" size="16" name="NanumMyeongjoBold"/>
-                                            <font key="NSOriginalFont" size="12" name="Helvetica"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                </attributedString>
-                                <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </buttonConfiguration>
+                            <buttonConfiguration key="configuration" style="plain" title="Button"/>
                             <connections>
-                                <segue destination="BBf-vP-PNV" kind="presentation" identifier="toCalendar" id="677-My-LMN"/>
+                                <segue destination="BBf-vP-PNV" kind="popoverPresentation" popoverAnchorView="341-J4-UNo" id="sOF-Jn-mMw">
+                                    <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                </segue>
                             </connections>
                         </button>
                         <barButtonItem key="rightBarButtonItem" image="chevron.forward" catalog="system" style="plain" id="ru3-on-OU7">
@@ -768,8 +752,9 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="cameraBtn" destination="24N-Jr-Mjz" id="Ieu-GH-S2D"/>
-                        <outlet property="dateBtn" destination="Atr-Qz-moW" id="JDN-fa-bWx"/>
+                        <outlet property="dateBtn" destination="341-J4-UNo" id="l81-b7-5Z4"/>
                         <outlet property="diaryContent" destination="PbV-jp-3R7" id="hu7-0s-Iih"/>
+                        <outlet property="lblMyPet" destination="2du-HN-VPs" id="kkQ-ym-4iS"/>
                         <outlet property="nextBtn" destination="ru3-on-OU7" id="FKQ-2u-awB"/>
                         <outlet property="prevBtn" destination="OKC-Te-J6g" id="nDb-DL-YUg"/>
                         <outlet property="tableView" destination="JSr-ab-A04" id="ELr-mz-SH2"/>
@@ -783,7 +768,7 @@
         <!--Add Pet Action View Controller-->
         <scene sceneID="nNg-1G-gmZ">
             <objects>
-                <viewController storyboardIdentifier="addAction3" id="d4R-YR-V4r" customClass="AddPetActionViewController" customModule="petLifeLog" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="addAction1" id="d4R-YR-V4r" customClass="AddPetActionViewController" customModule="petLifeLog" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lfn-7g-ffq">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -801,7 +786,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" style="wheels" translatesAutoresizingMaskIntoConstraints="NO" id="D8i-EL-ThG">
-                                        <rect key="frame" x="0.0" y="44" width="300" height="180"/>
+                                        <rect key="frame" x="0.0" y="44" width="300" height="100"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                     </datePicker>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QE9-gs-xTT">
@@ -847,7 +832,7 @@
         <!--Add Pet Action View Controller-->
         <scene sceneID="FJV-1K-UNG">
             <objects>
-                <viewController storyboardIdentifier="addAction1" id="R7D-td-z7V" customClass="AddPetActionViewController" customModule="petLifeLog" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="addAction3" id="R7D-td-z7V" customClass="AddPetActionViewController" customModule="petLifeLog" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5Re-kG-i5j">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -932,7 +917,7 @@
             <objects>
                 <viewController storyboardIdentifier="addAction5" id="H3F-H8-630" customClass="AddPetActionViewController" customModule="petLifeLog" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="b0V-b0-mQ8">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5cc-tG-RS1">
@@ -958,7 +943,7 @@
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="취소"/>
                                         <connections>
-                                            <action selector="actDisMiss:" destination="d4R-YR-V4r" eventType="touchUpInside" id="QrG-0t-IQE"/>
+                                            <action selector="actDisMiss:" destination="H3F-H8-630" eventType="touchUpInside" id="SsX-M7-oc6"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="irH-zn-02O">
@@ -1000,31 +985,31 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UJX-A8-RnZ">
-                                <rect key="frame" x="48" y="170" width="300" height="416"/>
+                                <rect key="frame" x="48" y="170" width="300" height="404"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="배변 시간" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U5m-C3-9iq">
-                                        <rect key="frame" x="0.0" y="24" width="300" height="25"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="300" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.99783056969999995" green="0.99737745519999998" blue="0.92733019589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" red="0.82352948189999997" green="0.4588235021" blue="0.43137252329999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" style="wheels" translatesAutoresizingMaskIntoConstraints="NO" id="Vso-qw-fBb">
-                                        <rect key="frame" x="0.0" y="39" width="300" height="131"/>
+                                        <rect key="frame" x="0.0" y="22" width="300" height="150"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                     </datePicker>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="배변 모양" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ayF-RX-RDf">
-                                        <rect key="frame" x="0.0" y="214" width="300" height="25"/>
+                                        <rect key="frame" x="0.0" y="164" width="300" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.99783056969999995" green="0.99737745519999998" blue="0.92733019589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" red="0.88117408750000004" green="0.43463277820000001" blue="0.41368937490000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="TAL-XR-43y">
-                                        <rect key="frame" x="8" y="247" width="284" height="32"/>
+                                        <rect key="frame" x="8" y="208" width="284" height="32"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <segments>
                                             <segment title="건조"/>
@@ -1033,15 +1018,15 @@
                                         </segments>
                                     </segmentedControl>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text=" 배변 색깔" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jzs-S2-FEq">
-                                        <rect key="frame" x="0.0" y="286" width="300" height="27"/>
+                                        <rect key="frame" x="0.0" y="259" width="300" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="1" green="0.99791292220000005" blue="0.9274652779" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" red="0.88117408750000004" green="0.43463277820000001" blue="0.41368937490000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="3" translatesAutoresizingMaskIntoConstraints="NO" id="Kfi-8L-VTU">
-                                        <rect key="frame" x="8" y="321" width="284" height="32"/>
+                                        <rect key="frame" x="8" y="304" width="284" height="32"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <segments>
                                             <segment title="초코"/>
@@ -1053,8 +1038,35 @@
                                             <segment title="보라"/>
                                         </segments>
                                     </segmentedControl>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a0o-sE-dmQ">
+                                        <rect key="frame" x="0.0" y="352" width="300" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IV9-RM-vcO">
+                                                <rect key="frame" x="89" y="3" width="55" height="24"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" title="취소" buttonSize="mini"/>
+                                                <connections>
+                                                    <action selector="actDisMiss:" destination="XMV-yN-Y0i" eventType="touchUpInside" id="GvY-gq-nV5"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lB9-X1-zPS">
+                                                <rect key="frame" x="156" y="3" width="55" height="24"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" title="등록" buttonSize="mini"/>
+                                                <connections>
+                                                    <action selector="AddPoo:" destination="XMV-yN-Y0i" eventType="touchUpInside" id="IgP-b7-J4w"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.88117408750000004" green="0.43463277820000001" blue="0.41368937490000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </view>
                                 </subviews>
-                                <color key="backgroundColor" red="0.93725490570000003" green="0.52156865600000002" blue="0.49019610879999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -1062,26 +1074,6 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IV9-RM-vcO">
-                                <rect key="frame" x="89" y="546" width="113" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="취소"/>
-                                <connections>
-                                    <action selector="actDisMiss:" destination="XMV-yN-Y0i" eventType="touchUpInside" id="GvY-gq-nV5"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lB9-X1-zPS">
-                                <rect key="frame" x="210" y="546" width="114" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="등록"/>
-                                <connections>
-                                    <action selector="AddPoo:" destination="XMV-yN-Y0i" eventType="touchUpInside" id="IgP-b7-J4w"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="z3I-Zg-GoO"/>
                     </view>
@@ -1098,9 +1090,9 @@
         <!--Add Pet Action View Controller-->
         <scene sceneID="tTu-wM-MAk">
             <objects>
-                <viewController storyboardIdentifier="addAction6" id="gVe-Ot-3HJ" customClass="AddPetActionViewController" customModule="petLifeLog" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="addAction4" id="gVe-Ot-3HJ" customClass="AddPetActionViewController" customModule="petLifeLog" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="NlW-jw-2vU">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hhB-7H-CvD">
@@ -1143,8 +1135,7 @@
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="취소"/>
                                         <connections>
-                                            <action selector="actDisMiss:" destination="gVe-Ot-3HJ" eventType="touchUpInside" id="J6J-Uu-VO8"/>
-                                            <action selector="actDisMiss:" destination="d4R-YR-V4r" eventType="touchUpInside" id="eUF-hM-CmE"/>
+                                            <action selector="actDisMiss:" destination="gVe-Ot-3HJ" eventType="touchUpInside" id="Oh0-go-gnQ"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xxn-gX-tVG">
@@ -1181,69 +1172,76 @@
         <!--Add Pet Action View Controller-->
         <scene sceneID="5Vn-iK-58v">
             <objects>
-                <viewController storyboardIdentifier="addAction4" id="P4X-dd-auI" customClass="AddPetActionViewController" customModule="petLifeLog" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="addAction6" id="P4X-dd-auI" customClass="AddPetActionViewController" customModule="petLifeLog" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="W0g-3D-iLd">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ISH-la-npg">
-                                <rect key="frame" x="47" y="92" width="299.99999999988518" height="385.99999999992622"/>
+                                <rect key="frame" x="47" y="92" width="300" height="332"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" style="wheels" translatesAutoresizingMaskIntoConstraints="NO" id="GRy-lZ-iA4">
-                                        <rect key="frame" x="-1" y="44" width="300" height="152"/>
+                                        <rect key="frame" x="-1" y="35" width="300" height="150"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                     </datePicker>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7Y9-BT-LFD">
-                                        <rect key="frame" x="30" y="276" width="206" height="34"/>
+                                        <rect key="frame" x="30" y="235" width="116" height="34"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="kg" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uJp-jG-Xux">
-                                        <rect key="frame" x="242" y="282" width="21" height="23"/>
+                                        <rect key="frame" x="154" y="241" width="21" height="23"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="측정 시간" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="di0-Og-fVj">
-                                        <rect key="frame" x="0.0" y="20" width="300" height="25"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="299" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.99783056969999995" green="0.99737745519999998" blue="0.92733019589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="textColor" systemColor="systemBackgroundColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="측정 무게" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="32e-ZC-V6n">
-                                        <rect key="frame" x="0.0" y="242" width="300" height="25"/>
+                                        <rect key="frame" x="0.0" y="184" width="300" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.99783056969999995" green="0.99737745519999998" blue="0.92733019589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AL9-bu-d5c">
-                                        <rect key="frame" x="33" y="342" width="113" height="24"/>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0cX-Wi-c9N">
+                                        <rect key="frame" x="0.0" y="297" width="300" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" title="취소"/>
-                                        <connections>
-                                            <action selector="actDisMiss:" destination="P4X-dd-auI" eventType="touchUpInside" id="OtG-ha-ckW"/>
-                                            <action selector="actDisMiss:" destination="d4R-YR-V4r" eventType="touchUpInside" id="Ug8-Fy-Wt6"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gha-ez-ZUI">
-                                        <rect key="frame" x="154" y="342" width="114" height="24"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" title="등록"/>
-                                        <connections>
-                                            <action selector="AddWeight:" destination="P4X-dd-auI" eventType="touchUpInside" id="Qqv-rK-caf"/>
-                                        </connections>
-                                    </button>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AL9-bu-d5c">
+                                                <rect key="frame" x="85" y="5" width="63" height="24"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" title="취소"/>
+                                                <connections>
+                                                    <action selector="actDisMiss:" destination="P4X-dd-auI" eventType="touchUpInside" id="OtG-ha-ckW"/>
+                                                    <action selector="actDisMiss:" destination="d4R-YR-V4r" eventType="touchUpInside" id="Ug8-Fy-Wt6"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gha-ez-ZUI">
+                                                <rect key="frame" x="155" y="5" width="61" height="24"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" title="등록"/>
+                                                <connections>
+                                                    <action selector="AddWeight:" destination="P4X-dd-auI" eventType="touchUpInside" id="Qqv-rK-caf"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" red="0.93725490570000003" green="0.54509806630000002" blue="0.97647058959999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <userDefinedRuntimeAttributes>

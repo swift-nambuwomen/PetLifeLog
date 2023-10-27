@@ -38,7 +38,10 @@ class AddPetActionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("AddPet뷰 호출 - 홈에 선택된 날짜", selected_date)
-//        feed_time.frame.size = CGSize(width: 250, height: 150)
+        if let weight_time = weight_time { weight_time.frame.size = CGSize(width: 250, height: 150) }
+        
+        if let poo_time = poo_time { poo_time.frame.size = CGSize(width: 250, height: 150) }
+        
 ////        feed_time.backgroundColor = UIColor(hex: "FFFFFF")
 //        feed_time.subviews[0].subviews[0].subviews[2].backgroundColor = feed_time.tintColor;
     }

@@ -13,6 +13,7 @@ class LoginViewController: UIViewController {
 
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
+    
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,11 +93,20 @@ class LoginViewController: UIViewController {
                     UserDefaults.standard.setValue(pet.profileImage, forKey: PetDefaultsKey.petImage.rawValue)
                     UserDefaults.standard.setValue(pet.id, forKey: PetDefaultsKey.petId.rawValue)
                     
+                    UserDefaults.standard.synchronize()
+                    
+                    USER_ID = UserDefaults.standard.integer(forKey: UserDefaultsKey.userId.rawValue)
+                    NICK_NAME = UserDefaults.standard.string(forKey: UserDefaultsKey.nickName.rawValue)
+                    
                     PET_ID = UserDefaults.standard.integer(forKey: PetDefaultsKey.petId.rawValue)
-                    PET_NAME = UserDefaults.standard.integer(forKey: PetDefaultsKey.petName.rawValue)
-                    PET_IMG = UserDefaults.standard.integer(forKey: PetDefaultsKey.petImage.rawValue)
+                    PET_NAME = UserDefaults.standard.string(forKey: PetDefaultsKey.petName.rawValue)
+                    PET_IMG = UserDefaults.standard.string(forKey: PetDefaultsKey.petImage.rawValue)
             
-                    self.navigationController?.popToRootViewController(animated: true)
+                    let homeStoryboard = UIStoryboard(name: "Home", bundle: nil)
+//                    self.navigationController?.popToRootViewController(animated: true)
+                    if let vc = homeStoryboard.instantiateViewController(identifier: "home") as? HomeViewController {
+                        self.navigationController?.pushViewController(vc, animated: false)
+                    }
                 
                 } else {
                     Utils.displayAlert(title: "", message: "로그인에 실패했습니다. \n이메일과 비밀번호를 다시한번 확인 부탁드립니다!!.", comfirm: "OK")
