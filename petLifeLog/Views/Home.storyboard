@@ -464,7 +464,7 @@
         <!--Home-->
         <scene sceneID="yJA-q5-d2L">
             <objects>
-                <viewController storyboardIdentifier="Home" id="LYk-fL-jyq" customClass="HomeViewController" customModule="petLifeLog" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="home" id="LYk-fL-jyq" customClass="HomeViewController" customModule="petLifeLog" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="k7Y-W0-9Pw">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

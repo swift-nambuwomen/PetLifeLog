@@ -32,9 +32,11 @@ class Utils {
         } else if mode == "pet" {
             PetDefaultsKey.allCases.forEach { UserDefaults.standard.removeObject(forKey: $0.rawValue) }
         } else if mode == "all"{
+            UserDefaults.standard.removeObject(forKey: "isLogined")
             PetDefaultsKey.allCases.forEach { UserDefaults.standard.removeObject(forKey: $0.rawValue) }
             UserDefaultsKey.allCases.forEach { UserDefaults.standard.removeObject(forKey: $0.rawValue) }
         }
+        UserDefaults.standard.synchronize()
     }
 
     
