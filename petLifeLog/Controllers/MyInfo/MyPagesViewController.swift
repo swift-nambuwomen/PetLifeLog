@@ -15,17 +15,18 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
     @IBOutlet weak var tabbarItem: UITabBarItem!
 
     @IBOutlet weak var textYearMonth: UITextField!
+    
+    @IBOutlet weak var lblBeautyCost: UILabel!
+    @IBOutlet weak var tableView: UITableView!
+    
+    @IBOutlet weak var lblHospitalCost: UILabel!
+    @IBOutlet weak var lblFeedCost: UILabel!
+    
     var pet:[Pets] = []
     var cost:[CostData] = []
     var petId = 0
     var selectedRowIndex: Int? // 현재 선택된 행의 인덱스
     
-    @IBOutlet weak var lblBeautyCost: UILabel!
-    @IBOutlet weak var tableView: UITableView!
-    
-    @IBOutlet weak var datePicker: UIDatePicker!
-    @IBOutlet weak var lblHospitalCost: UILabel!
-    @IBOutlet weak var lblFeedCost: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -34,35 +35,27 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
         }else{
             getPetInfo(userId: USER_ID)
         }
-
         
         navigationItem.title = "\(NICK_NAME)님의 강아지들"
         
+        textYearMonth.isHidden = true
         let currentDate = Date()
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM"
         dateFormatter.locale = Locale(identifier: "ko_KR")
-        // Date Picker의 시간대 설정 (한국 시간대로 설정)
-        
-        datePicker.timeZone = TimeZone(identifier: "Asia/Seoul")
-        datePicker.date = dateFormatter.date(from: "2023-10")!
-        datePicker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
+
         textYearMonth.text = dateFormatter.string(from: currentDate)
-        datePicker.date = currentDate
+        
+        //tabelview custom cell 왼쪽여백 없애기
+//        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+//        tableView.separatorInset = .zero
+//        tableView.directionalLayoutMargins = .zero
+//        tableView.layoutMargins = .zero
         
         tableView.dataSource = self
         tableView.reloadData()
         textYearMonth.delegate = self
-    }
-    
-    @IBAction func datePickerValueChanged(_ sender: UIDatePicker) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM"
-        if let selectedDate = dateFormatter.date(from: "2023-10") {
-            datePicker.date = selectedDate
-        }
-        
     }
     
     //+버튼으로 강아지 신규등록 및 수정
@@ -80,9 +73,12 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
     }
     
     //펫선택 버튼 누르면 userdefault값 변경(다른 화면에 적용)
-    @objc func buttonTapped(sender: UIButton) {
+    @objc func buttonTapped(_ sender: UIButton) {
         if let cell = sender.superview?.superview as? UITableViewCell,
-           let indexPath = tableView.indexPath(for: cell){
+           let indexPath = tableView.indexPath(for: cell) {
+            // 이전에 선택된 버튼의 인덱스 업데이트
+            //selectedRowIndex = indexPath.row
+            
             let rowIndex = indexPath.row
             let selectedPet = pet[rowIndex]
             petId = selectedPet.id
@@ -92,23 +88,35 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
             PET_ID = UserDefaults.standard.integer(forKey: PetDefaultsKey.petId.rawValue)
             print(petId)
             print(PET_ID)
-            
+                        
             //선택한 로우와 기존에 선택된 로우의 펫id값이 다를때는 기존 색상으로 변경
             // 이전에 선택한 셀의 배경색을 초기 상태로 되돌립니다.
             if let previousSelectedIndex = selectedRowIndex {
-                let previousSelectedCell = tableView.cellForRow(at: IndexPath(row: previousSelectedIndex, section: 0))
-                previousSelectedCell?.backgroundColor = UIColor.white // 기본 배경색
+                if let previousSelectedCell = tableView.cellForRow(at: IndexPath(row: previousSelectedIndex, section: 0)) {
+                    
+//                    if let button = previousSelectedCell.viewWithTag(6) as? UIButton {
+//                        button.isEnabled = true
+//                        button.setTitle("펫선택", for: .normal)
+//                        button.backgroundColor = .gray
+                    //}
+                }
             }
             
-            // 현재 선택된 행의 셀을 가져와서 배경색을 변경
+//            // 현재 선택된 행의 셀을 가져와서 배경색을 변경
             if selectedRowIndex == rowIndex {
                 // 같은 셀을 두 번 연속으로 클릭한 경우, 선택을 해제
-                selectedRowIndex = nil
+                selectedRowIndex = 0
+                
             } else {
                 // 현재 선택한 셀의 배경색을 변경하고 선택된 행을 업데이트하여 추적
                 let currentSelectedCell = tableView.cellForRow(at: IndexPath(row: rowIndex, section: 0))
-                currentSelectedCell?.backgroundColor = UIColor.systemGray5 // 변경하고자 하는 배경색으로 설정
+                currentSelectedCell?.backgroundColor = UIColor.gray // 변경하고자 하는 배경색으로 설정
+                
+                sender.tintColor = .black
+                sender.isEnabled = true
+                sender.setTitle("V", for: .normal)
                 selectedRowIndex = rowIndex
+                print("현재 선택펫: \(selectedRowIndex)")
             }
             
         }
@@ -129,6 +137,8 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
                 print("올바른 형식으로 입력하세요 (예: 2023-10).")
             }
         }
+        
+        tableView.reloadData()
     }
     
     
@@ -142,9 +152,15 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-                
+        
+        //custom cell 여백없애기
+//        cell.directionalLayoutMargins = .zero
+//        cell.layoutMargins = .zero
+//        cell.contentView.directionalLayoutMargins = .zero
+//        cell.contentView.layoutMargins = .zero
+        
         let pet = pet[indexPath.row]
-
+        
         let lblName = cell.viewWithTag(1) as? UILabel
         let lblBreed = cell.viewWithTag(2) as? UILabel
         let lblBirth = cell.viewWithTag(3) as? UILabel
@@ -153,49 +169,35 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
         let btnPetSelect = cell.viewWithTag(6) as? UIButton
         
         print(pet)
-        //이미지  https://stpetlifelog.blob.core.windows.net/petphoto/46/e99e3bd2-21cd-4d79-99cd-0dbde67fbb4a
+        //이미지주소 https://stpetlifelog.blob.core.windows.net/petphoto/46/e99e3bd2-21cd-4d79-99cd-0dbde67fbb4a
         if pet.profileImage != "" && IMAGE_URL != "" {
             let imageName = IMAGE_URL + "/" + pet.profileImage
-            
-            // 캐시된 이미지 삭제
-            
+
             if let url = URL(string: imageName) {
-                
+                // 캐시된 이미지 삭제
                 ImageCache.default.removeImage(forKey: url.cacheKey)
-                
-                let processor = RoundCornerImageProcessor(cornerRadius: 20) // 모서리 둥글게
                 
                 imageProfile?.kf.indicatorType = .activity
                 imageProfile?.clipsToBounds = true
-                imageProfile?.layer.cornerRadius = 55
+                imageProfile?.layer.cornerRadius = 20
                 
-                imageProfile?.kf.setImage(
-                  with: url,
-                  placeholder: UIImage(systemName: "photo"),
-                  options: [
-                          .processor(processor),
-                          .cacheOriginalImage
-                      ],
-                  completionHandler: nil
-                )
+                DispatchQueue.main.async {
+                    imageProfile?.kf.setImage(
+                        with: url,
+                        placeholder: UIImage(systemName: "photo"),
+                        options: [
+                            .cacheOriginalImage
+                        ],
+                        completionHandler: nil
+                    )
+                }
                 
             }
-            
-//            if let image = URL(string: imageName) {
-//                URLSession.shared.dataTask(with: image) { (data, response, error) in
-//                    if let data = data, let image = UIImage(data: data) {
-//                        DispatchQueue.main.async {
-//                            imageProfile?.image = image
-//                        }
-//                    } else {
-//                        print("이미지를 불러올 수 없습니다: \(error?.localizedDescription ?? "알 수 없는 오류")")
-//                    }
-//                }.resume()
-//            }
         }else{
             //이미지가 없을시 기본이미지 표시
             
         }
+        
         petId = pet.id
         lblName?.text = pet.name
         lblBreed?.text = pet.breed
@@ -209,9 +211,19 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
         }
 
         // 펫버튼에 액션 추가
-        btnPetSelect?.tag = indexPath.row
-        btnPetSelect?.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-        btnPetSelect?.tag = indexPath.row
+        btnPetSelect?.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        
+        btnPetSelect?.setTitle("V", for: UIControl.State.normal)
+        
+        // 이전에 선택된 버튼의 인덱스와 현재 버튼의 인덱스를 비교하여 텍스트 업데이트
+//        if indexPath.row == selectedRowIndex {
+//            print("이전버튼과 현재버튼 row가 같음")
+//        } else {
+//            btnPetSelect?.setTitle("V", for: UIControl.State.selected)
+//        }
+        
+            btnPetSelect?.tag = indexPath.row
+        
         
         return cell
     }
@@ -245,13 +257,11 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
     }
 
     func getPetInfo(userId:Int){
-        //let str = "http://127.0.0.1:8000/api/pet/list?"
         let str = SITE_URL + "/api/pet/list?"
         let params:Parameters = ["userId":USER_ID]
         
         let alamo = AF.request(str, method: .get, parameters: params)
 
-        //alamo.responseDecodable(of:Pets.self) { response in  //데이터 한건 받을때
         alamo.responseDecodable(of:[Pets].self) { response in
             if let error = response.error {
                     print("Error: \(error.localizedDescription)")
@@ -293,9 +303,6 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
                         self.lblFeedCost.text = "\(self.cost[0].feedAmount)"
                         self.lblHospitalCost.text = "\(self.cost[0].hospitalCost)"
                         self.lblBeautyCost.text = "\(self.cost[0].beautyCost)"
-                        
-                        //                    if self.cost[0].beautyCost != 0 {
-                        //                        self.lblBeautyCost.text = "\(self.cost[0].beautyCost)"
                     }else{
                         
                     }

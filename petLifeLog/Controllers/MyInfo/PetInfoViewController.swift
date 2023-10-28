@@ -36,9 +36,41 @@ class PetInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        sexseg.selectedSegmentIndex = 0
-        sexseg.tintColor = UIColor.blue
+        initPet()
         
+        getPetInfo()
+    }
+    
+    //컨트롤 초기화
+    func initPet()
+    {
+        //텍스트필드
+        txtName.borderStyle = .none
+        txtBreed.borderStyle = .none
+        
+        let bottomName = CALayer()
+        bottomName.frame = CGRect(x: 0.0, y: txtName.frame.size.height - 1, width: txtName.frame.size.width, height: 1.0)
+        bottomName.backgroundColor = UIColor.gray.cgColor //테두리 색
+
+        let bottomBreed = CALayer()
+        bottomBreed.frame = CGRect(x: 0.0, y: txtName.frame.size.height - 1, width: txtBreed.frame.size.width, height: 1.0)
+        bottomBreed.backgroundColor = UIColor.gray.cgColor //테두리 색
+        
+        txtName.layer.addSublayer(bottomName)
+        txtBreed.layer.addSublayer(bottomBreed)
+        
+        //세그먼트
+        sexseg.selectedSegmentIndex = 0
+        sexseg.removeSegment()
+        self.sexseg.setTitleTextAttributes(
+            [
+                NSAttributedString.Key.foregroundColor: UIColor.blue,
+                .font: UIFont.systemFont(ofSize: 16, weight: .semibold)
+            ],
+            for: .selected
+        )
+
+        //사진
         camera.sourceType = .camera
         camera.delegate = self
         
@@ -50,8 +82,6 @@ class PetInfoViewController: UIViewController {
         album?.delegate = self
         camera.delegate = self
         
-        datePicker.addTarget(self, action: #selector(actDatePicker(_:)), for: .valueChanged)
-        
         imageview.isUserInteractionEnabled = true //이미지뷰에 클릭허용
         
         //탭 제스처 생성 추가
@@ -60,7 +90,8 @@ class PetInfoViewController: UIViewController {
         
         self.view.addSubview(imageview)
         
-        getPetInfo()
+        //달력
+        datePicker.addTarget(self, action: #selector(actDatePicker(_:)), for: .valueChanged)
     }
     
     //초기 화면 데이터
@@ -73,6 +104,7 @@ class PetInfoViewController: UIViewController {
             } else {
                 lblTitle.text = "이름 정보가 없습니다"
             }
+            
             
             petId = pet[0].id
             txtBreed.text = pet[0].breed
@@ -98,16 +130,6 @@ class PetInfoViewController: UIViewController {
                           ],
                       completionHandler: nil
                     )
-                    
-//                    URLSession.shared.dataTask(with: image) { (data, response, error) in
-//                        if let data = data, let image = UIImage(data: data) {
-//                            DispatchQueue.main.async {
-//                                self.imageview.image = image
-//                            }
-//                        } else {
-//                            print("이미지를 불러올 수 없습니다: \(error?.localizedDescription ?? "알 수 없는 오류")")
-//                        }
-//                    }.resume()
                 }
             }
             
@@ -154,7 +176,16 @@ class PetInfoViewController: UIViewController {
     //달력 선택시
     @IBAction func actDatePicker(_ sender: UIDatePicker) {
         view.endEditing(true)
+        presentedViewController?.dismiss(animated: true, completion: nil)
     }
+    
+    //세그먼트 선택시 색상 변경
+    @IBAction func actSexSegment(_ sender: Any) {
+        let selected: [NSAttributedString.Key:Any] = [.foregroundColor:UIColor.blue]
+        
+        sexseg.setTitleTextAttributes(selected, for: .selected)
+    }
+    
     
     //취소버튼 클릭
     @IBAction func actCancel(_ sender: Any) {
@@ -264,7 +295,6 @@ class PetInfoViewController: UIViewController {
                 multipart.append(imageData, withName: "profile", fileName: fileName, mimeType: "image/png")
                 
             }, to: url, method: .post, headers: headers)
-            //.responseJSON { response in
             .responseDecodable(of:Pets.self) { response in
                 switch response.result {
                 case .success:
@@ -291,7 +321,6 @@ class PetInfoViewController: UIViewController {
         setInput()
         
         // [http 요청 파라미터 지정 실시]
-        //id, name, profile_image, birth, breed, sex, user_id
         let queryString : Parameters = [
             "id": 0,
             "name": name,
@@ -343,27 +372,30 @@ class PetInfoViewController: UIViewController {
             ]
             
             print(body)
-            if let imageData = imageview.image?.pngData() {
-                AF.upload(multipartFormData: { multipart in
-                    for (key, value) in body {
-                        multipart.append("\(value)".data(using: .utf8)!, withName: key)
-                    }
-                    multipart.append(imageData, withName: "profile", fileName: fileName, mimeType: "image/png")
-                    
-                }, to: url, method: .put, headers: headers)
-                //.responseJSON { response in
-                .responseDecodable(of:Pets.self) { response in
-                    switch response.result {
-                    case .success:
-                        let alert = UIAlertController(title: "확인", message: "수정되었습니다.", preferredStyle: .alert)
-                        let action = UIAlertAction(title: " 확인", style: .default)
-                        alert.addAction(action)
+            if let originalImage = imageview.image {
+                let resizedImage = resizeImage(originalImage, targetSize: CGSize(width: 200, height: 200))
+                
+                if let imageData = resizedImage.pngData() {
+                    AF.upload(multipartFormData: { multipart in
+                        for (key, value) in body {
+                            multipart.append("\(value)".data(using: .utf8)!, withName: key)
+                        }
+                        multipart.append(imageData, withName: "profile", fileName: fileName, mimeType: "image/png")
                         
-                        self.present(alert, animated: true)
-                        
-                        break
-                    case .failure(let error):
-                        print("이미지 업로드 실패 : \(error)")
+                    }, to: url, method: .put, headers: headers)
+                    .responseDecodable(of:Pets.self) { response in
+                        switch response.result {
+                        case .success:
+                            let alert = UIAlertController(title: "확인", message: "수정되었습니다.", preferredStyle: .alert)
+                            let action = UIAlertAction(title: " 확인", style: .default)
+                            alert.addAction(action)
+                            
+                            self.present(alert, animated: true)
+                            
+                            break
+                        case .failure(let error):
+                            print("이미지 업로드 실패 : \(error)")
+                        }
                     }
                 }
             }
@@ -379,7 +411,6 @@ class PetInfoViewController: UIViewController {
         setInput()
         
         // [http 요청 파라미터 지정 실시]
-        //id, name, profile_image, birth, breed, sex, user_id
         let queryString : Parameters = [
             "id":petId,
             "name": name,
@@ -403,7 +434,6 @@ class PetInfoViewController: UIViewController {
                 
                 break
             case .failure:
-                // POST 요청 중 오류가 발생한 경우
                 print(response.debugDescription)
                 break
             }
@@ -421,21 +451,26 @@ class PetInfoViewController: UIViewController {
         
     }
     
-    // 이미지를 문서 디렉토리에 저장하고 URL을 반환하는 함수
-//    func saveImageToDocumentsDirectory(_ image: UIImage) -> URL? {
-//        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-//        let fileURL = documentsDirectory?.appendingPathComponent("myImage.jpg")
-//        if let data = image.jpegData(compressionQuality: 1.0) {
-//            do {
-//                try data.write(to: fileURL!)
-//                return fileURL
-//            } catch {
-//                print("Error saving image: \(error)")
-//                return nil
-//            }
-//        }
-//        return nil
-//    }
+    func resizeImage(_ image: UIImage, targetSize: CGSize) -> UIImage {
+        let size = image.size
+        let widthRatio = targetSize.width / size.width
+        let heightRatio = targetSize.height / size.height
+        let newSize: CGSize
+        if widthRatio > heightRatio {
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
+        } else {
+            newSize = CGSize(width: size.width * widthRatio, height: size.height * widthRatio)
+        }
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        image.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return newImage!
+    }
+   
     
 }
 
@@ -497,18 +532,35 @@ extension Date {
     }
 }
 
-extension UIImage {
-    //이미지 사이즈 변경
-    func resizeImage(newWidth: CGFloat) -> UIImage? {
-        //        let scale = newWidth / self.size.width
-        //        let newHeight = self.size.height * scale
-        //        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
-        //        self.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
-        //
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return newImage
-    }
+//extension UIImage {
+//    /// 이미지의 용량을 줄이기 위해서 리사이즈.
+//    /// - 가로, 세로 중 짧은 것이 720 보다 작다면 그대로 반환.
+//    /// - 가로, 세로 중 짧은 것이 720 보다 크다면 720 으로 리사이즈해서 반환.
+//    func resize(newWidth: CGFloat) -> UIImage? {
+//        let width = self.size.width
+//         let height = self.size.height
+//         let resizeLength: CGFloat = 720.0
+//
+//         var scale: CGFloat
+//
+//         if height >= width {
+//             scale = width <= resizeLength ? 1 : resizeLength / width
+//         } else {
+//             scale = height <= resizeLength ? 1 :resizeLength / height
+//         }
+//
+//         let newHeight = height * scale
+//         let newWidth = width * scale
+//         let size = CGSize(width: newWidth, height: newHeight)
+//         let render = UIGraphicsImageRenderer(size: size)
+//         let renderImage = render.image { _ in
+//             self.draw(in: CGRect(origin: .zero, size: size))
+//         }
+//         return renderImage
+//    }
+//
+    
+    
     
 //    func asImage() -> UIImage {
 //        let render = UIGraphicsImageRenderer(bounds: bounds)
@@ -516,4 +568,32 @@ extension UIImage {
 //            layer.render(in: renderContext.cgContext)
 //        }
 //    }
+//}
+
+// 세그먼트 배경 바꾸기
+extension UISegmentedControl {
+    func removeSegment() {
+        // 배경색을 하얀색으로 설정
+        setBackgroundImage(imageWithSegment(UIColor.white), for: .normal, barMetrics: .default)
+        // 선택된 세그먼트의 배경색을 하얀색으로 설정
+        setBackgroundImage(imageWithSegment(UIColor.white), for: .selected, barMetrics: .default)
+        
+        // 글자 색을 파란색으로 설정
+        setTitleTextAttributes([.foregroundColor: UIColor.gray], for: .normal)
+        
+        // 글자와의 구분선
+        //        setDividerImage(imageWithColor(UIColor.blue, size: CGSize(width: 3, height: 2)), forLeftSegmentState: .selected, rightSegmentState: .normal, barMetrics: .default)
+    }
+    
+    func imageWithSegment(_ color: UIColor, size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {
+        let rect = CGRect(origin: .zero, size: size)
+        UIGraphicsBeginImageContext(rect.size)
+        let context = UIGraphicsGetCurrentContext()
+        context?.setFillColor(color.cgColor)
+        context?.fill(rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image!
+    }
+    
 }
