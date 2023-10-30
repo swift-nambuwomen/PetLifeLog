@@ -19,23 +19,23 @@ class AddBoardViewController: UIViewController {
     }
     
 
-    @IBAction func addBoard(_ sender: Any) {
-        var newPost:[String:String] = [:]
-        
-        newPost = ["user_id":"1","user_nick":"고돌언니", "profile_img":"twinlake", "reply_cnt":"0","reg_date":"2023-09-25"] //로그인사용자정보
-        
-        if let title = boardTitle.text {
-            newPost["title"] = title
-        }
-        if let content = boardContent.text {
-            newPost["content"] = content
-        }
-
-        posts.append(newPost)
-        
-        self.navigationController?.popViewController(animated: true)
-        
-    }
+//    @IBAction func addBoard(_ sender: Any) {
+//        var newPost:[String:String] = [:]
+//
+//        newPost = ["user_id":"1","user_nick":"고돌언니", "profile_img":"twinlake", "reply_cnt":"0","reg_date":"2023-09-25"] //로그인사용자정보
+//
+//        if let title = boardTitle.text {
+//            newPost["title"] = title
+//        }
+//        if let content = boardContent.text {
+//            newPost["content"] = content
+//        }
+//
+//        posts.append(newPost)
+//
+//        self.navigationController?.popViewController(animated: true)
+//
+//    }
     
     /*
     // MARK: - Navigation

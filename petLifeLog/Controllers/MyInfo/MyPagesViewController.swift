@@ -22,9 +22,9 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
     @IBOutlet weak var lblHospitalCost: UILabel!
     @IBOutlet weak var lblFeedCost: UILabel!
     
+    @IBOutlet weak var lblTotal: UILabel!
     var pet:[Pets] = []
     var cost:[CostData] = []
-    var petId = 0
     var selectedRowIndex: Int? // 현재 선택된 행의 인덱스
     
     override func viewDidLoad() {
@@ -36,7 +36,9 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
             getPetInfo(userId: USER_ID)
         }
         
-        navigationItem.title = "\(NICK_NAME)님의 강아지들"
+        if let nickName = NICK_NAME {
+            navigationItem.title = "\(nickName)님의 강아지들"
+        }
         
         textYearMonth.isHidden = true
         let currentDate = Date()
@@ -77,60 +79,28 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
         if let cell = sender.superview?.superview as? UITableViewCell,
            let indexPath = tableView.indexPath(for: cell) {
             // 이전에 선택된 버튼의 인덱스 업데이트
-            //selectedRowIndex = indexPath.row
-            
             let rowIndex = indexPath.row
             let selectedPet = pet[rowIndex]
-            petId = selectedPet.id
             
-            //Utils.delUserDefault(mode: "pet")
-            UserDefaults.standard.setValue(petId, forKey: PetDefaultsKey.petId.rawValue)
-            PET_ID = UserDefaults.standard.integer(forKey: PetDefaultsKey.petId.rawValue)
-            print(petId)
+            print("새로운 petId ::: \(selectedPet.id)")
             print(PET_ID)
-                        
-            //선택한 로우와 기존에 선택된 로우의 펫id값이 다를때는 기존 색상으로 변경
-            // 이전에 선택한 셀의 배경색을 초기 상태로 되돌립니다.
-            if let previousSelectedIndex = selectedRowIndex {
-                if let previousSelectedCell = tableView.cellForRow(at: IndexPath(row: previousSelectedIndex, section: 0)) {
-                    
-//                    if let button = previousSelectedCell.viewWithTag(6) as? UIButton {
-//                        button.isEnabled = true
-//                        button.setTitle("펫선택", for: .normal)
-//                        button.backgroundColor = .gray
-                    //}
-                }
-            }
             
-//            // 현재 선택된 행의 셀을 가져와서 배경색을 변경
-            if selectedRowIndex == rowIndex {
-                // 같은 셀을 두 번 연속으로 클릭한 경우, 선택을 해제
-                selectedRowIndex = 0
-                
-            } else {
-                // 현재 선택한 셀의 배경색을 변경하고 선택된 행을 업데이트하여 추적
-                let currentSelectedCell = tableView.cellForRow(at: IndexPath(row: rowIndex, section: 0))
-                currentSelectedCell?.backgroundColor = UIColor.gray // 변경하고자 하는 배경색으로 설정
-                
-                sender.tintColor = .black
-                sender.isEnabled = true
-                sender.setTitle("V", for: .normal)
-                selectedRowIndex = rowIndex
-                print("현재 선택펫: \(selectedRowIndex)")
-            }
-            
+            //PET_ID, PET_NAME 변경
+            UserDefaults.standard.setValue(selectedPet.id, forKey: PetDefaultsKey.petId.rawValue)
+            UserDefaults.standard.setValue(selectedPet.name, forKey: PetDefaultsKey.petName.rawValue)
+            PET_ID = UserDefaults.standard.integer(forKey: PetDefaultsKey.petId.rawValue)
+            PET_NAME = UserDefaults.standard.string(forKey: PetDefaultsKey.petName.rawValue)
         }
 
         if let inputText = textYearMonth.text {
-            let components = inputText.split(separator: "-")
-            if components.count == 2,
-                let year = Int(components[0]),
-                let month = Int(components[1]) {
+            let yearMonth = inputText.split(separator: "-")
+            if yearMonth.count == 2,
+                let year = Int(yearMonth[0]),
+                let month = Int(yearMonth[1]) {
                 // 년과 월 추출
                 print("Year: \(year), Month: \(month)")
                 //펫 선택시 한달지출비용
-                //getPetCost(pet: petId, actDate: datePicker.date.toString(format: "yyyy-MM-dd"))
-                getPetCost(pet: petId, actDate: String(year) + "-" + String(month) + "-01")
+                getPetCost(pet: PET_ID, actDate: String(year) + "-" + String(month) + "-01")
                 // 여기에서 년과 월을 사용하여 데이터를 처리
             } else {
                 // 사용자가 올바른 형식("년-월")으로 입력하지 않은 경우 에러 처리
@@ -191,39 +161,34 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
                         completionHandler: nil
                     )
                 }
-                
+                imageProfile?.image = UIImage(systemName: "photo")
             }
-        }else{
-            //이미지가 없을시 기본이미지 표시
-            
+        } else {
+            // 이미지가 없을시 기본 이미지 표시
+            imageProfile?.image = UIImage(systemName: "photo")
         }
         
-        petId = pet.id
+        //petId = pet.id
         lblName?.text = pet.name
         lblBreed?.text = pet.breed
         lblBirth?.text = pet.birth
         
         if pet.sex == "F"{
-            lblSex?.text = "암컷"
+            lblSex?.text = "암컷 \(pet.id)"
         }
         else{
-            lblSex?.text = "수컷"
+            lblSex?.text = "수컷 \(pet.id)"
         }
 
         // 펫버튼에 액션 추가
         btnPetSelect?.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
-        
-        btnPetSelect?.setTitle("V", for: UIControl.State.normal)
-        
-        // 이전에 선택된 버튼의 인덱스와 현재 버튼의 인덱스를 비교하여 텍스트 업데이트
-//        if indexPath.row == selectedRowIndex {
-//            print("이전버튼과 현재버튼 row가 같음")
-//        } else {
-//            btnPetSelect?.setTitle("V", for: UIControl.State.selected)
-//        }
-        
-            btnPetSelect?.tag = indexPath.row
-        
+        print("\(PET_ID) , \(pet.id)")
+        if PET_ID == pet.id {
+            btnPetSelect?.setTitle("V", for: UIControl.State.normal)
+            //btnPetSelect?.setImage(UIImage(systemName: "checkmark"), for: .normal)
+        } else {
+            btnPetSelect?.setTitle("펫선택", for: UIControl.State.normal)
+        }
         
         return cell
     }
@@ -249,7 +214,7 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
         
         print(selectedPet)
         detailVC?.pet = [selectedPet]
-        detailVC?.petId = petId
+        detailVC?.petId = PET_ID
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -303,6 +268,9 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
                         self.lblFeedCost.text = "\(self.cost[0].feedAmount)"
                         self.lblHospitalCost.text = "\(self.cost[0].hospitalCost)"
                         self.lblBeautyCost.text = "\(self.cost[0].beautyCost)"
+                        
+                        let totalCost = self.cost[0].feedAmount + self.cost[0].hospitalCost + self.cost[0].beautyCost
+                            self.lblTotal.text = "\(totalCost)"
                     }else{
                         
                     }

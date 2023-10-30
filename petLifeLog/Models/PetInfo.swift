@@ -71,6 +71,25 @@ struct CostData: Codable {
     }
 }
 
+//성장곡선
+struct WeightData: Codable {
+    let actDate: String
+    let weight: Double
+
+    enum CodingKeys: String, CodingKey {
+        case actDate = "act_date"
+        case weight
+    }
+    
+    init(from decoder : Decoder) throws
+    {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        actDate = (try? values.decode(String.self, forKey: .actDate)) ?? ""
+        weight = (try? values.decode(Double.self, forKey: .weight)) ?? 0
+    }
+}
+
+
 
 
 

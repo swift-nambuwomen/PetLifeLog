@@ -202,7 +202,7 @@ class PetInfoViewController: UIViewController {
         //등록, 수정구분 -> 이미지 있는지 없는지 체크하여 저장
         //수정
         if petId != 0 {
-            if let image = selectedImage {
+            if selectedImage != nil {
                 url = SITE_URL + "/api/pet/update/\(petId)"
                 updatePetWithImage(url: url)
             }else{
@@ -211,7 +211,7 @@ class PetInfoViewController: UIViewController {
             }
         }else{
             //이미지 데이터가 있으면 처리
-            if let image = selectedImage {
+            if selectedImage != nil {
                 //let url = "http://127.0.0.1:8000/api/pet/create"
                 url = SITE_URL + "/api/pet/create"
                 insertPetWithImage(url: url)
@@ -239,7 +239,18 @@ class PetInfoViewController: UIViewController {
             self.present(self.camera, animated: false) }
         alert.addAction(actionPhoto)
         
-        let actionPhotoDelete = UIAlertAction(title: "사진 삭제", style: .destructive) { action in }
+        let actionPhotoDelete = UIAlertAction(title: "사진 삭제", style: .destructive) { action in
+            let url = SITE_URL + "/api/pet/delete/\(self.petId)"
+            
+            if self.imageview.image != nil{
+                self.updatePetWithImage(url: url) //주소만 변경
+                let alert = UIAlertController(title: "확인", message: "프로필 사진이 삭제되었습니다.", preferredStyle: .alert)
+                let action = UIAlertAction(title: " 확인", style: .default)
+                alert.addAction(action)
+                
+                self.present(alert, animated: true)
+            }
+        }
         alert.addAction(actionPhotoDelete)
         
         let actionCancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
