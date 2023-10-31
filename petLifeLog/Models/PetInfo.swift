@@ -38,6 +38,8 @@ struct DiaryList: Codable {
     let act_date: String
     let diary_image: String
     let diary_content: String
+    let pet_name: String
+    let user_name: String
 
     init(from decoder : Decoder) throws
     {
@@ -46,6 +48,8 @@ struct DiaryList: Codable {
         act_date = (try? values.decode(String.self, forKey: .act_date)) ?? ""
         diary_image = (try? values.decode(String.self, forKey: .diary_image)) ?? ""
         diary_content = (try? values.decode(String.self, forKey: .diary_content)) ?? ""
+        pet_name = (try? values.decode(String.self, forKey: .pet_name)) ?? ""
+        user_name = (try? values.decode(String.self, forKey: .user_name)) ?? ""
     }
 
 }

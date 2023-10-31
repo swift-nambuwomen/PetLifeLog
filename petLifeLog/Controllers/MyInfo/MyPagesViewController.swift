@@ -154,18 +154,18 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
                 DispatchQueue.main.async {
                     imageProfile?.kf.setImage(
                         with: url,
-                        placeholder: UIImage(systemName: "photo"),
+                        placeholder: UIImage(named: "dogDefault3"),
                         options: [
                             .cacheOriginalImage
                         ],
                         completionHandler: nil
                     )
                 }
-                imageProfile?.image = UIImage(systemName: "photo")
+                imageProfile?.image = UIImage(named: "dogDefault3")
             }
         } else {
             // 이미지가 없을시 기본 이미지 표시
-            imageProfile?.image = UIImage(systemName: "photo")
+            imageProfile?.image = UIImage(named: "dogDefault3")
         }
         
         //petId = pet.id

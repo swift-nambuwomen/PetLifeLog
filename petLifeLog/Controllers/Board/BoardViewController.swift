@@ -15,21 +15,28 @@ class BoardViewController: UIViewController {
     var weight:[WeightData] = []
     var days: [String] = []
     var kg: [Double] = []
+    var searchData = ""
     
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getWeight(pet: 30, actDate: "2023-10-28")
-        chartData()
+        getCurrentDate() //현재날짜
+        if let nickName = NICK_NAME{
+            navigationItem.title = "\(nickName)의 성장곡선"
+        }
+        
+        getWeight(pet: PET_ID, actDate: searchData)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        //tableView.reloadData()
+        getCurrentDate() //현재날짜
+        
+        getWeight(pet: PET_ID, actDate: searchData)
     }
     
     func chartData() {
-        lineChart.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height / 1.3)
+        lineChart.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height / 1.4)
         lineChart.center = view.center
         view.addSubview(lineChart)
    //     var minLineDataEntries = [ChartDataEntry]()
@@ -120,51 +127,15 @@ class BoardViewController: UIViewController {
             }
         }
     }
+    
+    func getCurrentDate(){
+        let formatter = DateFormatter() //객체 생성
+        formatter.dateStyle = .long
+        formatter.timeStyle = .medium
+        formatter.dateFormat = "yyyy-MM-dd" //데이터 포멧 설정
+        searchData = formatter.string(from: Date()) //문자열로 바꾸기
+
+    }
 }
 
-//extension BoardViewController: UITableViewDataSource, UITableViewDelegate {
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        return 1
-//    }
-//
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//
-//        return posts.count
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//
-//        let board1 = posts[indexPath.row]
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-//
-//        let imageView = cell.viewWithTag(1) as? UIImageView
-//
-//        if let imageName = board1["profile_img"] {
-//            imageView?.image = UIImage(named:imageName)
-//        }
-//
-//        let lblNick = cell.viewWithTag(2) as? UILabel
-//        lblNick?.text = board1["user_nick"]
-//
-//        let lblTitle = cell.viewWithTag(3) as? UILabel
-//        lblTitle?.text = board1["title"]
-//
-//        let lblDate = cell.viewWithTag(4) as? UILabel
-//        lblDate?.text = board1["reg_date"]
-//
-//        let lblReply = cell.viewWithTag(5) as? UILabel
-//        lblReply?.text = board1["reply_cnt"]
-//
-//        return cell
-//    }
-//
-//    // 세그웨이를 이용하여 디테일 뷰로 전환하기
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "detail" {
-//            let targetVC = segue.destination as! BoardDetailViewController
-//            let cell = sender as! UITableViewCell
-//            let indexPath = self.tableView.indexPath(for: cell)//sender as! IndexPath //self.tableView.indexPath(for: cell)
-//            targetVC.post = posts[indexPath!.row ]
-//        }
-//    }
-//}
+

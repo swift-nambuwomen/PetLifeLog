@@ -48,6 +48,10 @@ class DiaryViewController: UIViewController,UITableViewDataSource, UITableViewDe
         self.tableView.dataSource = self
         self.tableView.delegate = self
     }
+    override func viewWillAppear(_ animated: Bool) {
+        getDiary()
+        //tableView.reloadData()
+    }
     
     @IBAction func meOrAll(_ sender: Any) {
         if segment.selectedSegmentIndex == 0 {
@@ -157,11 +161,14 @@ class DiaryViewController: UIViewController,UITableViewDataSource, UITableViewDe
                             )
                             
                         }
-                        
+                    }else{
+                        imageView.isHidden = true
                     }
                     
                 }
-                lblDiary.text = diaryData.diary_content // 이미지가 있는 경우 텍스트를 지우거나 다른 내용을 설정
+                lblDiary.text = diaryData.diary_content
+                let lblName = cell.viewWithTag(4) as? UILabel
+                lblName?.text = diaryData.user_name + "의 " + diaryData.pet_name
             }
         }
         else{
@@ -190,8 +197,12 @@ class DiaryViewController: UIViewController,UITableViewDataSource, UITableViewDe
                             completionHandler: nil
                         )
                     }
+                }else{
+                    imageView.isHidden = true
                 }
                 lblDiary.text = diaryAllData.diary_content
+                let lblName = cell.viewWithTag(4) as? UILabel
+                lblName?.text = diaryAllData.user_name + "의 " + diaryAllData.pet_name
             }  //else끝(다이어리 전체)
             
         }
