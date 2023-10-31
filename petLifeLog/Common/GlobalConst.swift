@@ -27,9 +27,14 @@ let actList_url = "\(SITE_URL)/api/pet/act/list"
 // act 등록
 let actReg_url = "\(SITE_URL)/api/pet/act"
 
+// act 등록 (image 첨부)
+let actImageReg_url = "\(SITE_URL)/api/pet/actImage"
+
+// act 등록 (image 첨부)
+let actDel_url = "\(SITE_URL)/api/pet/actDel"
+
 // diary 등록
 let diaryReg_url = "\(SITE_URL)/api/pet/diary"
-
 
 enum UserDefaultsKey: String, CaseIterable {
     case isLogined

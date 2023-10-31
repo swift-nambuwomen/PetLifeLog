@@ -7,6 +7,7 @@
 
 import UIKit
 import Alamofire
+import Kingfisher
 
 // 테스트용 임시 데이터(홈에서 쓰이는 5개의 컨트롤러는 이 글로벌 변수의 user,pet,birth를 가져다 씀)
 //let user_id = 1 // 로그인 후 들고 있어야 할 user_id값
@@ -35,13 +36,16 @@ class HomeViewController: UIViewController {
     
     // 다이어리용
     @IBOutlet weak var diaryImgView: UIImageView!
-    @IBOutlet weak var cameraBtn: UIButton!
+//    @IBOutlet weak var cameraBtn: UIButton!
     @IBOutlet weak var diaryContent: UILabel!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.isNavigationBarHidden = false
+        self.tabBarController?.tabBar.isHidden = false
+        self.tabBarController?.tabBar.layer.zPosition = 0
+        
+        
         print("didload 실행")
         login()
         // login check
@@ -87,8 +91,6 @@ class HomeViewController: UIViewController {
     }
     
     @objc func didDismissCalendarNotification(_ notification: Notification) {
-        print("didDismissCalendarNotification")
-        print("didDismissCalendarNotification")
         
         guard let new_date = notification.userInfo?["new_date"] as? String else { return }
         print("new_date:::::\(new_date)")
@@ -111,9 +113,7 @@ class HomeViewController: UIViewController {
 
         print("called GET ActionList")
         dataRequest.responseDecodable(of: Act.self) { [self] response in
-            //print("Request: \(String(describing: response.request))")   // original url request
-            //print("Response: \(String(describing: response.response))") // http url response
-            //print("Result: \(response.result)")
+
             switch response.result {
                 case .success:
                     guard let result = response.value else { return }
@@ -160,16 +160,41 @@ class HomeViewController: UIViewController {
     }
     
     func setupDiaryView() {
+        
         // 다이어리 이미지 있으면 카메라 버튼 비활성화 되게
         //cameraBtn.isHidden = false
-        cameraBtn.isEnabled = true
+//        cameraBtn.isEnabled = true
         if petDiary?.diary_image != nil {
             //cameraBtn.isHidden = true
-            cameraBtn.isEnabled = false
+//            cameraBtn.isEnabled = false
         }
 
-        diaryContent.text = petDiary?.diary_content
-        //diaryImgView.image = UIImage(named: petDiary?.diary_image ?? "white")
+//        diaryContent.text = petDiary?.diary_content
+//        diaryImgView.image = UIImage(named: petDiary?.diary_image ?? "white")
+//        if diaryData.diary_image != "" {
+//            
+//            if petDiary?.diary_image != "" && IMAGE_URL != "" {
+//                let imageName = IMAGE_URL + "/" + diaryData.diary_image
+//                
+//                if let url = URL(string: imageName) {
+//                    let processor = RoundCornerImageProcessor(cornerRadius: 20) // 모서리 둥글게
+//                    
+//                    imageView.kf.indicatorType = .activity
+//                    
+//                    imageView.kf.setImage(
+//                        with: url,
+//                        placeholder: UIImage(systemName: "photo"),
+//                        options:
+//                            //.processor(processor)
+//                        [.cacheOriginalImage],
+//                        completionHandler: nil
+//                    )
+//                    
+//                }
+//                
+//            }
+//            
+//        }
     }
     
     func setupTableView() {
@@ -289,6 +314,9 @@ class HomeViewController: UIViewController {
             if let selected = tableView.indexPathForSelectedRow {
                 if let targetVC = segue.destination as? PetDetailViewController {
                     targetVC.petAction = actdetail?[selected.row] ?? nil // 상세페이지에서 기존 데이터 뿌려줘야
+                    
+//                    targetVC.modalPresentationStyle = UIModalPresentationStyle.fullScreen
+//                    present(targetVC, animated: true, completion: nil)
                 }
             }
         }
@@ -337,80 +365,153 @@ class HomeViewController: UIViewController {
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1 // 액션 셀 하나
+        return 2 // 액션 셀 하나
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return actdetail?.count ?? 0// 셀 row 수는 Act 안의 Actdetail 데이터의 개수
+        if section == 0 {
+            return actdetail?.count ?? 0// 셀 row 수는 Act 안의 Actdetail 데이터의 개수
+        } else {
+            return 1
+        }
     }
     
     // getDataset()으로 불러들여온 dataset을 꺼내서 diaryCell,actionCell의 각 컴포넌트에 매치해서 넣어준다.
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "actionCell", for: indexPath)
         
-        guard let petActions = actdetail else { fatalError() }
-        let petAction = petActions[indexPath.row] // 액션 하나에 대한 정보
-        
-        let lblActTime = cell.viewWithTag(1) as? UILabel // 시간
-        let actImgView = cell.viewWithTag(2) as? UIImageView // 액션대표이미지
-        let lblActName = cell.viewWithTag(3) as? UILabel // 액션명
-        let lblActDetail = cell.viewWithTag(4) as? UILabel // 액션 필수 디테일
-        let lblMemo = cell.viewWithTag(5) as? UILabel // 메모
-        let memoImgView = cell.viewWithTag(6) as? UIImageView // 액션 메모 이미지
-        
-        lblMemo?.text = ""
-        // 시간
-        lblActTime?.text = petAction.act_time
-        
-        // 액션명,액션대표이미지
-        let act_id = petAction.act // 알라모파이어로 가져온 데이터 내의 act명
-        let act_name = petAction.act_name
-        let image = UIImage(systemName: "circle.fill")
-        
-        actImgView?.image = image
-    
-        //actImgView?.tintColor = UIColor(named: "#FF7E79")
-
-        switch act_id { // 액션별로 보여줄 대표 이미지가 다르므로 분기 처리
-//        case 1: actImgView?.tintColor = UIColor(named: "AAA517") //.image = UIImage(named: "walk")
-//            case 2: actImgView?.image = UIImage(named: "poo")
-//            case 3: actImgView?.image = UIImage(named: "food")UIImage(systemName: "doc.text.image")
-//            case 4: actImgView?.image = UIImage(named: "hospital")
-//            case 5: actImgView?.image = UIImage(named: "hair")
-//            case 6: actImgView?.image = UIImage(named: "weight")
-//            default: actImgView?.tintColor = UIColor(named: "AAA517") //UIImage(named: "walk")
-//        }
-        
-            case 1: actImgView?.tintColor = UIColor(hex: "#AAA517") //.image = UIImage(named: "walk")
-                case 2: actImgView?.tintColor = UIColor(hex: "#FF7E79")
-                case 3: actImgView?.tintColor = UIColor(hex: "#FA9E04")
-                case 4: actImgView?.tintColor = UIColor(hex: "hospital")
-                case 5: actImgView?.tintColor = UIColor(hex: "#09BCF1")
-                case 6: actImgView?.tintColor = UIColor(hex: "#FF85FF")
-                default: actImgView?.tintColor = UIColor(hex: "#AAA517")
-            //UIImage(named: "walk")
-
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "actionCell", for: indexPath)
+            
+            guard let petActions = actdetail else { fatalError() }
+            let petAction = petActions[indexPath.row] // 액션 하나에 대한 정보
+            
+            let lblActTime = cell.viewWithTag(1) as? UILabel // 시간
+            let actImgView = cell.viewWithTag(2) as? UIImageView // 액션대표이미지
+            //        actImgView?.tintColor = UIcolor
+            let lblActName = cell.viewWithTag(3) as? UILabel // 액션명
+            let lblActDetail = cell.viewWithTag(4) as? UILabel // 액션 필수 디테일
+            let lblMemo = cell.viewWithTag(5) as? UILabel // 메모
+            let memoImgView = cell.viewWithTag(6) as? UIImageView // 액션 메모 이미지
+            
+            lblMemo?.text = ""
+            // 시간
+            lblActTime?.text = petAction.act_time
+            
+            // 액션명,액션대표이미지
+            let act_id = petAction.act // 알라모파이어로 가져온 데이터 내의 act명
+            let act_name = petAction.act_name
+            let image = UIImage(systemName: "circle.fill")?.withRenderingMode(.alwaysOriginal)
+            
+            actImgView?.image = image?.withRenderingMode(.alwaysTemplate)
+            
+            //actImgView?.tintColor = UIColor(named: "#FF7E79")
+            
+            switch act_id { // 액션별로 보여줄 대표 이미지가 다르므로 분기 처리
+                //        case 1: actImgView?.tintColor = UIColor(named: "AAA517") //.image = UIImage(named: "walk")
+                //            case 2: actImgView?.image = UIImage(named: "poo")
+                //            case 3: actImgView?.image = UIImage(named: "food")UIImage(systemName: "doc.text.image")
+                //            case 4: actImgView?.image = UIImage(named: "hospital")
+                //            case 5: actImgView?.image = UIImage(named: "hair")
+                //            case 6: actImgView?.image = UIImage(named: "weight")
+                //            default: actImgView?.tintColor = UIColor(named: "AAA517") //UIImage(named: "walk")
+                //        }
+                
+            case 1: actImgView?.tintColor = UIColor.red // (hex: "#AAA517") //.image = UIImage(named: "walk")
+            case 2: actImgView?.tintColor = UIColor(hexCode	: "#FF7E79")
+            case 3: actImgView?.tintColor = UIColor(hexCode: "#FA9E04")
+            case 4: actImgView?.tintColor = UIColor(hexCode: "#01B5AD")
+            case 5: actImgView?.tintColor = UIColor(hexCode: "#09BCF1")
+            case 6: actImgView?.tintColor = UIColor(hexCode: "#FF85FF")
+            default: actImgView?.tintColor = UIColor(hexCode: "#AAA517")
+                //UIImage(named: "walk")
+                
             }
-        
-        // 디테일 - 액션별로 테이블뷰 셀에 보여줄 디테일이 다르므로 분기 처리(액션 라벨, 각 액션 디테일들)
-        switch act_id {
+            
+            // 디테일 - 액션별로 테이블뷰 셀에 보여줄 디테일이 다르므로 분기 처리(액션 라벨, 각 액션 디테일들)
+            switch act_id {
             case 1: lblActName?.text = act_name; lblActDetail?.text = "\(String(petAction.walk_spend_time ?? 0))분"
             case 2: lblActName?.text = act_name; lblActDetail?.text = "\(petAction.ordure_color ?? "") \( petAction.ordure_shape ?? "")"
             case 3: lblActName?.text = act_name; lblActDetail?.text = "\(petAction.feed_type ?? "") \(petAction.feed_name ?? "") \(petAction.feed_amount ?? 0)g"
             case 4: lblActName?.text = act_name; lblActDetail?.text = "\(petAction.hospital_type ?? "") \(petAction.hospital_cost ?? 0)원"
             case 5: lblActName?.text = act_name; lblActDetail?.text = "\(String((petAction.beauty_cost) ?? 0))원"
-        case 6: lblActName?.text = act_name; lblActDetail?.text =  "\(String((petAction.weight) ?? 0.0))kg"
+            case 6: lblActName?.text = act_name; lblActDetail?.text =  "\(String((petAction.weight) ?? 0.0))kg"
             default: lblActName?.text = ""
-        }
-        
-        // 다이어리 뷰의 메모
-        lblMemo?.text = petAction.memo
-        
-        // 다이어리 뷰의 메모 사진
-        memoImgView?.image = UIImage(named: "white") // Azure blob 적용전까지는 white로 세팅
-        //memoImgView?.image = UIImage(named: petAction.actdetail?.memo_image ?? "white") // white 아닌 nil로는 ?
+            }
+            
+            // 다이어리 뷰의 메모
+            lblMemo?.text = petAction.memo
+            
+            // 다이어리 뷰의 메모 사진
+//            memoImgView?.image = UIImage(named: "white") // Azure blob 적용전까지는 white로 세팅
+            //memoImgView?.image = UIImage(named: petAction.actdetail?.memo_image ?? "white") // white 아닌 nil로는 ?
+            
+            return cell
+            
+        } else {
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: "diaryCell", for: indexPath)
+            
+            let diaryMemoImage = cell.viewWithTag(21) as? UIImageView
+            let diaryMemo = cell.viewWithTag(22) as? UILabel
+            let cameraBtn = cell.viewWithTag(23) as? UIButton
+            
+            guard let diaryMemo = diaryMemo else { fatalError("화면오류")}
+            guard let diaryMemoImage = diaryMemoImage else { fatalError("화면오류")}
+            guard let cameraBtn = cameraBtn else { fatalError("화면오류")}
+            
 
-        return cell
+//            if petDiary?.diary_image != "" && petDiary?.diary_image != nil {
+            diaryMemoImage.frame = cell.contentView.bounds
+//            let imageView = UIImageView(frame: cell.contentView.bounds)
+//            imageView.image = myImg
+
+            
+            if let diaryImage = petDiary?.diary_image {
+                diaryMemoImage.isHidden = false
+                print("diary image = \(diaryImage)")
+//                let url = URL(string: "url")
+                cameraBtn.isHidden = true
+                cameraBtn.isEnabled = false
+                
+                let url = URL(string: "\(IMAGE_URL)/\(PET_ID)/\(diaryImage)")
+                print("\(url!)")
+//                diaryMemoImage.load(url: url!)
+//                diaryMemoImage.kf.indicatorType = .activity
+//                diaryMemoImage.kf.setImage( with: url )
+
+    //            cell.clipToBounds = true
+//                cell.addSubview(diaryMemoImage)
+//                    diaryMemoImage.kf.indicatorType = .activity
+//                if let url = URL(string: imageName) {
+//                    let processor = RoundCornerImageProcessor(cornerRadius: 20) // 모서리 둥글게
+//
+//                    diaryMemoImage.kf.indicatorType = .activity
+//
+//                diaryMemoImage.frame(forAlignmentRect: <#T##CGRect#>)
+                    diaryMemoImage.kf.setImage(
+                        with: url,
+                        placeholder: UIImage(systemName: "photo"),
+                        options: nil ,
+                            //.processor(processor)
+//                        [.cacheOriginalImage],
+                        completionHandler: nil
+                    )
+//
+                    
+//                }
+                    
+            } else {
+//                diaryMemoImage.isHidden = true
+                diaryMemoImage.image = nil
+                cameraBtn.isHidden = false
+                cameraBtn.isEnabled = true
+            }
+            diaryMemo.text = petDiary?.diary_content
+            
+            return cell
+        }
+            
+
     }
     
     
@@ -495,10 +596,7 @@ extension String {
             return nil
         }
     }
-}
-
-
-extension String {
+    
     func toTime() -> Date? { // 액션 시간 받은거 저장하려고. 액션디테일화면의 datepicker에 받은시간대로 띄우기 위함.
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
@@ -512,6 +610,7 @@ extension String {
     }
 }
 
+
 extension Date {
     func toDateString() -> String { // < > 버튼 누를시 날짜 연산하여 네비바에 날짜 포맷팅해서 입력하기 위한 용도
         let dateFormatter = DateFormatter()
@@ -520,9 +619,7 @@ extension Date {
         dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         return dateFormatter.string(from: self)
     }
-}
-
-extension Date {
+    
     func toTimeString() -> String { // 액션 시간 받으려고. 액션디테일화면의 datepicker의 시간을 DB로 보내기 위함.
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
@@ -531,6 +628,7 @@ extension Date {
         return dateFormatter.string(from: self)
     }
 }
+
 
 
 // MARK: 카메라 익스텐션
@@ -545,11 +643,47 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
         } else if let possibleImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             newImage = possibleImage // 원본 이미지가 있을 경우
         }
-        
-        self.diaryImgView.image = newImage // 받아온 이미지를 update
+   
+        guard let test = tableView.viewWithTag(21) as? UIImageView else { return }
+        test.image = newImage // 받아온 이미지를 update
         picker.dismiss(animated: true, completion: nil) // picker를 닫아줌
         //cameraBtn.isHidden = true
-        cameraBtn.isEnabled = false
+//        cameraBtn.isEnabled = false
         
+    }
+}
+
+extension UIColor {
+    
+    convenience init(hexCode: String, alpha: CGFloat = 1.0) {
+        var hexFormatted: String = hexCode.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).uppercased()
+        
+        if hexFormatted.hasPrefix("#") {
+            hexFormatted = String(hexFormatted.dropFirst())
+        }
+        
+        assert(hexFormatted.count == 6, "Invalid hex code used.")
+        
+        var rgbValue: UInt64 = 0
+        Scanner(string: hexFormatted).scanHexInt64(&rgbValue)
+        
+        self.init(red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+                  green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+                  blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+                  alpha: alpha)
+    }
+}
+
+extension UIImageView {
+    func load(url: URL) {
+        DispatchQueue.global().async { [weak self] in
+            if let data = try? Data(contentsOf: url) {
+                if let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self?.image = image
+                    }
+                }
+            }
+        }
     }
 }

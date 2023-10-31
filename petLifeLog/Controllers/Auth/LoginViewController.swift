@@ -33,6 +33,8 @@ class LoginViewController: UIViewController {
         
         // 화면의 Back 버튼 숨김
         self.navigationController?.isNavigationBarHidden = true
+        self.tabBarController?.tabBar.isHidden = true
+        self.tabBarController?.tabBar.layer.zPosition = -1
     }
     
     func getOsVersion() -> String {

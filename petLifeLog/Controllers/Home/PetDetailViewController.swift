@@ -7,7 +7,13 @@
 
 import UIKit
 import Alamofire
+import Kingfisher
+
 class PetDetailViewController: UIViewController {
+    
+    @IBOutlet weak var btnCamera: UIBarButtonItem!
+    
+    
     //UI 그리기 위한 뷰
     @IBOutlet weak var ActionLabel: UINavigationItem!
     @IBOutlet weak var PooShapeView: UIStackView!
@@ -38,6 +44,9 @@ class PetDetailViewController: UIViewController {
     
     let picker = UIImagePickerController()
     
+    // 카메라에서 선택된 이미지
+    var newImage: UIImage?
+    
     var petAction:Actdetail! // Home뷰로부터 넘겨받은 데이터
     var params:Parameters = [ // 알라모 파이어용 파라미터. 6개 액션의 공통된 2개는 미리 넣어둠.
         "pet":PET_ID,
@@ -60,10 +69,37 @@ class PetDetailViewController: UIViewController {
         act_time.date = petAction.act_time.toTime() ?? "00:00".toTime()!
         memo.text = petAction.memo
         //imageView.image = petAction.actions?.memo_image // String, UIImage
-        
+        print("\(petAction.memo_image)")
         // 액션명에 따라 보여줄 UI가 다르므로 분기처리
         act_name = petAction.act_name ?? ""
         act_id = petAction.act
+        
+        // 등록된 이미지 있을때
+        if let memoImage = petAction?.memo_image {
+            btnCamera.isHidden = true
+            let imageName = IMAGE_URL + "/" + memoImage
+            print(imageName)
+            let image = URL(string: imageName)
+                //                ImageCache.default.removeImage(forKey: image.cacheKey)
+                
+            let processor = RoundCornerImageProcessor(cornerRadius: 20) // 모서리 둥글게
+            
+            imageView?.kf.indicatorType = .activity
+            imageView?.clipsToBounds = true
+            
+            imageView?.kf.setImage(
+                with: image,
+                options: [
+                    .processor(processor),
+                    //                        .cacheOriginalImage
+                ],
+                completionHandler: nil
+            )
+        } else {
+            btnCamera.isHidden = false
+            imageView.image = nil
+        }
+        
         switch act_id {
         // 산책용 뷰
         case 1: ActionLabel.title = act_name; PooShapeView.isHidden = true; PooColorView.isHidden = true; FoodSelectView.isHidden = true; FoodBrandView.isHidden = true; FoodGramView.isHidden = true; HospitalSelectView.isHidden = true; ExpencesView.isHidden = true; HairSelectView.isHidden = true; WeightView.isHidden = true;
@@ -87,9 +123,10 @@ class PetDetailViewController: UIViewController {
                 case "초코": poo_color.selectedSegmentIndex = 0
                 case "녹색": poo_color.selectedSegmentIndex = 1
                 case "노랑": poo_color.selectedSegmentIndex = 2
-                case "빨강": poo_color.selectedSegmentIndex = 3
-                case "검정": poo_color.selectedSegmentIndex = 4
-                case "보라": poo_color.selectedSegmentIndex = 5
+                case "갈색": poo_color.selectedSegmentIndex = 3
+                case "빨강": poo_color.selectedSegmentIndex = 4
+                case "검정": poo_color.selectedSegmentIndex = 5
+                case "보라": poo_color.selectedSegmentIndex = 6
                 default: return
             }
             
@@ -156,16 +193,31 @@ class PetDetailViewController: UIViewController {
     @objc func onImgClicked(tapGestureRecognizer: UITapGestureRecognizer)
     {
         print("onImgClicked() called")
-        let alert =  UIAlertController(title: "사진", message: "사진을 앨범에서 가져오거나 카메라로 찍으세요.", preferredStyle: .actionSheet)
+        let alert =  UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     
-        let library =  UIAlertAction(title: "사진앨범", style: .default) { (action) in self.openLibrary()
+        let del =  UIAlertAction(title: "삭제", style: .destructive) { (action) in
+            self.deleteImageAF()
         }
         
-        let camera =  UIAlertAction(title: "카메라", style: .default) { (action) in
+        let cancel = UIAlertAction(title: "취소", style: .default, handler: nil)
+        
+        alert.addAction(del)
+        alert.addAction(cancel)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    @IBAction func actCamera(_ sender: Any) {
+        print("onImgClicked() called")
+        let alert =  UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+    
+        let library =  UIAlertAction(title: "앨범에서 선택", style: .default) { (action) in self.openLibrary()
+        }
+        
+        let camera =  UIAlertAction(title: "카메라로 촬영", style: .default) { (action) in
             self.openCamera()
         }
         
-        let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        let cancel = UIAlertAction(title: "취소", style: .default, handler: nil)
         
         alert.addAction(library)
         alert.addAction(camera)
@@ -203,24 +255,48 @@ class PetDetailViewController: UIViewController {
         }
     }
     
-    
-    // 알라모 파이어로 통신
-    func updateDataViaAF(){
-        print("called 액션 수정 버튼 via AF")
-        let pk = petAction.id
-        let paths = "api/pet/act/\(pk)"
-        let url = "\(actReg_url)/\(pk)"
+    func deleteImageAF() {
+        self.params["memo_image"] = ""
+        switch act_id {
+        case 1 : updateWalk()
+        case 2 : updatePoo()
+        case 3 : updateFood()
+        case 4 : updateHospital()
+        case 5 : updateHair()
+        case 6 :updateWeight()
+        default:return
+        }
         
+    }
+    
+    @IBAction func delConfirm() {
+        let alert = UIAlertController(title: "", message: "정말 삭제하시겠습니까?", preferredStyle: .alert)
+        
+        let actionOK = UIAlertAction(title: "확인", style: .default, handler: deleteAct)
+        
+        let actionCancel = UIAlertAction(title: "취소", style: .default) { _ in
+            
+        }
+        
+        present(alert, animated: true)
+        alert.addAction(actionCancel)
+        alert.addAction(actionOK)
+    }
+    
+    func deleteAct(action:UIAlertAction) {
+        let url = "\(actReg_url)/\(petAction.id)"
         print("parameter값",params)
-        let dataRequest = AF.request(url, method: .put, parameters: params, encoding: JSONEncoding.default)
-        dataRequest.responseDecodable(of: Actdetail.self) { response in
+        let dataRequest = AF.request(url, method: .delete, parameters: params, encoding: JSONEncoding.default)
+        dataRequest.responseDecodable(of: [String:String].self) { response in
             // print("Request: \(String(describing: response.request))")   // original url request
             print("Response: \(String(describing: response.response))") // http url response
-            //print("Result: \(response.result)")
+            print("Result: \(response.result)")
             switch response.result {
             case .success:
                 guard let result = response.value else { return }
-                print("액션 수정 PUT 응답 결과", result)
+                NotificationCenter.default.post(name: NSNotification.Name("DataInsertSuccess"), object: nil, userInfo: nil)
+                self.dismiss(animated: true)
+//                    print("액션 수정 PUT 응답 결과", result)
                 self.alert(title: "수정되었습니다.")
             case .failure(let error):
                 print("액션 수정 PUT 에러", error)
@@ -229,6 +305,66 @@ class PetDetailViewController: UIViewController {
             }
         }
     }
+    
+    // 알라모 파이어로 통신
+    func updateDataViaAF(){
+        
+        print("called 액션 수정 버튼 via AF")
+        let pk = petAction.id
+        let paths = "api/pet/act/\(pk)"
+        
+        
+        print("image test")
+        if let memoImage = newImage {
+            let url = "\(actImageReg_url)/\(pk)"
+            let fileName = "\(UUID().uuidString).png"
+            Utils.uploadImageToServer(url: url,
+                                   imageName: fileName,
+                                   image: memoImage,
+                                   parameters: params,
+                                      responseType: Actdetail.self) {result in
+                    print(result)
+                    switch result {
+                    case .success:
+                        let alert = UIAlertController(title: "확인", message: "등록 되었습니다.", preferredStyle: .alert)
+                        let action = UIAlertAction(title: "확인", style: .default)
+                        alert.addAction(action)
+                        NotificationCenter.default.post(name: NSNotification.Name("DataInsertSuccess"), object: nil, userInfo: nil)
+                        // 여기에서는 알림을 표시하는 것이 아니라 호출자 함수에서 처리하도록 수정하실 수도 있습니다.
+                        self.dismiss(animated: true)
+            
+                    case .failure(let error):
+                        // POST 요청 중 오류가 발생한 경우
+                        // 에러 처리 로직을 추가하세요.
+                        print(error)
+                    }
+                }
+                                      
+            
+        } else {
+            let url = "\(actReg_url)/\(pk)"
+            print("parameter값",params)
+            let dataRequest = AF.request(url, method: .post, parameters: params, encoding: JSONEncoding.default)
+            dataRequest.responseDecodable(of: Actdetail.self) { response in
+                // print("Request: \(String(describing: response.request))")   // original url request
+                print("Response: \(String(describing: response.response))") // http url response
+                //print("Result: \(response.result)")
+                switch response.result {
+                case .success:
+                    guard let result = response.value else { return }
+                    NotificationCenter.default.post(name: NSNotification.Name("DataInsertSuccess"), object: nil, userInfo: nil)
+                    self.dismiss(animated: true)
+//                    print("액션 수정 PUT 응답 결과", result)
+                    self.alert(title: "수정되었습니다.")
+                case .failure(let error):
+                    print("액션 수정 PUT 에러", error)
+                    self.alert(title: "실패했습니다.")
+                    break
+                }
+            }
+        }
+    }
+    
     
     // MARK: - UI에 따라 보여지는 필드들이 다르므로 분기해서 데이터를 얻음-> Params대입-> AF호출
     func updateWalk() {
@@ -258,9 +394,10 @@ class PetDetailViewController: UIViewController {
         case 0: ordure_color = "초코"
         case 1: ordure_color = "녹색"
         case 2: ordure_color = "노랑"
-        case 3: ordure_color = "빨강"
-        case 4: ordure_color = "검정"
-        case 5: ordure_color = "보라"
+        case 3: ordure_color = "갈색"
+        case 4: ordure_color = "빨강"
+        case 5: ordure_color = "검정"
+        case 6: ordure_color = "보라"
         default: return
         }
         
@@ -270,6 +407,7 @@ class PetDetailViewController: UIViewController {
         self.params["ordure_shape"] = ordure_type
         self.params["ordure_color"] = ordure_color
         self.params["memo"] = memo.text ?? ""
+        print("zzzzz")
         updateDataViaAF()
     }
     
@@ -360,7 +498,7 @@ extension PetDetailViewController: UIImagePickerControllerDelegate, UINavigation
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
-        var newImage: UIImage? = nil // update 할 이미지
+        // update 할 이미지
         
         if let possibleImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
             newImage = possibleImage // 수정된 이미지가 있을 경우
