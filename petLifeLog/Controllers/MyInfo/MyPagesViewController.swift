@@ -30,6 +30,10 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationController?.isNavigationBarHidden = false
+        self.tabBarController?.tabBar.isHidden = false
+        self.tabBarController?.tabBar.layer.zPosition = 0
+        
         if USER_ID == 0 {
             print("로그인정보 없음")
         }else{
