@@ -263,6 +263,15 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
         }
     }
 
+    @IBAction func actLogout(_ sender: Any) {
+        Utils.delUserDefault(mode: "all")
+        UserDefaults.standard.synchronize()
+        
+        let loginStoryboard = UIStoryboard(name: "Auth", bundle: nil)
+        if let vc = loginStoryboard.instantiateViewController(identifier: "login") as? LoginViewController {
+            self.navigationController?.pushViewController(vc, animated: false)
+        }
+    }
 }
 
 
