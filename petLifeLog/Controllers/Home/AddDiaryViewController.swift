@@ -20,9 +20,9 @@ class AddDiaryViewController: UIViewController {
     
     var petDiary:PetDiary! // 이전 화면에서 받아온 다이어리
     
+    @IBOutlet weak var diaryPublicYN: UISegmentedControl!
     @IBOutlet weak var diaryDate: UILabel!
     @IBOutlet weak var diaryContent: UITextView!
-    @IBOutlet weak var diaryOpenYN: UISwitch!
     @IBOutlet weak var diaryImgView: UIImageView!
     
     let picker = UIImagePickerController()
@@ -36,16 +36,17 @@ class AddDiaryViewController: UIViewController {
     }
     
     func drawUI() {
-        diaryDate.text = selected_date + " 일기" // 메인에서 선택된 날짜의 일기를 추가해야 하므로 타이틀은 그 날짜로
+//        diaryDate.text = selected_date + " 일기" // 메인에서 선택된 날짜의 일기를 추가해야 하므로 타이틀은 그 날짜로
         //TODO: 다이어리는 하루 하나 등록 가능하기에, 다이어리 기존 데이터가 있을 시 데이터 들고와서 뿌려줘야 함
         if petDiary != nil {
             diaryContent.text = petDiary.diary_content
-            diaryImgView.image = UIImage(named: petDiary.diary_image ?? "no-img")
-            
+//            diaryImgView.image = UIImage(named: petDiary.diary_image ?? "no-img")
+            print("aa :\(petDiary.diary_open_yn)")
             if petDiary?.diary_open_yn == "Y" {
-                diaryOpenYN.isOn = true
+                diaryPublicYN.selectedSegmentIndex = 1
+//                diaryPublicYN.
             } else {
-                diaryOpenYN.isOn = false
+                diaryPublicYN.selectedSegmentIndex = 0
             }
         }
     }
@@ -66,7 +67,8 @@ class AddDiaryViewController: UIViewController {
                 case .success:
                     guard let result = response.value else { return }
                     print("다이어리 POST 응답 결과", result)
-                    self.alert(title: "성공했습니다.")
+                    NotificationCenter.default.post(name: NSNotification.Name("DataInsertSuccess"), object: nil, userInfo: nil)
+                self.dismiss(animated: true)
                 case .failure(let error):
                     print("다이어리 POST 응답 에러", error.localizedDescription)
                     self.alert(title: "실패했습니다.")
@@ -80,7 +82,11 @@ class AddDiaryViewController: UIViewController {
     @IBAction func addDiary(_ sender: Any) {
         // 공개 여부 스위치의 상태값 받아옴
         var new_diary_flag = "N"
-        if diaryOpenYN.isOn{
+//        if diaryOpenYN.isOn{
+//            new_diary_flag = "Y"
+//        }
+        
+        if diaryPublicYN.selectedSegmentIndex == 1{
             new_diary_flag = "Y"
         }
 
@@ -88,6 +94,10 @@ class AddDiaryViewController: UIViewController {
         self.params["diary_open_yn"] = new_diary_flag
         //self.params["diary_image"] = 이미지명
         updateOrCreateDataViaAF()
+    }
+    
+    @IBAction func actDissMiss(_ sender: Any) {
+        self.dismiss(animated: true)
     }
     
     // TODO: 장치 이미지명 가져와서 AF에 넣기
@@ -101,7 +111,7 @@ class AddDiaryViewController: UIViewController {
         updateOrCreateDataViaAF()
     }
     
-    
+
     
     //MARK: 제스처인식기 생성 및 연결
     func imgGesture() {
@@ -109,9 +119,9 @@ class AddDiaryViewController: UIViewController {
         let tapImageViewRecognizer
         = UITapGestureRecognizer(target: self, action: #selector(onImgClicked(tapGestureRecognizer:)))
        //이미지뷰가 상호작용할 수 있게 설정
-        diaryImgView.isUserInteractionEnabled = true
+//        diaryImgView.isUserInteractionEnabled = true
        //이미지뷰에 제스처인식기 연결
-        diaryImgView.addGestureRecognizer(tapImageViewRecognizer)
+//        diaryImgView.addGestureRecognizer(tapImageViewRecognizer)
     }
     
     //MARK: 이미지뷰 클릭시 호출될 함수 - 카메라 혹은 앨범 가져오기 알럿

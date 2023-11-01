@@ -36,6 +36,9 @@ let actDel_url = "\(SITE_URL)/api/pet/actDel"
 // diary 등록
 let diaryReg_url = "\(SITE_URL)/api/pet/diary"
 
+// 달력통계용
+let statsForCalendar_url = "\(SITE_URL)/api/pet/act/detailList"
+
 enum UserDefaultsKey: String, CaseIterable {
     case isLogined
     case userId

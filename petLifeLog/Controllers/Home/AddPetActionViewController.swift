@@ -14,6 +14,7 @@ class AddPetActionViewController: UIViewController {
     //var paths = actReg_url
     var params:Parameters = [ // 알라모 파이어용 파라미터. 6개 액션의 공통된 2개는 미리 넣어둠.
         "pet":PET_ID,
+        "user":USER_ID,
         "act_date":selected_date
     ]
     
@@ -42,8 +43,6 @@ class AddPetActionViewController: UIViewController {
         
         if let poo_time = poo_time { poo_time.frame.size = CGSize(width: 250, height: 150) }
         
-////        feed_time.backgroundColor = UIColor(hex: "FFFFFF")
-//        feed_time.subviews[0].subviews[0].subviews[2].backgroundColor = feed_time.tintColor;
     }
     
     // MARK: 6개 액션 등록 메소드에서 공통으로 쓸 AF

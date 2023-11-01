@@ -25,6 +25,7 @@ class HomeViewController: UIViewController {
     var actdetail:[Actdetail]?
     var petDiary:PetDiary?
     let paths = "api/pet/act/list"
+    var newDiaryImage: UIImage?
     
     
     
@@ -255,16 +256,16 @@ class HomeViewController: UIViewController {
     
     // MARK: 카메라
     @IBAction func addDiaryPic(_ sender: Any) {
-        let alert =  UIAlertController(title: "다이어리 사진", message: "사진을 앨범에서 가져오거나 카메라로 찍으세요.", preferredStyle: .actionSheet)
-    
-        let library =  UIAlertAction(title: "사진앨범", style: .default) { (action) in self.openLibrary()
+        let alert =  UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let library =  UIAlertAction(title: "앨범에서 선택", style: .default) { (action) in self.openLibrary()
         }
         
-        let camera =  UIAlertAction(title: "카메라", style: .default) { (action) in
+        let camera =  UIAlertAction(title: "카메라로 촬영", style: .default) { (action) in
             self.openCamera()
         }
         
-        let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        let cancel = UIAlertAction(title: "취소", style: .default, handler: nil)
         
         alert.addAction(library)
         alert.addAction(camera)
@@ -355,6 +356,46 @@ class HomeViewController: UIViewController {
         vc.modalPresentationStyle = UIModalPresentationStyle.formSheet
         present(vc, animated: true, completion: nil)
     }
+    
+    
+    func insertDiaryImage() {
+        var url = "\(diaryReg_url)"
+//        print("다이어리뷰의 URL \(url)")
+        if let actId = act?.id {
+            url += "/\(actId)"
+        }
+        
+        var params:Parameters = ["pet_id":PET_ID, "act_date":selected_date]
+        if let diaryContent = act?.diary_content {
+            params["diary_content"] = diaryContent
+        }
+        
+        guard let diaryImage = newDiaryImage else {return}
+        let fileName = "\(UUID().uuidString).png"
+        Utils.uploadImageToServer(url: url,
+                               imageName: fileName,
+                               image: diaryImage,
+                               parameters: params,
+                               responseType: [String:String].self) {result in
+                print(result)
+                switch result {
+                case .success:
+                    let alert = UIAlertController(title: "확인", message: "등록 되었습니다.", preferredStyle: .alert)
+                    let action = UIAlertAction(title: "확인", style: .default)
+                    alert.addAction(action)
+                    self.tableView.reloadData()
+//                    NotificationCenter.default.post(name: NSNotification.Name("DataInsertSuccess"), object: nil, userInfo: nil)
+                    // 여기에서는 알림을 표시하는 것이 아니라 호출자 함수에서 처리하도록 수정하실 수도 있습니다.
+//                    self.dismiss(animated: true)
+        
+                case .failure(let error):
+                    // POST 요청 중 오류가 발생한 경우
+                    // 에러 처리 로직을 추가하세요.
+                    print(error)
+                }
+            }
+        self.tableView.reloadData()
+    }
 }
 
 
@@ -416,7 +457,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 //            default: actImgView?.tintColor = UIColor(named: "AAA517") //UIImage(named: "walk")
                 //        }
                 
-            case 1: actImgView?.tintColor = UIColor.red // (hex: "#AAA517") //.image = UIImage(named: "walk")
+            case 1: actImgView?.tintColor = UIColor(hexCode : "#AAA517") 
             case 2: actImgView?.tintColor = UIColor(hexCode	: "#FF7E79")
             case 3: actImgView?.tintColor = UIColor(hexCode: "#FA9E04")
             case 4: actImgView?.tintColor = UIColor(hexCode: "#01B5AD")
@@ -439,7 +480,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             
             // 다이어리 뷰의 메모
-            lblMemo?.text = petAction.memo
+//            lblMemo?.text = petAction.memo
             
             // 다이어리 뷰의 메모 사진
 //            memoImgView?.image = UIImage(named: "white") // Azure blob 적용전까지는 white로 세팅
@@ -467,13 +508,13 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
             
             if let diaryImage = petDiary?.diary_image {
-                diaryMemoImage.isHidden = false
+//                diaryMemoImage.isHidden = false
                 print("diary image = \(diaryImage)")
 //                let url = URL(string: "url")
                 cameraBtn.isHidden = true
                 cameraBtn.isEnabled = false
                 
-                let url = URL(string: "\(IMAGE_URL)/\(PET_ID)/\(diaryImage)")
+                let url = URL(string: "\(IMAGE_URL)/\(diaryImage)")
                 print("\(url!)")
 //                diaryMemoImage.load(url: url!)
 //                diaryMemoImage.kf.indicatorType = .activity
@@ -496,6 +537,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 //                        [.cacheOriginalImage],
                         completionHandler: nil
                     )
+                
+   
 //
                     
 //                }
@@ -503,6 +546,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             } else {
 //                diaryMemoImage.isHidden = true
                 diaryMemoImage.image = nil
+                
                 cameraBtn.isHidden = false
                 cameraBtn.isEnabled = true
             }
@@ -580,6 +624,9 @@ extension UIViewController {
     }
     self.present(alert, animated: true, completion: completion)
   }
+    
+    
+    
 }
 
 
@@ -630,22 +677,26 @@ extension Date {
 }
 
 
-
 // MARK: 카메라 익스텐션
 extension HomeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
-        var newImage: UIImage? = nil // update 할 이미지
-        newImage = newImage?.resizeWithWidth(width: 100)
+  // update 할 이미지
+//        newImage = newImage?.resizeWithWidth(width: 300)
         if let possibleImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
-            newImage = possibleImage // 수정된 이미지가 있을 경우
+            newDiaryImage = possibleImage // 수정된 이미지가 있을 경우
         } else if let possibleImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            newImage = possibleImage // 원본 이미지가 있을 경우
+            newDiaryImage = possibleImage // 원본 이미지가 있을 경우
         }
-   
-        guard let test = tableView.viewWithTag(21) as? UIImageView else { return }
-        test.image = newImage // 받아온 이미지를 update
+        insertDiaryImage()
+//        guard let imageView = tableView.viewWithTag(21) as? UIImageView else {
+//            print("이미지뷰 없음")
+//            return }
+//
+//        print("이미지뷰 있음")
+        
+//        imageView.image = newImage // 받아온 이미지를 update
         picker.dismiss(animated: true, completion: nil) // picker를 닫아줌
         //cameraBtn.isHidden = true
 //        cameraBtn.isEnabled = false

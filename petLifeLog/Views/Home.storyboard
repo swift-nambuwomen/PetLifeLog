@@ -157,7 +157,7 @@
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="itu-kR-Lu7">
                                 <rect key="frame" x="0.0" y="63" width="389" height="672"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -447,6 +447,7 @@
                             </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="RJS-aH-Mqb"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="mkG-jR-gzG" firstAttribute="leading" secondItem="RJS-aH-Mqb" secondAttribute="leading" constant="20" id="DFE-Si-idA"/>
                             <constraint firstItem="RJS-aH-Mqb" firstAttribute="trailing" secondItem="mkG-jR-gzG" secondAttribute="trailing" constant="20" id="FKc-gN-2Xe"/>
