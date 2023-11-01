@@ -35,7 +35,9 @@ class DiaryViewController: UIViewController,UITableViewDataSource, UITableViewDe
         self.segment.setTitleTextAttributes(
             [
                 NSAttributedString.Key.foregroundColor: UIColor.blue,
-                .font: UIFont.systemFont(ofSize: 16, weight: .semibold)
+                .font: UIFont.systemFont(ofSize: 16, weight: .semibold),
+                NSAttributedString.Key.backgroundColor: UIColor.cyan,
+                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.thick
             ],
             for: .selected
         )
@@ -167,8 +169,10 @@ class DiaryViewController: UIViewController,UITableViewDataSource, UITableViewDe
                     
                 }
                 lblDiary.text = diaryData.diary_content
-                let lblName = cell.viewWithTag(4) as? UILabel
-                lblName?.text = diaryData.user_name + "의 " + diaryData.pet_name
+                let lblPetName = cell.viewWithTag(4) as? UILabel
+                let lblUserName = cell.viewWithTag(5) as? UILabel
+                lblPetName?.text = diaryData.pet_name
+                lblUserName?.text = "(" + diaryData.user_name + ")"
             }
         }
         else{
@@ -201,8 +205,10 @@ class DiaryViewController: UIViewController,UITableViewDataSource, UITableViewDe
                     imageView.isHidden = true
                 }
                 lblDiary.text = diaryAllData.diary_content
-                let lblName = cell.viewWithTag(4) as? UILabel
-                lblName?.text = diaryAllData.user_name + "의 " + diaryAllData.pet_name
+                let lblPetName = cell.viewWithTag(4) as? UILabel
+                let lblUserName = cell.viewWithTag(5) as? UILabel
+                lblPetName?.text = diaryAllData.pet_name
+                lblUserName?.text = "(" + diaryAllData.user_name + ")"
             }  //else끝(다이어리 전체)
             
         }

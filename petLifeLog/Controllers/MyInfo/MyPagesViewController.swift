@@ -47,8 +47,9 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
         dateFormatter.dateFormat = "yyyy-MM"
         dateFormatter.locale = Locale(identifier: "ko_KR")
 
-        textYearMonth.text = dateFormatter.string(from: currentDate)
+        let yearMonth = dateFormatter.string(from: currentDate)
         
+        getPetCost(pet: PET_ID, actDate: yearMonth + "-01")
         //tabelview custom cell 왼쪽여백 없애기
 //        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
 //        tableView.separatorInset = .zero
@@ -91,23 +92,6 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
             PET_ID = UserDefaults.standard.integer(forKey: PetDefaultsKey.petId.rawValue)
             PET_NAME = UserDefaults.standard.string(forKey: PetDefaultsKey.petName.rawValue)
         }
-
-        if let inputText = textYearMonth.text {
-            let yearMonth = inputText.split(separator: "-")
-            if yearMonth.count == 2,
-                let year = Int(yearMonth[0]),
-                let month = Int(yearMonth[1]) {
-                // 년과 월 추출
-                print("Year: \(year), Month: \(month)")
-                //펫 선택시 한달지출비용
-                getPetCost(pet: PET_ID, actDate: String(year) + "-" + String(month) + "-01")
-                // 여기에서 년과 월을 사용하여 데이터를 처리
-            } else {
-                // 사용자가 올바른 형식("년-월")으로 입력하지 않은 경우 에러 처리
-                print("올바른 형식으로 입력하세요 (예: 2023-10).")
-            }
-        }
-        
         tableView.reloadData()
     }
     
@@ -174,10 +158,10 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
         lblBirth?.text = pet.birth
         
         if pet.sex == "F"{
-            lblSex?.text = "암컷 \(pet.id)"
+            lblSex?.text = "암컷"
         }
         else{
-            lblSex?.text = "수컷 \(pet.id)"
+            lblSex?.text = "수컷"
         }
 
         // 펫버튼에 액션 추가
