@@ -172,7 +172,7 @@ class StatsViewController: UIViewController {
 //        default: self.calendar.appearance.eventDefaultColor = .systemGray4
 //        }
     
-        self.calendar.appearance.eventSelectionColor = UIColor.green
+        self.calendar.appearance.eventSelectionColor = UIColor.blue
         
 //        setEvents()
         
@@ -272,15 +272,12 @@ class StatsViewController: UIViewController {
 extension StatsViewController: FSCalendarDataSource,FSCalendarDelegate ,FSCalendarDelegateAppearance {
     
     func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
-//        return events.filter("writeDate = %@", date).count
-        if self.events.contains(date){
-            return 1
+        if self.events.contains(date) {
+            return events.filter{ $0 == date }.count
         } else {
             return 0
         }
-
-//        return tasks.filter("writeDate = %@", date).count
-        }
+    }
     
     // Event 표시 Dot 사이즈 조정
     func calendar(_ calendar: FSCalendar, willDisplay cell: FSCalendarCell, for date: Date, at monthPosition: FSCalendarMonthPosition) {

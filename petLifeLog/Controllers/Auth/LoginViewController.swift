@@ -18,13 +18,15 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // 키보드 내리기
+        hideKeyboard()
         
         print("TARGET_IPHONE_SIMULATOR : \(TARGET_IPHONE_SIMULATOR)")
         
         if TARGET_IPHONE_SIMULATOR == 1 {
           // Simulator
-            emailTextField.text = "jsoarchi@nate.com"
-            passwordTextField.text = "1234"
+//            emailTextField.text = "jsoarchi@nate.com"
+//            passwordTextField.text = "1234"
         } else {
           // Device
             emailTextField.text = ""
@@ -88,21 +90,27 @@ class LoginViewController: UIViewController {
                     UserDefaults.standard.set(true, forKey: UserDefaultsKey.isLogined.rawValue)
                     UserDefaults.standard.setValue(user.id, forKey: UserDefaultsKey.userId.rawValue)
                     UserDefaults.standard.setValue(user.nickName, forKey: UserDefaultsKey.nickName.rawValue)
-               
-                    let pet = user.pets[0]
-                    print("login pet 정보 : \(pet)")
-                    UserDefaults.standard.setValue(pet.name, forKey: PetDefaultsKey.petName.rawValue)
-                    UserDefaults.standard.setValue(pet.profileImage, forKey: PetDefaultsKey.petImage.rawValue)
-                    UserDefaults.standard.setValue(pet.id, forKey: PetDefaultsKey.petId.rawValue)
                     
                     UserDefaults.standard.synchronize()
-                    
                     USER_ID = UserDefaults.standard.integer(forKey: UserDefaultsKey.userId.rawValue)
                     NICK_NAME = UserDefaults.standard.string(forKey: UserDefaultsKey.nickName.rawValue)
                     
-                    PET_ID = UserDefaults.standard.integer(forKey: PetDefaultsKey.petId.rawValue)
-                    PET_NAME = UserDefaults.standard.string(forKey: PetDefaultsKey.petName.rawValue)
-                    PET_IMG = UserDefaults.standard.string(forKey: PetDefaultsKey.petImage.rawValue)
+                    if user.pets.count > 0 {
+                        let pet = user.pets[0]
+                        print("login pet 정보 : \(pet)")
+                        UserDefaults.standard.setValue(pet.name, forKey: PetDefaultsKey.petName.rawValue)
+                        UserDefaults.standard.setValue(pet.profileImage, forKey: PetDefaultsKey.petImage.rawValue)
+                        UserDefaults.standard.setValue(pet.id, forKey: PetDefaultsKey.petId.rawValue)
+                        
+                        PET_ID = pet.id
+                        PET_NAME = pet.name
+                        PET_IMG = pet.profileImage
+                        
+                    }
+                    
+                    
+                    
+
             
                     let homeStoryboard = UIStoryboard(name: "Home", bundle: nil)
 //                    self.navigationController?.popToRootViewController(animated: true)

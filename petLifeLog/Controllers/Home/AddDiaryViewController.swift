@@ -29,6 +29,8 @@ class AddDiaryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // 키보드 내리기
+        hideKeyboard()
         drawUI()
         imgGesture()
         print("AddDiary뷰 호출 - 홈에 선택된 날짜", selected_date)

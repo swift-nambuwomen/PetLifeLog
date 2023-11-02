@@ -15,10 +15,10 @@ import Kingfisher
 let pet_birth = "2021-04-16" // 로그인 후 들고 있어야 할 현재 pet의 강아지 생일
 //
 //// 글로벌 변수 - 다른 컨트롤러에서도 쓰임
-//let baseURL = "http://127.0.0.1:8000/"
-//var selected_date = "" // 네비바용. 사용자가 선택한 날짜. yyyy-MM-dd.
-//var today = "" // < > 날짜 이동 버튼, 날짜에 따라 비활성화 처리용 대조 데이터.
-//let picker = UIImagePickerController()
+let baseURL = "http://127.0.0.1:8000/"
+var selected_date = "" // 네비바용. 사용자가 선택한 날짜. yyyy-MM-dd.
+var today = "" // < > 날짜 이동 버튼, 날짜에 따라 비활성화 처리용 대조 데이터.
+let picker = UIImagePickerController()
 class HomeViewController: UIViewController {
     // AF로 가져온 Act를 [actdetail]과 diary로 분리함
     var act:Act?
@@ -26,9 +26,8 @@ class HomeViewController: UIViewController {
     var petDiary:PetDiary?
     let paths = "api/pet/act/list"
     var newDiaryImage: UIImage?
-    
-    
-    
+    var newDiaryImageView: UIImageView?
+
     @IBOutlet weak var lblMyPet: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var dateBtn: UIButton! // 날짜 지정하기 위함
@@ -46,6 +45,7 @@ class HomeViewController: UIViewController {
         self.tabBarController?.tabBar.isHidden = false
         self.tabBarController?.tabBar.layer.zPosition = 0
         
+        lblMyPet?.text = "\(PET_NAME) (\(PET_ID))"
         
         print("didload 실행")
         login()
@@ -56,6 +56,20 @@ class HomeViewController: UIViewController {
             self,
             selector: #selector(self.didDismissDetailNotification(_:)),
             name: NSNotification.Name("DataInsertSuccess"),
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.didDismissDetailNotification(_:)),
+            name: NSNotification.Name("DiaryInsertSuccess"),
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.didDismissDetailNotification(_:)),
+            name: NSNotification.Name("JoinPetInsertSuccess"),
             object: nil
         )
         
@@ -78,28 +92,24 @@ class HomeViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-
+//                lblMyPet?.text = "\(PET_NAME) , \(PET_ID)"
         login()
+
         getActDataViaAF() //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
     }
     
     @objc func didDismissDetailNotification(_ notification: Notification) {
-        print("didDismissDetailNotification")
-//        DispatchQueue.main.async {
-//            self.tableView.reloadData()
-            getActDataViaAF()
-//        }
+        lblMyPet?.text = PET_NAME
+        getActDataViaAF()
     }
     
     @objc func didDismissCalendarNotification(_ notification: Notification) {
         
         guard let new_date = notification.userInfo?["new_date"] as? String else { return }
-        print("new_date:::::\(new_date)")
         dateBtn.setTitle(new_date, for: .normal) // 받아온 new_date를 네비바 타이틀에 설정
         selected_date = new_date
         checkDateCaseLogic()
         getActDataViaAF() //테이블뷰 데이터도 바뀐 selected_date 날짜의 데이터로 불러오기
-
     }
     
     // MARK: UI, 데이터 셋업
@@ -129,6 +139,8 @@ class HomeViewController: UIViewController {
                     self.petDiary = PetDiary(id: self.act?.id ?? 0, diary_image: the_diary_image, diary_content: the_diary_content, diary_open_yn: the_diary_yn)
                 case .failure(let error):
                     print("GET 응답 에러", error.localizedDescription)
+                    self.act = nil
+                    self.actdetail = nil
                     self.petDiary = nil
                     self.actdetail = nil
                 }
@@ -173,15 +185,15 @@ class HomeViewController: UIViewController {
 //        diaryContent.text = petDiary?.diary_content
 //        diaryImgView.image = UIImage(named: petDiary?.diary_image ?? "white")
 //        if diaryData.diary_image != "" {
-//            
+//
 //            if petDiary?.diary_image != "" && IMAGE_URL != "" {
 //                let imageName = IMAGE_URL + "/" + diaryData.diary_image
-//                
+//
 //                if let url = URL(string: imageName) {
 //                    let processor = RoundCornerImageProcessor(cornerRadius: 20) // 모서리 둥글게
-//                    
+//
 //                    imageView.kf.indicatorType = .activity
-//                    
+//
 //                    imageView.kf.setImage(
 //                        with: url,
 //                        placeholder: UIImage(systemName: "photo"),
@@ -190,11 +202,11 @@ class HomeViewController: UIViewController {
 //                        [.cacheOriginalImage],
 //                        completionHandler: nil
 //                    )
-//                    
+//
 //                }
-//                
+//
 //            }
-//            
+//
 //        }
     }
     
@@ -364,8 +376,8 @@ class HomeViewController: UIViewController {
         if let actId = act?.id {
             url += "/\(actId)"
         }
-        
-        var params:Parameters = ["pet_id":PET_ID, "act_date":selected_date]
+        print("다이어리뷰의 URL \(url)")
+        var params:Parameters = ["pet":PET_ID, "act_date":selected_date,"user":USER_ID]
         if let diaryContent = act?.diary_content {
             params["diary_content"] = diaryContent
         }
@@ -376,15 +388,15 @@ class HomeViewController: UIViewController {
                                imageName: fileName,
                                image: diaryImage,
                                parameters: params,
-                               responseType: [String:String].self) {result in
+                               responseType: PetDiary.self) {result in
                 print(result)
                 switch result {
                 case .success:
-                    let alert = UIAlertController(title: "확인", message: "등록 되었습니다.", preferredStyle: .alert)
-                    let action = UIAlertAction(title: "확인", style: .default)
-                    alert.addAction(action)
-                    self.tableView.reloadData()
-//                    NotificationCenter.default.post(name: NSNotification.Name("DataInsertSuccess"), object: nil, userInfo: nil)
+//                    let alert = UIAlertController(title: "확인", message: "등록 되었습니다.", preferredStyle: .alert)
+//                    let action = UIAlertAction(title: "확인", style: .default)
+//                    alert.addAction(action)
+//                    self.tableView.reloadData()
+                    NotificationCenter.default.post(name: NSNotification.Name("DiaryInsertSuccess"), object: nil, userInfo: nil)
                     // 여기에서는 알림을 표시하는 것이 아니라 호출자 함수에서 처리하도록 수정하실 수도 있습니다.
 //                    self.dismiss(animated: true)
         
@@ -434,7 +446,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             let lblMemo = cell.viewWithTag(5) as? UILabel // 메모
             let memoImgView = cell.viewWithTag(6) as? UIImageView // 액션 메모 이미지
             
-            lblMemo?.text = ""
+            lblMemo?.text = petAction.memo
             // 시간
             lblActTime?.text = petAction.act_time
             
@@ -457,8 +469,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 //            default: actImgView?.tintColor = UIColor(named: "AAA517") //UIImage(named: "walk")
                 //        }
                 
-            case 1: actImgView?.tintColor = UIColor(hexCode : "#AAA517") 
-            case 2: actImgView?.tintColor = UIColor(hexCode	: "#FF7E79")
+            case 1: actImgView?.tintColor = UIColor(hexCode : "#AAA517")
+            case 2: actImgView?.tintColor = UIColor(hexCode    : "#FF7E79")
             case 3: actImgView?.tintColor = UIColor(hexCode: "#FA9E04")
             case 4: actImgView?.tintColor = UIColor(hexCode: "#01B5AD")
             case 5: actImgView?.tintColor = UIColor(hexCode: "#09BCF1")
@@ -493,6 +505,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "diaryCell", for: indexPath)
             
             let diaryMemoImage = cell.viewWithTag(21) as? UIImageView
+            self.newDiaryImageView = diaryMemoImage
             let diaryMemo = cell.viewWithTag(22) as? UILabel
             let cameraBtn = cell.viewWithTag(23) as? UIButton
             
@@ -510,6 +523,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             if let diaryImage = petDiary?.diary_image {
 //                diaryMemoImage.isHidden = false
                 print("diary image = \(diaryImage)")
+                
 //                let url = URL(string: "url")
                 cameraBtn.isHidden = true
                 cameraBtn.isEnabled = false
@@ -537,7 +551,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 //                        [.cacheOriginalImage],
                         completionHandler: nil
                     )
-                
+                diaryMemoImage.frame.size = CGSize(width: diaryMemoImage.frame.width, height: 180)
    
 //
                     
@@ -545,6 +559,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     
             } else {
 //                diaryMemoImage.isHidden = true
+                diaryMemoImage.frame.size = CGSize(width: diaryMemoImage.frame.width, height: 1)
+            
                 diaryMemoImage.image = nil
                 
                 cameraBtn.isHidden = false
@@ -688,7 +704,9 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
             newDiaryImage = possibleImage // 수정된 이미지가 있을 경우
         } else if let possibleImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             newDiaryImage = possibleImage // 원본 이미지가 있을 경우
+            
         }
+//        self.newDiaryImageView?.image = newDiaryImage
         insertDiaryImage()
 //        guard let imageView = tableView.viewWithTag(21) as? UIImageView else {
 //            print("이미지뷰 없음")

@@ -38,11 +38,17 @@ class AddPetActionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // 키보드 내리기
+        hideKeyboard()
+        
         print("AddPet뷰 호출 - 홈에 선택된 날짜", selected_date)
         if let weight_time = weight_time { weight_time.frame.size = CGSize(width: 250, height: 150) }
-        
         if let poo_time = poo_time { poo_time.frame.size = CGSize(width: 250, height: 150) }
-        
+        if let hospital_time = hospital_time { hospital_time.frame.size = CGSize(width: 250, height: 150) }
+        if let hair_time = hair_time { hair_time.frame.size = CGSize(width: 250, height: 150) }
+        if let feed_time = feed_time { feed_time.frame.size = CGSize(width: 250, height: 150) }
+        if let walk_time = walk_time { walk_time.frame.size = CGSize(width: 250, height: 150) }
     }
     
     // MARK: 6개 액션 등록 메소드에서 공통으로 쓸 AF

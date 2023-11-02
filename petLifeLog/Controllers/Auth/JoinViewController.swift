@@ -20,6 +20,8 @@ class JoinViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // 키보드 내리기
+        hideKeyboard()
         nickNameTxtField.setUnderLine()
         emailTxtField.setUnderLine()
         pwdTxtField.setUnderLine()
@@ -83,26 +85,32 @@ class JoinViewController: UIViewController {
         
         if !isDuplCheck {
             Utils.displayAlert(title: "", message: "이메일 중복체크를 해주세요", comfirm: "OK")
+            return
         }
         
         if !emailPossible {
             Utils.displayAlert(title: "", message: "사용 불가능한 이메일 입니다.", comfirm: "OK")
+            return
         }
         
         if nickName == "" {
             Utils.displayAlert(title: "", message: "닉네임을 입력해주세요", comfirm: "OK")
+            return
         }
         
         if password == "" {
             Utils.displayAlert(title: "", message: "비밀번호를 입력해주세요", comfirm: "OK")
+            return
         }
         
         if passwordConfirm == "" {
             Utils.displayAlert(title: "", message: "비밀번호를 입력해주세요", comfirm: "OK")
+            return
         }
         
         if passwordConfirm != password {
             Utils.displayAlert(title: "", message: "비밀번호를 다시한번 확인해주세요", comfirm: "OK")
+            return
         }
 
         let strURL = "\(join_url)"
@@ -125,7 +133,17 @@ class JoinViewController: UIViewController {
                 UserDefaults.standard.set(true, forKey: UserDefaultsKey.isLogined.rawValue)
                 UserDefaults.standard.setValue(user.id, forKey: UserDefaultsKey.userId.rawValue)
                 UserDefaults.standard.setValue(user.nickName, forKey: UserDefaultsKey.nickName.rawValue)
-
+                UserDefaults.standard.synchronize()
+                
+                USER_ID = UserDefaults.standard.integer(forKey: UserDefaultsKey.userId.rawValue)
+                NICK_NAME = UserDefaults.standard.string(forKey: UserDefaultsKey.nickName.rawValue)
+                
+                PET_ID = 0
+                PET_NAME = nil
+                PET_IMG = nil
+                
+                print("회원가입후 \(USER_ID) , \(NICK_NAME)")
+                
                 let petStoryboard = UIStoryboard(name: "MyInfo", bundle: nil)
                 if let vc = petStoryboard.instantiateViewController(identifier: "MyInfo") as? MyPagesViewController {
                     self.navigationController?.pushViewController(vc, animated: false)

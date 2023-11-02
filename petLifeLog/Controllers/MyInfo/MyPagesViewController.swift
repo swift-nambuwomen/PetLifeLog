@@ -14,6 +14,7 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
     //양육자 변수
     @IBOutlet weak var tabbarItem: UITabBarItem!
 
+    @IBOutlet weak var consumView: UIView!
     @IBOutlet weak var textYearMonth: UITextField!
     
     @IBOutlet weak var lblBeautyCost: UILabel!
@@ -27,12 +28,24 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
     var cost:[CostData] = []
     var selectedRowIndex: Int? // 현재 선택된 행의 인덱스
     
+    let currentDate = Date()
+    let dateFormatter = DateFormatter()
+    
+    let numberFormatter: NumberFormatter = NumberFormatter()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.navigationController?.isNavigationBarHidden = false
         self.tabBarController?.tabBar.isHidden = false
         self.tabBarController?.tabBar.layer.zPosition = 0
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.didPetInsertNotification(_:)),
+            name: NSNotification.Name("PetInsertSuccess"),
+            object: nil
+        )
         
         if USER_ID == 0 {
             print("로그인정보 없음")
@@ -45,15 +58,12 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
         }
         
         textYearMonth.isHidden = true
-        let currentDate = Date()
         
-        let dateFormatter = DateFormatter()
+        
         dateFormatter.dateFormat = "yyyy-MM"
         dateFormatter.locale = Locale(identifier: "ko_KR")
+        numberFormatter.numberStyle = .decimal
 
-        let yearMonth = dateFormatter.string(from: currentDate)
-        
-        getPetCost(pet: PET_ID, actDate: yearMonth + "-01")
         //tabelview custom cell 왼쪽여백 없애기
 //        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
 //        tableView.separatorInset = .zero
@@ -63,6 +73,11 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
         tableView.dataSource = self
         tableView.reloadData()
         textYearMonth.delegate = self
+    }
+
+    @objc func didPetInsertNotification(_ notification: Notification) {
+        print("didPetInsertNotification")
+        getPetInfo(userId: USER_ID)
     }
     
     //+버튼으로 강아지 신규등록 및 수정
@@ -93,10 +108,14 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
             //PET_ID, PET_NAME 변경
             UserDefaults.standard.setValue(selectedPet.id, forKey: PetDefaultsKey.petId.rawValue)
             UserDefaults.standard.setValue(selectedPet.name, forKey: PetDefaultsKey.petName.rawValue)
+            UserDefaults.standard.synchronize()
+            
             PET_ID = UserDefaults.standard.integer(forKey: PetDefaultsKey.petId.rawValue)
             PET_NAME = UserDefaults.standard.string(forKey: PetDefaultsKey.petName.rawValue)
         }
         tableView.reloadData()
+        let yearMonth = dateFormatter.string(from: currentDate)
+        getPetCost(pet: PET_ID, actDate: yearMonth + "-01")
     }
     
     
@@ -137,7 +156,7 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
                 
                 imageProfile?.kf.indicatorType = .activity
                 imageProfile?.clipsToBounds = true
-                imageProfile?.layer.cornerRadius = 20
+                imageProfile?.layer.cornerRadius = 36
                 
                 DispatchQueue.main.async {
                     imageProfile?.kf.setImage(
@@ -206,7 +225,18 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
         tableView.reloadData()
+        let yearMonth = dateFormatter.string(from: currentDate)
+        
+        if PET_ID != nil && PET_ID != 0 {
+            self.consumView!.isHidden = false
+            getPetCost(pet: PET_ID, actDate: yearMonth + "-01")
+        } else {
+            self.consumView.isHidden = true
+        }
+        
+        
     }
 
     func getPetInfo(userId:Int){
@@ -253,14 +283,17 @@ class MyPagesViewController: UIViewController, UITableViewDataSource, UITabBarDe
                     self.cost = result
                     //pet_id = 1, act_date = '2023-10-15' 데이터로 테스트
                     if self.cost.count >= 1{
-                        self.lblFeedCost.text = "\(self.cost[0].feedAmount)"
-                        self.lblHospitalCost.text = "\(self.cost[0].hospitalCost)"
-                        self.lblBeautyCost.text = "\(self.cost[0].beautyCost)"
+//                        self.lblFeedCost.text = self.numberFormatter.string(for: self.cost[0].feedAmount)!
+                        self.lblHospitalCost.text = self.numberFormatter.string(for: self.cost[0].hospitalCost)!
+                        self.lblBeautyCost.text = self.numberFormatter.string(for: self.cost[0].beautyCost)!
                         
-                        let totalCost = self.cost[0].feedAmount + self.cost[0].hospitalCost + self.cost[0].beautyCost
-                            self.lblTotal.text = "\(totalCost)"
+                        let totalCost = self.cost[0].hospitalCost + self.cost[0].beautyCost
+                            self.lblTotal.text = self.numberFormatter.string(for: totalCost)!
                     }else{
-                        
+//                        self.lblFeedCost.text = "0"
+                        self.lblHospitalCost.text = "0"
+                        self.lblBeautyCost.text = "0"
+                        self.lblTotal.text = "0"
                     }
                 }
             }

@@ -57,6 +57,8 @@ class PetDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // 키보드 내리기
+        hideKeyboard()
         drawUI()
         imgGesture()
         picker.delegate = self // 카메라 피커

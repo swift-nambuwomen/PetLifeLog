@@ -36,6 +36,9 @@ class PetInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // 키보드 내리기
+        hideKeyboard()
+        
         initPet()
         
         getPetInfo()
@@ -227,17 +230,19 @@ class PetInfoViewController: UIViewController {
     
     //================================사진선택==========================================
     @objc func imageViewTapped(){
-        let alert = UIAlertController(title: "이미지선택", message: "", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        let actionCamera = UIAlertAction(title: "사진찍기", style: .default) { action in
+        let actionCamera = UIAlertAction(title: "카메라로 촬영", style: .default) { action in
             self.camera.sourceType = .camera
             self.present(self.camera, animated: false) }
         alert.addAction(actionCamera)
         
-        let actionPhoto = UIAlertAction(title: "사진 보관함", style: .default) { action in
+        let actionPhoto = UIAlertAction(title: "앨범에서 선택", style: .default) { action in
             self.camera.sourceType = .photoLibrary
             self.present(self.camera, animated: false) }
         alert.addAction(actionPhoto)
+        
+        
         
         let actionPhotoDelete = UIAlertAction(title: "사진 삭제", style: .destructive) { action in
             let url = SITE_URL + "/api/pet/delete/\(self.petId)"
@@ -253,7 +258,7 @@ class PetInfoViewController: UIViewController {
         }
         alert.addAction(actionPhotoDelete)
         
-        let actionCancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        let actionCancel = UIAlertAction(title: "취소", style: .default, handler: nil)
         alert.addAction(actionCancel)
         
         present(alert, animated: true)
@@ -309,6 +314,21 @@ class PetInfoViewController: UIViewController {
             .responseDecodable(of:Pets.self) { response in
                 switch response.result {
                 case .success:
+                    
+                    // 회원가입 후 강아지 등록이 안된 초기화면인경우
+                    guard let pet = response.value else {
+                        Utils.displayAlert(title: "", message: "Pet 등록에 실패했습니다. \n계속해서 실패할 경우 문의 부탁드립니다!!.", comfirm: "OK")
+                        return
+                    }
+                    if PET_ID == nil || PET_ID == 0 {
+                        UserDefaults.standard.setValue(pet.name, forKey: PetDefaultsKey.petName.rawValue)
+                        UserDefaults.standard.setValue(pet.id, forKey: PetDefaultsKey.petId.rawValue)
+                        
+                        PET_ID = pet.id
+                        PET_NAME = pet.name
+                        NotificationCenter.default.post(name: NSNotification.Name("JoinPetInsertSuccess"), object: nil, userInfo: nil)
+                    }
+                    
                     let alert = UIAlertController(title: "확인", message: "등록 되었습니다.", preferredStyle: .alert)
                     let action = UIAlertAction(title: " 확인", style: .default)
                     alert.addAction(action)
@@ -346,14 +366,30 @@ class PetInfoViewController: UIViewController {
         
         // Alamofire를 사용하여 POST 요청 보내기
         AF.request(url, method: .post, parameters: queryString, encoding: JSONEncoding.default).responseDecodable(of: Pets.self) { response in
-            print(response.result)
+            print("response :: \(response.value)666")
             switch response.result {
             case .success:
+                
+                guard let pet = response.value else {
+                    Utils.displayAlert(title: "", message: "Pet 등록에 실패했습니다. \n계속해서 실패할 경우 문의 부탁드립니다!!.", comfirm: "OK")
+                    return
+                }
+                
+                // 회원가입 후 강아지 등록이 안된 초기화면인경우
+                if PET_ID == nil || PET_ID == 0 {
+                    UserDefaults.standard.setValue(pet.name, forKey: PetDefaultsKey.petName.rawValue)
+                    UserDefaults.standard.setValue(pet.id, forKey: PetDefaultsKey.petId.rawValue)
+                    
+                    PET_ID = pet.id
+                    PET_NAME = pet.name
+                }
+
                 let alert = UIAlertController(title: "확인", message: "등록 되었습니다.", preferredStyle: .alert)
                 let action = UIAlertAction(title: " 확인", style: .default)
                 alert.addAction(action)
-                
+
                 self.present(alert, animated: true)
+                NotificationCenter.default.post(name: NSNotification.Name("PetInsertSuccess"), object: nil, userInfo: nil)
 
                 break
             case .failure:
@@ -608,3 +644,4 @@ extension UISegmentedControl {
     }
     
 }
+

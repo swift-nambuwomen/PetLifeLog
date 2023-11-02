@@ -20,29 +20,42 @@ class DiaryViewController: UIViewController,UITableViewDataSource, UITableViewDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.didDiaryNotification(_:)),
+            name: NSNotification.Name("DiaryInsertSuccess"),
+            object: nil
+        )
     
         //세그먼트 설정
-        segment.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            self.segment.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            self.segment.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+            self.segment.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 10),
+            self.segment.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -10),
             self.segment.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 80),
-            self.segment.heightAnchor.constraint(equalToConstant: 50),
+            self.segment.heightAnchor.constraint(equalToConstant: 40),
         ])
+
+        segment.translatesAutoresizingMaskIntoConstraints = false
+        // 선택된 배경색 변경.
+        segment.selectedSegmentTintColor = .white
+
+        // 전체 배경색 변경
+        segment.backgroundColor = .systemBlue
         
-        self.segment.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.gray], for: .normal)
+        self.segment.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white], for: .normal)
         self.segment.setTitleTextAttributes(
             [
                 NSAttributedString.Key.foregroundColor: UIColor.blue,
-                .font: UIFont.systemFont(ofSize: 16, weight: .semibold),
-                NSAttributedString.Key.backgroundColor: UIColor.cyan,
-                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.thick
+//                .font: UIFont.systemFont(ofSize: 16, weight: .semibold),
+//                NSAttributedString.Key.backgroundColor: UIColor.cyan,
+//                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.thick
             ],
             for: .selected
         )
         self.segment.addTarget(self, action: #selector(meOrAll(_:)), for: .valueChanged)
-        segment.removeSegment()
+//        segment.removeSegment()
         self.view.addSubview(self.segment)
         
         getDiary()
@@ -64,6 +77,11 @@ class DiaryViewController: UIViewController,UITableViewDataSource, UITableViewDe
             //all
             getDiaryAll()
         }
+    }
+    
+    @objc func didDiaryNotification(_ notification: Notification) {
+        print("didDismissDetailNotification")
+        getDiary()
     }
     
     //===============다이어리 데이터 조회(나)===============
@@ -169,10 +187,10 @@ class DiaryViewController: UIViewController,UITableViewDataSource, UITableViewDe
                     
                 }
                 lblDiary.text = diaryData.diary_content
-                let lblPetName = cell.viewWithTag(4) as? UILabel
-                let lblUserName = cell.viewWithTag(5) as? UILabel
+                let lblPetName = cell.viewWithTag(5) as? UILabel
+                let lblUserName = cell.viewWithTag(4) as? UILabel
                 lblPetName?.text = diaryData.pet_name
-                lblUserName?.text = "(" + diaryData.user_name + ")"
+                lblUserName?.text = "[\(diaryData.user_name)님의] "
             }
         }
         else{
@@ -205,10 +223,12 @@ class DiaryViewController: UIViewController,UITableViewDataSource, UITableViewDe
                     imageView.isHidden = true
                 }
                 lblDiary.text = diaryAllData.diary_content
-                let lblPetName = cell.viewWithTag(4) as? UILabel
-                let lblUserName = cell.viewWithTag(5) as? UILabel
+                let lblPetName = cell.viewWithTag(5) as? UILabel
+                let lblUserName = cell.viewWithTag(4) as? UILabel
+//                lblPetName?.text = diaryAllData.pet_name
+//                lblUserName?.text = "(" + diaryAllData.user_name + ")"
                 lblPetName?.text = diaryAllData.pet_name
-                lblUserName?.text = "(" + diaryAllData.user_name + ")"
+                lblUserName?.text = "[\(diaryAllData.user_name)님의] "
             }  //else끝(다이어리 전체)
             
         }
