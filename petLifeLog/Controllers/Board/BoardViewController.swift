@@ -90,7 +90,8 @@ class BoardViewController: UIViewController {
     }
 
     func getWeight(pet:Int, actDate:String){
-        let str = "http://127.0.0.1:8000/api/pet/weightChart?"
+        //let str = "http://127.0.0.1:8000/api/pet/weightChart?"
+        let str = SITE_URL + "/api/pet/weightChart?"
         let params:Parameters = ["pet_id":pet,
                                  "act_date":actDate]
         let headers: HTTPHeaders = ["Content-Type": "application/json"]
